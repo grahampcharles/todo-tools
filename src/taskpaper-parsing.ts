@@ -149,7 +149,7 @@ export function getUpdates(node: TaskPaperNode): TaskPaperNode[] {
 export function getFutureTasks(input: TaskPaperNode): TaskPaperNode[] {
     const results = new Array<TaskPaperNode>();
 
-    // does this node have children? if so, act on the children
+    // does this node have children? if so, act on the children // TODO: remove undefined
     if (input.children !== undefined) {
         input.children.forEach((child) =>
             results.push(...getFutureTasks(child))
