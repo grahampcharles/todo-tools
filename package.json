@@ -4,6 +4,10 @@
     "publisher": "grahampcharles",
     "description": "Auxiliary functions for taskpaper documents.",
     "version": "0.4.4",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/grahampcharles/todo-tools.git"
+    },
     "engines": {
         "vscode": "^1.63.0"
     },
