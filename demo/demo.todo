@@ -1,0 +1,37 @@
+Today:
+	- whatever's already here
+	- shop
+	- eat groceries
+	- every other day task two
+	- mow lawn
+	- every Saturday test
+
+Future:
+	- this should be due @due(2022-01-11)
+
+---
+# todotools settings for this document
+runOnOpen: True
+runDaily: True
+tasks: 
+  daily: 
+    - mow lawn
+  2: 
+    - eat groceries
+    - every other day task two
+  Tuesday:
+    - shop
+  11/1:
+    - task for 1 November
+  11/14/2021:
+    - pay taxes
+  4/10/2022:
+    - pay taxes
+  12/1:
+    - start XMas shopping
+  monthly: 
+    - pay rent
+  Saturday:
+    - every Saturday test
+lastAutoRun: 2022-01-11T21:21:39.834Z
+---

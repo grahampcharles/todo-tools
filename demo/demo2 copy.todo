@@ -1,0 +1,17 @@
+Today:
+	- done copy to future @recur(2) @due(2022-01-13)
+	- this should be due @due(2022-01-11)
+	- this should not be due @due(2022-01-13)
+	- this should be due too @due(2022-01-11)
+	- whatever's already here
+	- eat groceries
+	- recur on Tuesdays @done(2022-01-10) @due(2022-01-18)
+	- happen on one Sunday @done(2022-01-10) @due(2022-01-16)
+	- done copy to future @done(2022-01-11) @due(2022-01-13)
+
+Future:
+	- recur on Tuesdays @recur(Tuesdays) @due(2022-01-18)
+	- happen on one Sunday @due(2022-01-16)
+	- recur every day but no due date @recur(1)
+	- recur every 5th day but no due date @recur(5)
+	- this should be due and remain due for next year @annual(1/11) @due(2023-01-11)

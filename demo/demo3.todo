@@ -1,0 +1,15 @@
+Today:
+	- item #3 @recur(2) @due(2020-01-05)
+	- a due item @due(2022-01-13)
+	- another due item @due(2022-01-14)
+	- item #2 @due(2022-01-12) @done(22-01-16 16:52)
+	- item #3 @done(2020-01-03)
+	- item #4 @done(2020-01-03)
+	- item #5 @annual(11/1) @due(anything)
+
+Future:
+	- item #1 @recur(2) @due(2022-01-18)
+	- item #2 @recur(2) @due(2022-01-18)
+	- item #4 @annual(11/1) @due(2022-11-01)
+	- item #6 @annual(11/1) @due(2022-11-01)
+	- an item that should recur today @recur(1) @due(2022-01-17)
