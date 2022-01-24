@@ -1,5 +1,4 @@
 import * as vscode from "vscode";
-import { autoRunInterval } from "./constants";
 import { Settings } from "./Settings";
 import { getSection } from "./taskpaper-utils";
 import {
@@ -18,8 +17,8 @@ import {
 } from "./taskpaper-parsing";
 import { TaskPaperNode } from "task-parser/build/TaskPaperNode";
 
-let settings: Settings = new Settings();
 let consoleChannel = vscode.window.createOutputChannel("ToDoTools");
+const settings = new Settings();
 
 /**
  *activate
@@ -32,13 +31,13 @@ export function activate(context: vscode.ExtensionContext) {
     const textEditor = vscode.window.activeTextEditor;
 
     // if there is one, then perform a copy
-    if (textEditor) {
+    if (textEditor && settings.autoRun()) {
         automaticPerformCopy(textEditor);
     }
 
     //  implement commands with registerCommand
     let disposable = vscode.commands.registerCommand(
-        "todotools.copyDailyToToday",
+        "todotools.processTasks",
         () => {
             let textEditor = vscode.window.activeTextEditor;
             if (textEditor) {
@@ -61,7 +60,7 @@ export function activate(context: vscode.ExtensionContext) {
     if (textEditor) {
         consoleChannel.appendLine("auto-run interval set");
         // set the auto-run function to run
-        setInterval(autoRunFunction, autoRunInterval);
+        setInterval(autoRunFunction, settings.autoRunInterval());
     }
 
     // implement a mock "pretend we just opened" command
@@ -78,13 +77,11 @@ export function activate(context: vscode.ExtensionContext) {
     ////////////////
 
     /**
-     *Automatically run the copy
+     *Automatically run the copy and then save.
      * @param {vscode.TextEditor} editor
      */
     function automaticPerformCopy(editor: vscode.TextEditor) {
-        // if (!settings.hasRunToday()) {
         performCopyAndSave(editor);
-        // }
     }
 
     /**
@@ -96,9 +93,6 @@ export function activate(context: vscode.ExtensionContext) {
     function performCopyAndSave(editor: vscode.TextEditor) {
         try {
             performCopy(editor)
-                // .then(() =>
-                //     ( update last run property...)
-                // )
                 .then(() => editor.document.save())
                 .catch((reason: any) => {
                     if (reason instanceof Error) {
@@ -121,8 +115,6 @@ export function activate(context: vscode.ExtensionContext) {
     async function performCopy(
         textEditor: vscode.TextEditor
     ): Promise<boolean> {
-        const archiveItems = true;
-
         // find the today line number
         if (
             !(
@@ -186,7 +178,7 @@ export function activate(context: vscode.ExtensionContext) {
             // 4. move DONE tasks to Archive
             /////////////////////////////////
 
-            if (archiveItems) {
+            if (settings.archiveDoneItems()) {
                 // re-parse document to account for changes in part 1
                 items = await parseTaskDocument(textEditor);
                 if (items === undefined) {

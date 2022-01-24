@@ -3,7 +3,7 @@
     "displayName": "ToDo-Tools",
     "publisher": "grahampcharles",
     "description": "Auxiliary functions for taskpaper documents.",
-    "version": "0.4.5",
+    "version": "0.4.6",
     "repository": {
         "type": "git",
         "url": "https://github.com/grahampcharles/todo-tools.git"
@@ -15,16 +15,43 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:todotools.copyDailyToToday",
+        "onCommand:todotools.processTasks",
         "onCommand:todotools.runOnOpen",
         "onLanguage:todo"
     ],
     "main": "./dist/extension.js",
     "contributes": {
+        "configuration": {
+            "title": "To-Do Tools",
+            "properties": {
+                "todotools.runOnOpen": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Process files whenever they are opened."
+                },
+                "todotools.autoRun": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Automatically check files every few hours while they are open."
+                },
+                "todotools.autoRunInterval": {
+                    "type": "number",
+                    "default": 3,
+                    "minimum": 1,
+                    "maximum": 24,
+                    "description": "Number of hours between automatically checking files."
+                },
+                "todotools.archiveDoneItems": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Archive @done items while processing recurring items."
+                }
+            }
+        },
         "commands": [
             {
-                "command": "todotools.copyDailyToToday",
-                "title": "ToDo Tools: Copy Daily Tasks to Today"
+                "command": "todotools.processTasks",
+                "title": "ToDo Tools: Copy Recurring Tasks"
             },
             {
                 "command": "todotools.runOnOpen",
