@@ -4,11 +4,15 @@ All notable changes to the "todo-tools" extension will be documented in this fil
 
 ## Unreleased -
 
-## add
+### add
 
 -   sort every section by @due
 
-## [0.4.7] - 2022-01-23
+### fix
+
+-   duplicate recurrences happening
+
+## [0.4.8] - 2022-01-23
 
 ### added
 
