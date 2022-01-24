@@ -148,7 +148,7 @@ All notable changes to the "todo-tools" extension will be documented in this fil
 
 ### Added
 
--   Added YAML property to prevent autorun more than once per day.
+-   Added YAML property to prevent auto-run more than once per day.
 
 ## [0.0.3]
 

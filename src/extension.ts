@@ -150,7 +150,7 @@ export function activate(context: vscode.ExtensionContext) {
                 for (const task of sorted) {
                     await insertLineAfter(
                         textEditor,
-                        task.index.line,
+                        task.index.line - 1, // node index is 1-based; vscode editor is 0-based
                         task.toString()
                     );
                 }
