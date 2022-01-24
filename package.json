@@ -37,14 +37,14 @@
                 "todotools.autoRun": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Automatically check files every few hours while they are open."
+                    "description": "Automatically check files every few minutes while they are open."
                 },
                 "todotools.autoRunInterval": {
                     "type": "number",
-                    "default": 3,
+                    "default": 10,
                     "minimum": 1,
-                    "maximum": 24,
-                    "description": "Number of hours between automatically checking files."
+                    "maximum": 3600,
+                    "description": "Number of minutes between automatically checking files."
                 },
                 "todotools.archiveDoneItems": {
                     "type": "boolean",

@@ -1,7 +1,9 @@
 Today:
-	- item #5 @annual(11/1) @due(anything)
-	- item #2 @recur(2) @due(2022-01-24) @done(22-01-24 14:01)
-	- item #4 @annual(11/1) @due(2022-11-01)
 	- item #6 @annual(11/1) @due(2022-11-01)
 	
 Archive:
+	- item #5 @due(2022-11-01) @done(22-01-24 14:34) @project(Today)
+	- item #5 @due(anything) @started(22-01-24 14:19) @done(22-01-24 14:19) @lasted(45s) @project(Today)
+	- item #2 @due(2022-01-26) @done(22-01-24 14:19) @project(Today)
+	- item #4 @due(2022-11-01) @done(22-01-24 14:19) @project(Today)
+	- item #2 @due(2022-01-24) @done(22-01-24 14:01) @project(Today)

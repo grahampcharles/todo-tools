@@ -1,26 +1,38 @@
 import * as vscode from "vscode";
 
 export class Settings {
-    private config = vscode.workspace.getConfiguration("todotools");
-    private millisecondsPerHour: number = 1000 * 60 * 60;
-
     autoRun(): boolean {
-        return this.config.autoRun;
+        return (
+            vscode.workspace.getConfiguration("todotools").get("autoRun") ??
+            true
+        );
     }
     runOnOpen(): boolean {
-        return this.config.runOnOpen;
+        return (
+            vscode.workspace.getConfiguration("todotools").get("runOnOpen") ??
+            true
+        );
     }
     archiveDoneItems(): boolean {
-        return this.config.archiveDoneItems;
+        return (
+            vscode.workspace
+                .getConfiguration("todotools")
+                .get("archiveDoneItems") ?? true
+        );
     }
     recurringItemsAdjacent(): boolean {
-        return this.config.recurringItemsAdjacent;
+        return (
+            vscode.workspace
+                .getConfiguration("todotools")
+                .get("recurringItemsAdjacent") ?? true
+        );
     }
     autoRunInterval(): number {
-        return (
-            Math.min(Math.max(this.config.autoRunInterval, 1), 24) *
-            this.millisecondsPerHour
-        );
+        const ret: number =
+            vscode.workspace
+                .getConfiguration("todotools")
+                .get("autoRunInterval") ?? 10;
+        return Math.min(Math.max(ret, 1), 3600);
     }
 
     constructor() {}

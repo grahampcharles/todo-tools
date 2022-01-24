@@ -20,6 +20,7 @@ import { TaskPaperNode } from "task-parser/build/TaskPaperNode";
 
 let consoleChannel = vscode.window.createOutputChannel("ToDoTools");
 const settings = new Settings();
+var loopCount: number = 0;
 
 /**
  *activate
@@ -51,9 +52,14 @@ export function activate(context: vscode.ExtensionContext) {
     // automatic re-run function
     const autoRunFunction = function () {
         consoleChannel.appendLine("auto-run called");
-        let textEditor = vscode.window.activeTextEditor;
-        if (textEditor) {
-            automaticPerformCopy(textEditor);
+        loopCount++;
+        if (loopCount >= settings.autoRunInterval()) {
+            loopCount = 0; // reset counter
+
+            let textEditor = vscode.window.activeTextEditor;
+            if (textEditor) {
+                automaticPerformCopy(textEditor);
+            }
         }
     };
 
@@ -61,7 +67,7 @@ export function activate(context: vscode.ExtensionContext) {
     if (textEditor) {
         consoleChannel.appendLine("auto-run interval set");
         // set the auto-run function to run
-        setInterval(autoRunFunction, settings.autoRunInterval());
+        setInterval(autoRunFunction, 1000 * 60); // run every minute
     }
 
     // implement a mock "pretend we just opened" command
@@ -94,7 +100,7 @@ export function activate(context: vscode.ExtensionContext) {
     function performCopyAndSave(editor: vscode.TextEditor) {
         try {
             performCopy(editor)
-                .then(() => editor.document.save())
+                .then(async () => editor.document.save())
                 .catch((reason: any) => {
                     if (reason instanceof Error) {
                         console.log(reason.message);

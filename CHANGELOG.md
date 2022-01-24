@@ -8,9 +8,12 @@ All notable changes to the "todo-tools" extension will be documented in this fil
 
 -   sort every section by @due
 
+## [0.4.9] - 2022-01-24
+
 ### fix
 
 -   duplicate recurrences happening
+-   not auto-saving
 
 ## [0.4.8] - 2022-01-23
 
