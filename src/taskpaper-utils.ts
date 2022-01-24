@@ -1,9 +1,9 @@
-import { yamlDelimiter } from "./constants";
-
+const yamlDelimiter = "---";
 /**
  *getSection
  *
  * Retrieves a section (project) of the taskpaper document in the editor.
+ * Skips yaml sections, if any.
  * @export
  * @param {vscode.TextEditor} editor
  * @param {string} fromSection

@@ -1,11 +1,12 @@
 # Change Log
 
-All notable changes to the "todotools" extension will be documented in this file.
+All notable changes to the "todo-tools" extension will be documented in this file.
 
-## Unreleased
+## [0.4.6] - 2022-01-23
 
 ### added
 
+-   settings page
 -   syntax highlighting
 
 ### fixed
