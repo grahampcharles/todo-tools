@@ -1,2 +1,6 @@
--   consider what happens in the new system if the file doesn't get opened for a number of days
--   alpha test!
+general:
+	-   consider what happens in the new system if the file doesn't get opened for a number of days @done(22-01-24 13:45)
+	-   alpha test! @done(22-01-24 13:45)
+
+fix:
+	- in adjacent mode, creates multiples

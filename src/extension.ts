@@ -139,13 +139,19 @@ export function activate(context: vscode.ExtensionContext) {
             ////////////////////////////////////
             var futureTasks = getFutureTasks(items);
 
+            // process any updates from getFutureTasks
+            await processUpdates(items, textEditor);
+
             if (settings.recurringItemsAdjacent()) {
                 // option: create the future tasks adjacent to the current ones
 
-                // go from bottom to top
-                const sorted = futureTasks.sort(
-                    (taskA, taskB) => taskB.index.line - taskA.index.line
-                );
+                const sorted = futureTasks
+                    // filter to remove tasks that already exist
+                    .filter((task) => !items?.containsItem(task))
+                    // sort from bottom to top
+                    .sort(
+                        (taskA, taskB) => taskB.index.line - taskA.index.line
+                    );
 
                 for (const task of sorted) {
                     await insertLineAfter(
@@ -157,9 +163,6 @@ export function activate(context: vscode.ExtensionContext) {
             } else {
                 // option: copy the future tasks to the future
                 var futureString = futureTasks.map((node) => node.toString());
-
-                // process any updates
-                await processUpdates(items, textEditor);
 
                 /// 2. ADD FUTURES
                 // remove anything that's already in the future section,
