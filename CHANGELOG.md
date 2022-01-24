@@ -13,6 +13,10 @@ All notable changes to the "todo-tools" extension will be documented in this fil
 
 -   project parsing bug
 
+### removed
+
+-   references to YAML
+
 ## [0.4.3] - 2022-01-16
 
 ### added
