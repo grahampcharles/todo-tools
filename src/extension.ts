@@ -6,6 +6,7 @@ import {
     addLinesToSection,
     replaceLine,
     editorLines,
+    insertLineAfter,
 } from "./editor-utils";
 import { getSectionLineNumber, stringToLines } from "./strings";
 import {
@@ -134,24 +135,42 @@ export function activate(context: vscode.ExtensionContext) {
                 return false;
             }
 
-            // 1. copy FUTURE tasks to Future
+            // 1. get FUTURE tasks
             ////////////////////////////////////
             var futureTasks = getFutureTasks(items);
-            var futureString = futureTasks.map((node) => node.toString());
 
-            // process any updates
-            await processUpdates(items, textEditor);
+            if (settings.recurringItemsAdjacent()) {
+                // option: create the future tasks adjacent to the current ones
 
-            /// 2. ADD FUTURES
-            // remove anything that's already in the future section,
-            // and deduplicate
-            futureString = futureString
-                .filter((v) => !future.includes(v))
-                .filter((v, i, a) => a.indexOf(v) === i);
+                // go from bottom to top
+                const sorted = futureTasks.sort(
+                    (taskA, taskB) => taskB.index.line - taskA.index.line
+                );
 
-            // add futures
-            await addLinesToSection(textEditor, "Future", futureString);
+                for (const task of sorted) {
+                    await insertLineAfter(
+                        textEditor,
+                        task.index.line,
+                        task.toString()
+                    );
+                }
+            } else {
+                // option: copy the future tasks to the future
+                var futureString = futureTasks.map((node) => node.toString());
 
+                // process any updates
+                await processUpdates(items, textEditor);
+
+                /// 2. ADD FUTURES
+                // remove anything that's already in the future section,
+                // and deduplicate
+                futureString = futureString
+                    .filter((v) => !future.includes(v))
+                    .filter((v, i, a) => a.indexOf(v) === i);
+
+                // add futures
+                await addLinesToSection(textEditor, "Future", futureString);
+            }
             // 3. move DUE tasks to Today
             ///////////////////////////////
 

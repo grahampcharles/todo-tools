@@ -2,6 +2,18 @@
 
 All notable changes to the "todo-tools" extension will be documented in this file.
 
+## Unreleased -
+
+## add
+
+-   sort every section by @due
+
+## [0.4.7] - 2022-01-23
+
+### added
+
+-   generate "future" items adjacent to existing items
+
 ## [0.4.6] - 2022-01-23
 
 ### added
@@ -103,7 +115,7 @@ All notable changes to the "todo-tools" extension will be documented in this fil
 
 ### added:
 
--   autosave when auto-running
+-   auto-save when auto-running
 -   auto-rerun every hour if file is open
 
 ## [0.0.8] - 2021-02-20

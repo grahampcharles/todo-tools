@@ -83,6 +83,20 @@ export async function addLinesToSection(
     return vscode.workspace.applyEdit(edit);
 }
 
+export async function insertLineAfter(
+    textEditor: vscode.TextEditor,
+    line: number,
+    text: string
+): Promise<boolean> {
+    const edit = new vscode.WorkspaceEdit();
+    edit.insert(
+        textEditor.document.uri,
+        new vscode.Position(line + 1, 0),
+        `${text}\n`
+    );
+    return vscode.workspace.applyEdit(edit);
+}
+
 export async function replaceLine(
     textEditor: vscode.TextEditor,
     line: number,

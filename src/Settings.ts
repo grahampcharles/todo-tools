@@ -13,6 +13,9 @@ export class Settings {
     archiveDoneItems(): boolean {
         return this.config.archiveDoneItems;
     }
+    recurringItemsAdjacent(): boolean {
+        return this.config.recurringItemsAdjacent;
+    }
     autoRunInterval(): number {
         return (
             Math.min(Math.max(this.config.autoRunInterval, 1), 24) *

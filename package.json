@@ -3,7 +3,7 @@
     "displayName": "ToDo-Tools",
     "publisher": "grahampcharles",
     "description": "Auxiliary functions for taskpaper documents.",
-    "version": "0.4.6",
+    "version": "0.4.7",
     "repository": {
         "type": "git",
         "url": "https://github.com/grahampcharles/todo-tools.git"
@@ -28,6 +28,11 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Process files whenever they are opened."
+                },
+                "todotools.recurringItemsAdjacent": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Generate recurring items adjacent to the original item, rather than in the Future project."
                 },
                 "todotools.autoRun": {
                     "type": "boolean",
