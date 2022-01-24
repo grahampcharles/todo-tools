@@ -99,11 +99,13 @@ export function getDoneTasks(
     // does this node have children? if so, act on the children
     if (node.children !== undefined) {
         // add the project name to the parser
-        if (node.type === "project") {
-            projectName.push(node.value || "Untitled Project");
-        }
+        const newProjectName = [
+            ...projectName,
+            ...(node.type === "project" ? [node.value || "Untitled"] : []),
+        ];
+
         node.children.forEach((childNode) =>
-            results.push(...getDoneTasks(childNode, projectName))
+            results.push(...getDoneTasks(childNode, newProjectName))
         );
     }
 
