@@ -3,7 +3,7 @@
     "displayName": "ToDo-Tools",
     "publisher": "grahampcharles",
     "description": "Auxiliary functions for taskpaper documents.",
-    "version": "0.4.9",
+    "version": "0.4.10",
     "repository": {
         "type": "git",
         "url": "https://github.com/grahampcharles/todo-tools.git"
@@ -50,6 +50,11 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Archive @done items while processing recurring items."
+                },
+                "todotools.sortFutureItems": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Sort @due items by due date to the end of their projects."
                 }
             }
         },
