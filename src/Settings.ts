@@ -1,37 +1,33 @@
 import * as vscode from "vscode";
 
 export class Settings {
-    autoRun(): boolean {
+    private getValue<T>(key: string, defaultValue: T): T {
         return (
-            vscode.workspace.getConfiguration("todotools").get("autoRun") ??
-            true
+            vscode.workspace.getConfiguration("todotools").get(key) ??
+            defaultValue
         );
+    }
+
+    autoRun(): boolean {
+        return this.getValue("autoRun", true);
     }
     runOnOpen(): boolean {
-        return (
-            vscode.workspace.getConfiguration("todotools").get("runOnOpen") ??
-            true
-        );
+        return this.getValue("runOnOpen", true);
     }
     archiveDoneItems(): boolean {
-        return (
-            vscode.workspace
-                .getConfiguration("todotools")
-                .get("archiveDoneItems") ?? true
-        );
+        return this.getValue("archiveDoneItems", true);
     }
+
+    sortFutureItems(): boolean {
+        return this.getValue("sortFutureItems", true);
+    }
+
     recurringItemsAdjacent(): boolean {
-        return (
-            vscode.workspace
-                .getConfiguration("todotools")
-                .get("recurringItemsAdjacent") ?? true
-        );
+        return this.getValue("recurringItemsAdjacent", true);
     }
+
     autoRunInterval(): number {
-        const ret: number =
-            vscode.workspace
-                .getConfiguration("todotools")
-                .get("autoRunInterval") ?? 10;
+        const ret: number = this.getValue("autoRunInterval", 10);
         return Math.min(Math.max(ret, 1), 3600);
     }
 
