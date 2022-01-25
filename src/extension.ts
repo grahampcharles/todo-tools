@@ -7,14 +7,18 @@ import {
     replaceLine,
     editorLines,
     insertLineAfter,
+    insertLinesAfter,
 } from "./editor-utils";
 import { getSectionLineNumber, stringToLines } from "./strings";
 import {
     getDoneTasks,
-    getDueTasks,
+    getNewDueTasks,
     getFutureTasks,
     getUpdates,
     parseTaskDocument,
+    filterProjects,
+    getDueTasks,
+    dueSort,
 } from "./taskpaper-parsing";
 import { TaskPaperNode } from "task-parser/build/TaskPaperNode";
 
@@ -180,6 +184,7 @@ export function activate(context: vscode.ExtensionContext) {
                 // add futures
                 await addLinesToSection(textEditor, "Future", futureString);
             }
+
             // 3. move DUE tasks to Today
             ///////////////////////////////
 
@@ -190,10 +195,10 @@ export function activate(context: vscode.ExtensionContext) {
             }
 
             // get newly due items
-            const due = getDueTasks(items);
+            const due = getNewDueTasks(items);
 
             // process any node updates
-            // TODO: that this will cause badness if Today is not the first section!
+            // TODO: note that this will cause badness if Today is not the first section!
             await processUpdates(items, textEditor);
 
             // add the new lines to the today section
@@ -207,7 +212,8 @@ export function activate(context: vscode.ExtensionContext) {
             /////////////////////////////////
 
             if (settings.archiveDoneItems()) {
-                // re-parse document to account for changes in part 1
+                // TODO: fix re-parsing so it doesn't happen every time
+                // re-parse document to account for changes
                 items = await parseTaskDocument(textEditor);
                 if (items === undefined) {
                     return false;
@@ -225,6 +231,49 @@ export function activate(context: vscode.ExtensionContext) {
                     "Archive",
                     done.map((item) => item.toString())
                 );
+            }
+
+            // 5. sort DUE tasks by die date
+            if (settings.sortFutureItems()) {
+                // re-parse document to account for changes
+                items = await parseTaskDocument(textEditor);
+                if (items === undefined) {
+                    return false;
+                }
+
+                // get done items from all non-archive projects
+                const projects = filterProjects(items);
+
+                // for all the projects from bottom to top, get the due tasks
+                projects.sort((a: TaskPaperNode, b: TaskPaperNode) => {
+                    return b.index.line - a.index.line;
+                });
+
+                for (const projectNode of projects) {
+                    const due = getDueTasks(projectNode);
+
+                    if (due.length > 0) {
+                        due.forEach((dueNode) =>
+                            dueNode.setTag("action", "DELETE")
+                        );
+
+                        await insertLinesAfter(
+                            textEditor,
+                            projectNode.lastLine(),
+                            [
+                                ...due
+                                    .sort(dueSort)
+                                    .map((dueNode) =>
+                                        dueNode.toString(["action"])
+                                    ),
+                                "",
+                            ]
+                        );
+
+                        // process any node updates
+                        await processUpdates(items, textEditor);
+                    }
+                }
             }
         }
 
@@ -256,6 +305,7 @@ async function processUpdates(
                 updateNode.toString(["action"])
             );
         }
+        updateNode.removeTag("action"); // handled
     }
     return true;
 }

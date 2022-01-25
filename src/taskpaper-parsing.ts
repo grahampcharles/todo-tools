@@ -36,6 +36,28 @@ export async function parseTaskDocument(
     }
 }
 
+export function filterProjects(node: TaskPaperNode): TaskPaperNode[] {
+    // returns only project nodes, flattened; skips Archive
+    const results = new Array<TaskPaperNode>();
+
+    // does this node have children? if so, act on the children
+    // but skip the Archive project
+    if (!(node.type === "project" && node.value?.toLowerCase() === "archive")) {
+        if (node.children !== undefined) {
+            node.children.forEach((childNode) =>
+                results.push(...filterProjects(childNode))
+            );
+        }
+    }
+
+    // only act on projects
+    if (node.type !== "project") {
+        return results;
+    }
+    results.push(node);
+    return results;
+}
+
 /**
  *Returns all tasks that are @due today or earlier, not @done, and not in "Today"
  *
@@ -43,7 +65,7 @@ export async function parseTaskDocument(
  * @param {TaskPaperNode} node
  * @return {*}  {TaskPaperNode[]}
  */
-export function getDueTasks(node: TaskPaperNode): TaskPaperNode[] {
+export function getNewDueTasks(node: TaskPaperNode): TaskPaperNode[] {
     const results = new Array<TaskPaperNode>();
 
     // does this node have children? if so, act on the children
@@ -51,7 +73,7 @@ export function getDueTasks(node: TaskPaperNode): TaskPaperNode[] {
     if (!(node.type === "project" && node.value?.toLowerCase() === "today")) {
         if (node.children !== undefined) {
             node.children.forEach((childNode) =>
-                results.push(...getDueTasks(childNode))
+                results.push(...getNewDueTasks(childNode))
             );
         }
     }
@@ -79,6 +101,23 @@ export function getDueTasks(node: TaskPaperNode): TaskPaperNode[] {
     }
 
     return results;
+}
+
+/**
+ *Returns all tasks that are @due and not @done; does *not* recurse
+ *
+ * @export
+ * @param {TaskPaperNode} node
+ * @return {*}  {TaskPaperNode[]}
+ */
+export function getDueTasks(node: TaskPaperNode): TaskPaperNode[] {
+    // return any direct-child tasks that are due on or before today
+    return node.children.filter(
+        (childNode: TaskPaperNode) =>
+            childNode.type === "task" &&
+            childNode.hasTag("due") &&
+            !childNode.hasTag("done")
+    );
 }
 
 export function getDoneTasks(
@@ -220,4 +259,11 @@ export function removeDuplicates(
     return nodeList.filter((node) => {
         return !masterNode.containsItem(node);
     });
+}
+
+export function dueSort(a: TaskPaperNode, b: TaskPaperNode) {
+    if (!a.hasTag("due") || !b.hasTag("due")) {
+        return 0;
+    }
+    return dayjs(b.tagValue("due")).isSameOrBefore(a.tagValue("due")) ? 1 : -1;
 }
