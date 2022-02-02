@@ -1,12 +1,12 @@
 Today:
 	- item #3 has no due date
+	- item #11 @recur(2) @due(2022-01-27)
 	- item #6 @annual(11/1) @due(2022-11-01)
 	- item #4 already has a due date @due(2022-11-02)
 	- item #1 @recur(2) @due(2022-11-03)
 
 Tomorrow:
 	- item #13 has no due date
-	- item #11 @recur(2) @due(2022-01-27)
 	- item #12 @annual(11/1) @due(2022-11-01)
 	- item #14 already has a due date @due(2022-11-02)
 

@@ -4,8 +4,19 @@ The `todotools` extension adds some task list management shortcuts for TaskPaper
 
 ## Features
 
-** Thoughts **:
-The copy-to-Today could be optional; could also copy in place to the same project
+### Settings
+
+Along with the settings at the User or Workspace level, this app allows each taskpaper document to have its own settings section. To override one or more settings per-document, create a top-level section called _Settings_ and populate it with note nodes (that is, without any task prefix like `-` or `*`) with any of the following key-value pairs:
+
+```
+Settings:
+  autoRun=true
+  runOnOpen=false
+  archiveDoneItems=true
+  sortFutureItems=true
+  recurringItemsAdjacent=true
+  autoRunInterval=15
+```
 
 **Copy Daily Tasks to Today**
 : This task will copy any completed tasks with certain tags back into the "Today" section, unless they are already there. This allows you to create daily, monthly, or annual tasks (e.g. "Feed the cat") without having to re-type them.

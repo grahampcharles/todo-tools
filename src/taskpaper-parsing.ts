@@ -1,5 +1,4 @@
 import * as vscode from "vscode";
-
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
@@ -34,6 +33,16 @@ export async function parseTaskDocument(
         await vscode.window.showInformationMessage(error.toString());
         return undefined;
     }
+}
+
+// returns a top-level project with the given name
+export function getProjectByName(
+    node: TaskPaperNode,
+    name: string
+): TaskPaperNode | undefined {
+    return node.children.find(
+        (node: TaskPaperNode) => node.type === "project" && node.value === name
+    );
 }
 
 export function filterProjects(node: TaskPaperNode): TaskPaperNode[] {

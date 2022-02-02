@@ -2,6 +2,11 @@
 
 All notable changes to the "todo-tools" extension will be documented in this file.
 
+## [0.5.1] - 2022-02-02
+
+### add
+- document-specific settings section
+
 ## [0.4.10] - 2022-01-25
 
 ### add

@@ -32,9 +32,17 @@ var loopCount: number = 0;
  * @export
  * @param {vscode.ExtensionContext} context
  */
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
     // get reference to the active text editor
     const textEditor = vscode.window.activeTextEditor;
+
+    // update settings from current document
+    if (textEditor) {
+        const doc = await parseTaskDocument(textEditor);
+        if (doc) {
+            settings.update(doc);
+        }
+    }
 
     // if there is one, then perform a copy
     if (textEditor && settings.autoRun()) {

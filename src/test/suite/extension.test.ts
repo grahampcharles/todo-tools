@@ -23,7 +23,9 @@ import {
 } from "../../strings";
 import { getDoneTasks } from "../../taskpaper-parsing";
 import { TaskPaperNode } from "task-parser/build/TaskPaperNode";
-import { testDone } from "./testData";
+import { testDone, testSettings } from "./testData";
+import { Settings } from "../../Settings";
+import { parseTaskPaper } from "task-parser/build";
 
 suite("Extension Test Suite", () => {
     vscode.window.showInformationMessage("Start all tests.");
@@ -132,5 +134,17 @@ suite("Extension Test Suite", () => {
         const test = `line 1\nline 2\t\nline 3  \n\nline 4`;
         const result = stripTrailingWhitespace(test);
         expect(result).eq(`line 1\nline 2\nline 3\n\nline 4`);
+    });
+
+    it("settings", () => {
+        const test = new Settings();
+        const settingsNode = parseTaskPaper(testSettings);
+        test.update(settingsNode);
+        expect(test.autoRun()).eq(false);
+        expect(test.runOnOpen()).eq(false);
+        expect(test.archiveDoneItems()).eq(false);
+        expect(test.sortFutureItems()).eq(false);
+        expect(test.recurringItemsAdjacent()).eq(false);
+        expect(test.autoRunInterval()).eq(45);
     });
 });

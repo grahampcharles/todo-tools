@@ -17,3 +17,17 @@ export const testDone = `Today:
 
 Later:
   - third @done`;
+
+export const testSettings = `Today:
+- first @done
+SubProject:
+  - second @done
+  - this one is not
+
+Settings:
+  autoRun=false
+  runOnOpen=false
+  archiveDoneItems=false
+  sortFutureItems=false
+  recurringItemsAdjacent=false
+  autoRunInterval=45`;
