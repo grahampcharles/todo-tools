@@ -2,6 +2,16 @@
 
 All notable changes to the "todo-tools" extension will be documented in this file.
 
+
+## [0.5.2] - unreleased
+
+### add 
+- normalize dates in the form ["today", "tomorrow", "yesterday", "2/3", ]
+
+### fix 
+- recurring items adjacent not working
+- duplicating items
+
 ## [0.5.1] - 2022-02-02
 
 ### add

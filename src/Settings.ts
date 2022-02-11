@@ -33,10 +33,11 @@ export class Settings {
     }
     autoRunInterval(): number {
         const ret: number = this.getValue("autoRunInterval", 10);
-        return Math.min(Math.max(ret, 1), 3600);
+        return Math.min(Math.max(ret, 1), 1440);
     }
 
     update(settingsDocument: TaskPaperNode): void {
+        console.log("updating settings");
         const settings = getProjectByName(settingsDocument, "Settings");
         this._docOverrides.clear(); // clear current overrides
         if (settings === undefined) {

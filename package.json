@@ -3,7 +3,7 @@
     "displayName": "ToDo-Tools",
     "publisher": "grahampcharles",
     "description": "Auxiliary functions for taskpaper documents.",
-    "version": "0.4.10",
+    "version": "0.5.2",
     "repository": {
         "type": "git",
         "url": "https://github.com/grahampcharles/todo-tools.git"
@@ -17,7 +17,8 @@
     "activationEvents": [
         "onCommand:todotools.processTasks",
         "onCommand:todotools.runOnOpen",
-        "onLanguage:todo"
+        "onLanguage:todo",
+        "onLanguage:taskpaper"
     ],
     "main": "./dist/extension.js",
     "contributes": {
@@ -43,7 +44,7 @@
                     "type": "number",
                     "default": 10,
                     "minimum": 1,
-                    "maximum": 3600,
+                    "maximum": 1440,
                     "description": "Number of minutes between automatically checking files."
                 },
                 "todotools.archiveDoneItems": {
@@ -66,6 +67,19 @@
             {
                 "command": "todotools.runOnOpen",
                 "title": "ToDo Tools: Simulate On Open"
+            }
+        ],
+        "languages": [
+            {
+                "id": "todo",
+                "extensions": [
+                    ".todo",
+                    ".taskpaper"
+                ],
+                "aliases": [
+                    "todo"
+                ],
+                "filenames": []
             }
         ]
     },
