@@ -27,7 +27,7 @@
             "properties": {
                 "todotools.runOnOpen": {
                     "type": "boolean",
-                    "default": true,
+                    "default": false,
                     "description": "Process files whenever they are opened."
                 },
                 "todotools.recurringItemsAdjacent": {
@@ -37,7 +37,7 @@
                 },
                 "todotools.autoRun": {
                     "type": "boolean",
-                    "default": true,
+                    "default": false,
                     "description": "Automatically check files every few minutes while they are open."
                 },
                 "todotools.autoRunInterval": {
@@ -49,7 +49,7 @@
                 },
                 "todotools.archiveDoneItems": {
                     "type": "boolean",
-                    "default": true,
+                    "default": false,
                     "description": "Archive @done items while processing recurring items."
                 },
                 "todotools.sortFutureItems": {

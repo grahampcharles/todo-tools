@@ -36,8 +36,7 @@ export async function activate(context: vscode.ExtensionContext) {
     console.log("activate");
 
     // start by running code once
-    // TODO: necessary?
-    processDocument(true);
+    documentOnOpen();
 
     //  register commands
     let disposable = vscode.commands.registerCommand(
@@ -53,23 +52,24 @@ export async function activate(context: vscode.ExtensionContext) {
 
     // re-run on open a new document
     context.subscriptions.push(
-        vscode.workspace.onDidOpenTextDocument((doc: vscode.TextDocument) => {
-            processDocument(true);
-        })
+        vscode.workspace.onDidOpenTextDocument(
+            async (doc: vscode.TextDocument) => {
+                documentOnOpen();
+            }
+        )
     );
 
     // set a timer to do the automatic re-run interval
-    consoleChannel.appendLine("auto-run interval set");
-    // set the auto-run function to run
-    setInterval(processDocument, 1000 * 60); // run every x minutes
+    setInterval(documentOnEveryMinute, 1000 * 10); // run every minute
 
     // implement a mock "pretend we just opened" command
     disposable = vscode.commands.registerCommand("todotools.runOnOpen", () => {
         let textEditor = vscode.window.activeTextEditor;
         if (textEditor) {
-            automaticPerformCopy(textEditor);
+            performCopyAndSave(textEditor);
         }
     });
+
     context.subscriptions.push(disposable);
 }
 
@@ -77,45 +77,46 @@ export async function activate(context: vscode.ExtensionContext) {
 /// FUNCTIONS //
 ////////////////
 
-// automatic re-run function
-function processDocument(forceStart: boolean = false) {
-    consoleChannel.appendLine("auto-run called");
+function documentOnOpen() {
     const textEditor = vscode.window.activeTextEditor;
-    if (!textEditor) {
-        return;
-    }
-    if (!["todo", "taskpaper"].includes(textEditor.document.languageId)) {
-        return;
-    }
-
-    // update settings from the currently-opened document
-    updateSettings(textEditor);
-
-    loopCount++;
-    if (forceStart || loopCount >= settings.autoRunInterval()) {
-        loopCount = 0; // reset counter
-        automaticPerformCopy(textEditor);
-    }
+    updateSettings(textEditor).then(() => {
+        if (textEditor && settings.runOnOpen()) {
+            performCopyAndSave(textEditor);
+        }
+    });
 }
 
-/**
- *Automatically run the copy and then save.
- * @param {vscode.TextEditor} editor
- */
-function automaticPerformCopy(editor: vscode.TextEditor) {
-    performCopyAndSave(editor);
+function documentOnEveryMinute() {
+    console.log("one minute...");
+
+    const textEditor = vscode.window.activeTextEditor;
+
+    // in case they were manually changed
+    updateSettings(textEditor).then(() => {
+        if (textEditor && settings.autoRun()) {
+            loopCount++;
+            if (loopCount >= settings.autoRunInterval()) {
+                loopCount = 0; // reset counter
+                performCopyAndSave(textEditor);
+            }
+        }
+    });
 }
 
 /**
  * Perform the copy of items to the Today section,
  * Save the results
  *
- * @param {vscode.TextEditor} editor
+ * @param {vscode.TextEditor} textEditor
  */
-function performCopyAndSave(editor: vscode.TextEditor) {
+function performCopyAndSave(textEditor: vscode.TextEditor) {
+    if (!["todo", "taskpaper"].includes(textEditor.document.languageId)) {
+        return;
+    }
+
     try {
-        performCopy(editor)
-            .then(async () => editor.document.save())
+        performCopy(textEditor)
+            .then(async () => textEditor.document.save())
             .catch((reason: any) => {
                 if (reason instanceof Error) {
                     console.log(reason.message);
@@ -152,7 +153,7 @@ async function performCopy(textEditor: vscode.TextEditor): Promise<boolean> {
     }
 
     // update settings
-    updateSettings(textEditor);
+    await updateSettings(textEditor);
 
     // 1. get FUTURE tasks
     ////////////////////////////////////

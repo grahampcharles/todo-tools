@@ -1,6 +1,8 @@
 Today:
 	- item #3 has no due date
-	- item #11 @recur(2) @due(2022-01-27)
+	- item #11 @done(2022-02-10)
+	- item #11 @due(2022-02-12) @done(22-02-11 14:00)
+	- item #11 @recur(2) @due(2022-02-13)
 	- item #6 @annual(11/1) @due(2022-11-01)
 	- item #4 already has a due date @due(2022-11-02)
 	- item #1 @recur(2) @due(2022-11-03)
@@ -18,3 +20,6 @@ Archive:
 	- item #2 @due(2022-01-26) @done(22-01-24 14:19) @project(Today)
 	- item #4 @due(2022-11-01) @done(22-01-24 14:19) @project(Today)
 	- item #2 @due(2022-01-24) @done(22-01-24 14:01) @project(Today)
+
+Settings:
+	autoRun=true

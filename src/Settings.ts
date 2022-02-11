@@ -17,7 +17,7 @@ export class Settings {
     }
 
     autoRun(): boolean {
-        return this.getValue("autoRun", true);
+        return this.getValue("autoRun", false);
     }
     runOnOpen(): boolean {
         return this.getValue("runOnOpen", true);
