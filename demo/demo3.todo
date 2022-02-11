@@ -23,3 +23,4 @@ Archive:
 
 Settings:
 	autoRun=true
+	autoRunInterval=3

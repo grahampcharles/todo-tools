@@ -46,24 +46,26 @@ export function getProjectByName(
 }
 
 export function filterProjects(node: TaskPaperNode): TaskPaperNode[] {
-    // returns only project nodes, flattened; skips Archive
+    // returns only project nodes, flattened;
     const results = new Array<TaskPaperNode>();
 
-    // does this node have children? if so, act on the children
-    // but skip the Archive project
-    if (!(node.type === "project" && node.value?.toLowerCase() === "archive")) {
-        if (node.children !== undefined) {
-            node.children.forEach((childNode) =>
-                results.push(...filterProjects(childNode))
-            );
-        }
-    }
-
-    // only act on projects
-    if (node.type !== "project") {
+    // skip Archive
+    if (node.type === "project" && node.value?.toLowerCase() === "archive") {
         return results;
     }
-    results.push(node);
+
+    // does this node have children? if so, act on the children
+    if (node.children !== undefined) {
+        node.children.forEach((childNode) =>
+            results.push(...filterProjects(childNode))
+        );
+    }
+
+    // only push projects on the stack
+    if (node.type === "project") {
+        results.push(node);
+    }
+
     return results;
 }
 

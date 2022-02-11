@@ -9,6 +9,7 @@ All notable changes to the "todo-tools" extension will be documented in this fil
 - normalize dates in the form ["today", "tomorrow", "yesterday", "2/3", ]
 
 ### fix 
+- filter projects returns archive
 - recurring items adjacent not working
 - duplicating items
 

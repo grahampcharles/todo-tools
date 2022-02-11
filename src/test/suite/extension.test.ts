@@ -21,11 +21,11 @@ import {
     stringToLines,
     stripTrailingWhitespace,
 } from "../../strings";
-import { getDoneTasks } from "../../taskpaper-parsing";
 import { TaskPaperNode } from "task-parser/build/TaskPaperNode";
 import { testDone, testSettings } from "./testData";
 import { Settings } from "../../Settings";
 import { parseTaskPaper } from "task-parser/build";
+import { getDoneTasks } from "../../taskpaper-parsing";
 
 suite("Extension Test Suite", () => {
     vscode.window.showInformationMessage("Start all tests.");

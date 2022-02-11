@@ -241,7 +241,7 @@ async function performCopy(textEditor: vscode.TextEditor): Promise<boolean> {
         );
     }
 
-    // 5. sort DUE tasks by die date
+    // 5. sort DUE tasks by due date
     if (settings.sortFutureItems()) {
         // re-parse document to account for changes
         items = await parseTaskDocument(textEditor);
