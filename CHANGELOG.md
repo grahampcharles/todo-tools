@@ -3,7 +3,8 @@
 All notable changes to the "todo-tools" extension will be documented in this file.
 
 
-## [0.5.2] - unreleased
+## [0.5.3] - unreleased
+
 
 ### add 
 - normalize dates in the form ["today", "tomorrow", "yesterday", "2/3", ]
@@ -12,6 +13,10 @@ All notable changes to the "todo-tools" extension will be documented in this fil
 - filter projects returns archive
 - recurring items adjacent not working
 - duplicating items
+
+## [0.5.2] - interim
+
+This was an interim build to see if my cleanup sorted any of the duplication problems
 
 ## [0.5.1] - 2022-02-02
 
