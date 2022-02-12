@@ -5,7 +5,12 @@ import timezone from "dayjs/plugin/timezone";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import { TaskPaperNode } from "task-parser/build/TaskPaperNode";
 import { parseTaskPaper } from "task-parser/build/index";
-import { cleanDate, getDaysFromRecurrencePattern } from "./dates";
+import {
+    cleanDate,
+    DEFAULT_DATE_FORMAT,
+    getDaysFromRecurrencePattern,
+    todayDay,
+} from "./dates";
 
 // work in the local time zone
 dayjs.extend(utc);
@@ -64,51 +69,6 @@ export function filterProjects(node: TaskPaperNode): TaskPaperNode[] {
     // only push projects on the stack
     if (node.type === "project") {
         results.push(node);
-    }
-
-    return results;
-}
-
-/**
- *Returns all tasks that are @due today or earlier, not @done, and not in "Today"
- *
- * @export
- * @param {TaskPaperNode} node
- * @return {*}  {TaskPaperNode[]}
- */
-export function getNewDueTasks(node: TaskPaperNode): TaskPaperNode[] {
-    const results = new Array<TaskPaperNode>();
-
-    // does this node have children? if so, act on the children
-    // but skip the Today project
-    if (!(node.type === "project" && node.value?.toLowerCase() === "today")) {
-        if (node.children !== undefined) {
-            node.children.forEach((childNode) =>
-                results.push(...getNewDueTasks(childNode))
-            );
-        }
-    }
-
-    // only act on undone tasks
-    if (node.type !== "task" || node.hasTag("done")) {
-        return results;
-    }
-
-    // push any tasks that are due on or before today
-    if (
-        node.hasTag("due") &&
-        cleanDate(node.tagValue("due")).isSameOrBefore(dayjs(), "day")
-    ) {
-        // return a clone of the task
-        const newNode = node.clone();
-        // clear metatags relating to task completion
-        newNode.removeTag(["project", "lasted", "started"]);
-        // force all "Today" nodes to depth 2
-        newNode.depth = 2;
-        results.push(newNode);
-
-        // set the task to be erased
-        node.setTag("action", "DELETE");
     }
 
     return results;
@@ -198,13 +158,31 @@ export function getUpdates(node: TaskPaperNode): TaskPaperNode[] {
 }
 
 // Returns tasks that have a future recurrence flag
-export function getFutureTasks(input: TaskPaperNode): TaskPaperNode[] {
+export function replaceDueTokens(input: TaskPaperNode): void {
+    // only further process tasks that have due dates
+    if (input.type !== "task" || !input.hasTag("due")) {
+        return;
+    }
+
+    // replace date tokens
+    const due = cleanDate(input.tagValue("due"));
+    if (due.isValid()) {
+        const dueFormatted = due.format(DEFAULT_DATE_FORMAT);
+        if (dueFormatted !== input.tagValue("due")) {
+            input.setTag("due", dueFormatted);
+            input.setTag("action", "UPDATE");
+        }
+    }
+}
+
+// processes all tasks
+export function processTaskNode(input: TaskPaperNode): TaskPaperNode[] {
     const results = new Array<TaskPaperNode>();
 
-    // does this node have children? if so, act on the children // TODO: remove undefined
+    // does this node have children? if so, act on the children
     if (input.children !== undefined) {
         input.children.forEach((child) =>
-            results.push(...getFutureTasks(child))
+            results.push(...processTaskNode(child))
         );
     }
 
@@ -213,50 +191,108 @@ export function getFutureTasks(input: TaskPaperNode): TaskPaperNode[] {
         return results;
     }
 
-    // clone the node
-    const newNode = input.clone();
+    // handle special @due tokens
+    replaceDueTokens(input);
 
-    // filter for the recurring events (recur OR annual)
-    // that have been done OR don't have a due date
+    // if there's a due date and no done date,
+    // stop processing; we don't recur any task
+    // that's due and undone
+    if (input.hasTag("due") && !input.hasTag("done")) {
+        return results;
+    }
+
+    // check for a recurrence pattern
+    if (input.hasTag(["recur", "annual"])) {
+        // Get the "source date" -- the day
+        // after which to generate the next task
+        // This is the date the task was last done,
+        // or if that's unknown, then today.
+        var sourceDate = cleanDate(input.tagValue("done"));
+
+        /// next recurrence date
+        const nextDate = cleanDate(
+            input.tagValue("recur") || input.tagValue("annual") || "1",
+            sourceDate
+        );
+
+        /// case 1: already @done, so clone the node
+        if (input.hasTag("done")) {
+            // clone the node
+            const newNode = input.clone();
+
+            newNode.removeTag(["done", "started", "lasted"]);
+            newNode.setTag("due", nextDate.format(DEFAULT_DATE_FORMAT));
+
+            // add new node to results
+            results.push(newNode);
+
+            // clear the recurrence from the original
+            input.removeTag(["recur", "annual"]);
+        } else {
+            /// case 2: not yet @done, so just set the due date
+            input.setTag("due", nextDate.format(DEFAULT_DATE_FORMAT));
+        }
+
+        /// set update flag
+        input.setTag("action", "UPDATE");
+    }
+
+    return results;
+}
+
+// Returns tasks should move to Today
+export function getNewTodays(input: TaskPaperNode): TaskPaperNode[] {
+    const results = new Array<TaskPaperNode>();
+
+    // skip Today project
+    if (input.type === "project" && input.value === "Today") {
+        return results;
+    }
+
+    // does this node have children? if so, act on the children
+    input.children.forEach((child) => results.push(...getNewTodays(child)));
+
+    // if this is a task where due <= today, then add it to the list
     if (
-        newNode.hasTag(["recur", "annual"]) &&
-        (!newNode.hasTag("due") || newNode.hasTag("done"))
+        input.type === "task" &&
+        input.hasTag("due") &&
+        cleanDate(input.tagValue("due")).isSameOrBefore(todayDay)
     ) {
-        // get the updated due date; default to now
-        var due: dayjs.Dayjs = dayjs(""); // intentionally invalid
-
-        if (newNode.hasTag("recur")) {
-            due = cleanDate(newNode.tagValue("done") || undefined);
-            due = due.add(
-                getDaysFromRecurrencePattern(newNode.tagValue("recur"), due),
-                "day"
-            );
-        }
-        if (newNode.hasTag("annual")) {
-            due = cleanDate(newNode.tagValue("annual")).year(dayjs().year());
-            if (due.isBefore(dayjs())) {
-                due = due.add(1, "year");
-            }
-        }
-
-        // valid due date?
-        if (!due.isValid()) {
-            return results;
-        }
-
-        // set the updated due date
-        newNode.setTag("due", due.format("YYYY-MM-DD"));
-
-        // remove the recur flag from the current location
-        input.removeTag(["recur", "annual"]);
-
-        // if there's a @done, flag this item to be updated in its current location;
-        // otherwise, flag this item to be deleted from its current location
-        input.setTag("action", input.hasTag("done") ? "UPDATE" : "DELETE");
-
-        // copy this item without @done, @lasted, @started
-        newNode.removeTag(["done", "lasted", "started"]);
+        const newNode = input.clone();
+        newNode.depth = 2;
         results.push(newNode);
+
+        // delete from the original spot
+        input.setTag("action", "DELETE");
+    }
+
+    return results;
+}
+
+// Returns tasks should move to Future
+export function getNewFutures(input: TaskPaperNode): TaskPaperNode[] {
+    const results = new Array<TaskPaperNode>();
+
+    // skip Today project
+    if (input.type === "project" && input.value !== "Today") {
+        return results;
+    }
+
+    // does this node have children? if so, act on the children
+    input.children.forEach((child) => results.push(...getNewFutures(child)));
+
+    // if this is a task where due <= today, then add it to the list
+    if (
+        input.type === "task" &&
+        input.hasTag("due") &&
+        cleanDate(input.tagValue("due")).isAfter(todayDay)
+    ) {
+        const newNode = input.clone();
+        newNode.depth = 2;
+        results.push(newNode);
+
+        // delete from the original spot
+        input.setTag("action", "DELETE");
     }
 
     return results;

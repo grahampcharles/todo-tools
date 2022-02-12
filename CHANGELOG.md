@@ -3,11 +3,11 @@
 All notable changes to the "todo-tools" extension will be documented in this file.
 
 
-## [0.5.3] - unreleased
-
+## [0.5.3] - 2022-02-11
 
 ### add 
-- normalize dates in the form ["today", "tomorrow", "yesterday", "2/3", ]
+- normalize dates in the form ["today", "tomorrow", "yesterday", "2/3", etc. ]
+- re-worked and clarified the code
 
 ### fix 
 - filter projects returns archive

@@ -26,14 +26,17 @@ import { testDone, testSettings } from "./testData";
 import { Settings } from "../../Settings";
 import { parseTaskPaper } from "task-parser/build";
 import { getDoneTasks } from "../../taskpaper-parsing";
+import dayjs from "dayjs";
 
 suite("Extension Test Suite", () => {
     vscode.window.showInformationMessage("Start all tests.");
 
     it("clean date", () => {
+        const thisYear = new Date().getFullYear();
+
         const date1 = cleanDate("1/11");
-        expect(date1.year()).eq(2001);
-        expect(date1.format("YYYY-MM-DD")).eq(`2001-01-11`);
+        expect(date1.year()).eq(thisYear);
+        expect(date1.format("YYYY-MM-DD")).eq(`${thisYear}-01-11`);
 
         const date2 = cleanDate("22-01-13 13:45");
         expect(date2.format("YYYY-MM-DD HH:mm")).eq("2022-01-13 13:45");
@@ -103,6 +106,36 @@ suite("Extension Test Suite", () => {
         expect(daysUntilWeekday(2, day)).to.equal(7, "until Tuesday");
         expect(daysUntilWeekday(3, day)).to.equal(1, "until Wednesday");
         expect(daysUntilWeekday(0, day)).to.equal(5, "until Sunday");
+    });
+
+    it("clean date", () => {
+        const today = new Date();
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const dayAfterTomorrow = new Date();
+        dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2);
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+
+        // "sv" -> Sweden, which formats as YYYY-MM-DD
+        expect(cleanDate("today").format("YYYY-MM-DD")).to.equal(
+            today.toLocaleDateString("sv")
+        );
+        expect(cleanDate("tomorrow").format("YYYY-MM-DD")).to.equal(
+            tomorrow.toLocaleDateString("sv")
+        );
+        expect(cleanDate("1").format("YYYY-MM-DD")).to.equal(
+            tomorrow.toLocaleDateString("sv")
+        );
+        expect(cleanDate("2").format("YYYY-MM-DD")).to.equal(
+            dayAfterTomorrow.toLocaleDateString("sv")
+        );
+        expect(cleanDate("yesterday").format("YYYY-MM-DD")).to.equal(
+            yesterday.toLocaleDateString("sv")
+        );
+        expect(
+            cleanDate("Monday", dayjs("2022-02-11")).format("YYYY-MM-DD")
+        ).to.equal("2022-02-14");
     });
 
     it("string utilities", () => {

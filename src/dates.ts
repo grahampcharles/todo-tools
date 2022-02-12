@@ -4,6 +4,7 @@ import utc from "dayjs/plugin/utc";
 import timeZone from "dayjs/plugin/timezone";
 import localeData from "dayjs/plugin/localeData";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { removeDuplicates } from "./taskpaper-parsing";
 
 // extend the parse formatter
 dayjs.extend(customParseFormat);
@@ -17,20 +18,64 @@ dayjs.tz.guess();
 const FORMAT_STRINGS = [
     "YYYY-MM-DD hh:mm:ss",
     "YY-MM-DD hh:mm:ss",
+    "YYYY-MM-DD hh:mm",
     "YY-MM-DD hh:mm",
+    "YYYY-MM-DD",
     "YY-MM-DD",
+    "M/D",
+    "M-D",
 ];
 
+const RELATIVE_DAYS = ["yesterday", "today", "tomorrow"];
+export const DEFAULT_DATE_FORMAT = "YYYY-MM-DD";
 export const dayNames = dayjs.weekdays();
 
-export function cleanDate(dayString: string | undefined): dayjs.Dayjs {
+export function cleanDate(
+    dayString: string | undefined,
+    afterDate: dayjs.Dayjs = dayjs()
+): dayjs.Dayjs {
     // attempts to turn the string into a Dayjs object
-    var ret = dayjs(dayString);
-    if (!ret.isValid()) {
-        ret = dayjs(dayString, FORMAT_STRINGS);
+
+    if (dayString === undefined) {
+        return dayjs(dayString);
     }
 
-    return ret;
+    // try a format string
+    var ret = dayjs(dayString, FORMAT_STRINGS);
+    if (ret.isValid()) {
+        return ret;
+    }
+
+    // simple number: just add it
+    const dayOffset = parseInt(dayString);
+    if (!isNaN(dayOffset)) {
+        ret = afterDate.add(dayOffset, "day");
+        if (ret.isValid()) {
+            return ret;
+        }
+    }
+
+    // try a weekday
+    const weekday = dayNameToWeekday(dayString);
+    if (weekday !== -1) {
+        ret = nextWeekday(weekday, afterDate);
+        if (ret.isValid()) {
+            return ret;
+        }
+    }
+
+    // try a relative day name token
+    const relativeDayIndex = RELATIVE_DAYS.findIndex(
+        (item: string) => item === dayString
+    );
+    if (relativeDayIndex !== -1) {
+        ret = afterDate.add(relativeDayIndex - 1, "day"); // -1 because "yesterday" will have an index of 0
+        if (ret.isValid()) {
+            return ret;
+        }
+    }
+
+    return dayjs();
 }
 
 /// returns -1 on nonexistent
@@ -40,7 +85,8 @@ export function dayNameToWeekday(dayName: string): number {
 }
 export function dayNamePluralToWeekday(dayName: string): number {
     // find the singular version of the day name by slicing off the last letter
-    // TODO: i8n; maybe replace with @weekly(Tuesday) or something, since day names are differently pluralized in different languages; e.g. los martes
+    // TODO: i8n; maybe replace with @weekly(Tuesday) or something, since day names
+    // are differently pluralized in different languages; e.g. los martes
     return dayNames.indexOf(dayName.slice(0, -1));
 }
 
@@ -67,18 +113,25 @@ export const todayName = dayNames[todayDay.day()];
 
 export function daysUntilWeekday(
     weekday: number,
-    fromday: dayjs.Dayjs = dayjs()
+    fromDay: dayjs.Dayjs = dayjs()
 ): number {
-    var days = weekday - fromday.day();
+    var days = weekday - fromDay.day();
     if (days <= 0) {
         days = days + 7;
     }
     return days;
 }
+export function nextWeekday(
+    weekday: number,
+    fromDay: dayjs.Dayjs = dayjs()
+): dayjs.Dayjs {
+    const days = daysUntilWeekday(weekday, fromDay);
+    return dayjs().add(days, "day");
+}
 
 export function getDaysFromRecurrencePattern(
     recur: string | undefined,
-    fromday: dayjs.Dayjs = dayjs()
+    fromDay: dayjs.Dayjs = dayjs()
 ): number {
     // what's the new due date?
     if (recur === undefined) {
@@ -93,7 +146,7 @@ export function getDaysFromRecurrencePattern(
         var test = dayNamePluralToWeekday(recur);
         if (test !== -1) {
             // set to be due on the next day of that name
-            return daysUntilWeekday(test, fromday);
+            return daysUntilWeekday(test, fromDay);
         }
     }
 

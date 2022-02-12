@@ -37,7 +37,6 @@ export class Settings {
     }
 
     update(settingsDocument: TaskPaperNode): void {
-        console.log("updating settings");
         const settings = getProjectByName(settingsDocument, "Settings");
         this._docOverrides.clear(); // clear current overrides
         if (settings === undefined) {

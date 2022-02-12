@@ -1,6 +1,5 @@
 import * as vscode from "vscode";
 import { Settings } from "./Settings";
-import { getSection } from "./taskpaper-utils";
 import {
     deleteLine,
     addLinesToSection,
@@ -9,20 +8,19 @@ import {
     insertLineAfter,
     insertLinesAfter,
 } from "./editor-utils";
-import { getSectionLineNumber, stringToLines } from "./strings";
 import {
     getDoneTasks,
-    getNewDueTasks,
-    getFutureTasks,
     getUpdates,
     parseTaskDocument,
     filterProjects,
     getDueTasks,
     dueSort,
+    processTaskNode,
+    getNewTodays,
+    getNewFutures,
 } from "./taskpaper-parsing";
 import { TaskPaperNode } from "task-parser/build/TaskPaperNode";
 
-let consoleChannel = vscode.window.createOutputChannel("ToDoTools");
 const settings = new Settings();
 var minuteCount: number = 0;
 const TIMEOUT_INTERVAL = 60 * 1000; // one minute between runs
@@ -34,8 +32,6 @@ const TIMEOUT_INTERVAL = 60 * 1000; // one minute between runs
  * @param {vscode.ExtensionContext} context
  */
 export async function activate(context: vscode.ExtensionContext) {
-    console.log("activate");
-
     // start by running code once
     documentOnOpen();
 
@@ -102,7 +98,7 @@ function documentOnEveryMinute() {
     });
 
     // re-run in a minute
-    setTimeout(documentOnEveryMinute, TIMEOUT_INTERVAL); // run every minute
+    setTimeout(documentOnEveryMinute, TIMEOUT_INTERVAL);
 }
 
 /**
@@ -138,17 +134,10 @@ function performCopyAndSave(textEditor: vscode.TextEditor) {
  * @return {*}  {Promise<boolean>}
  */
 async function performCopy(textEditor: vscode.TextEditor): Promise<boolean> {
-    // find the today line number
-    if (getSectionLineNumber(editorLines(textEditor), "Today") === undefined) {
-        // no point going on if there's no Today section
-        // TODO: *create* a Today section?
-        return false;
-    }
+    // flag that items have been added; suppress sort if nothing added
+    var itemsAdded = false;
 
-    // get the "future" section
-    var text = textEditor.document.getText();
-    const future = getSection(stringToLines(text), "Future");
-
+    // get items
     var items = await parseTaskDocument(textEditor);
     if (items === undefined) {
         return false;
@@ -157,100 +146,111 @@ async function performCopy(textEditor: vscode.TextEditor): Promise<boolean> {
     // update settings
     await updateSettings(textEditor);
 
-    // 1. get FUTURE tasks
+    // 1. process task node
     ////////////////////////////////////
-    var futureTasks = getFutureTasks(items);
+    const newTasks = processTaskNode(items);
 
-    // process any updates from getFutureTasks
+    // process any task update flags
     await processUpdates(items, textEditor);
 
-    if (settings.recurringItemsAdjacent()) {
-        // option: create the future tasks adjacent to the current ones
+    // 2. insert new tasks in reverse order (so they get
+    // added to the end of the document first)
+    const newTasksSorted = newTasks
+        // filter to remove tasks that already exist
+        .filter((task) => !items?.containsItem(task))
+        // sort from bottom to top
+        .sort((taskA, taskB) => taskB.index.line - taskA.index.line);
 
-        const sorted = futureTasks
-            // filter to remove tasks that already exist
-            .filter((task) => !items?.containsItem(task))
-            // sort from bottom to top
-            .sort((taskA, taskB) => taskB.index.line - taskA.index.line);
-
-        for (const task of sorted) {
-            await insertLineAfter(
-                textEditor,
-                task.index.line - 1, // node index is 1-based; vscode editor is 0-based
-                task.toString()
-            );
-        }
-    } else {
-        // option: copy the future tasks to the future
-        var futureString = futureTasks.map((node) => node.toString());
-
-        /// 2. ADD FUTURES
-        // remove anything that's already in the future section,
-        // and deduplicate
-        futureString = futureString
-            .filter((v) => !future.includes(v))
-            .filter((v, i, a) => a.indexOf(v) === i);
-
-        // add futures
-        await addLinesToSection(textEditor, "Future", futureString);
+    for (const task of newTasksSorted) {
+        await insertLineAfter(
+            textEditor,
+            task.index.line - 1, // node index is 1-based; vscode editor is 0-based
+            task.toString()
+        );
+        itemsAdded = true;
     }
 
-    // 3. move DUE tasks to Today
-    ///////////////////////////////
-
-    // re-parse document to account for changes in part 1
+    // reprocess items
     items = await parseTaskDocument(textEditor);
     if (items === undefined) {
         return false;
     }
 
-    // get newly due items
-    const due = getNewDueTasks(items);
+    // 3. move items to Today if @due <= today
+    const newTodays = getNewTodays(items);
 
-    // process any node updates
-    // TODO: note that this will cause badness if Today is not the first section!
-    await processUpdates(items, textEditor);
+    if (newTodays.length > 0) {
+        // delete the originals
+        await processUpdates(items, textEditor);
 
-    // add the new lines to the today section
-    await addLinesToSection(
-        textEditor,
-        "Today",
-        due.map((item) => item.toString())
-    );
+        // add to Today
+        await addLinesToSection(
+            textEditor,
+            "Today",
+            newTodays.map((node) => node.toString()),
+            "top"
+        );
 
-    // 4. move DONE tasks to Archive
-    /////////////////////////////////
-
-    if (settings.archiveDoneItems()) {
-        // TODO: fix re-parsing so it doesn't happen every time
-        // re-parse document to account for changes
+        // reprocess items
         items = await parseTaskDocument(textEditor);
         if (items === undefined) {
             return false;
         }
+        itemsAdded = true;
+    }
 
+    // 4. get future items
+    if (!settings.recurringItemsAdjacent()) {
+        const newFutures = getNewFutures(items);
+
+        if (newFutures.length > 0) {
+            // delete the originals
+            await processUpdates(items, textEditor);
+
+            // add to Today
+            await addLinesToSection(
+                textEditor,
+                "Future",
+                newFutures.map((node) => node.toString())
+            );
+
+            // reprocess items
+            items = await parseTaskDocument(textEditor);
+            if (items === undefined) {
+                return false;
+            }
+
+            itemsAdded = true;
+        }
+    }
+
+    // 5. move done items to Archive
+    if (settings.archiveDoneItems()) {
         // get done items
         const done = getDoneTasks(items);
 
-        // process any node updates
-        await processUpdates(items, textEditor);
+        if (done.length > 0) {
+            // process any node updates
+            await processUpdates(items, textEditor);
 
-        // add the new lines to the Archive section
-        await addLinesToSection(
-            textEditor,
-            "Archive",
-            done.map((item) => item.toString())
-        );
+            // add the new lines to the Archive section
+            await addLinesToSection(
+                textEditor,
+                "Archive",
+                done.map((item) => item.toString())
+            );
+
+            // re-parse document to account for changes
+            items = await parseTaskDocument(textEditor);
+            if (items === undefined) {
+                return false;
+            }
+            itemsAdded = true;
+        }
     }
 
-    // 5. sort DUE tasks by due date
-    if (settings.sortFutureItems()) {
-        // re-parse document to account for changes
-        items = await parseTaskDocument(textEditor);
-        if (items === undefined) {
-            return false;
-        }
-
+    // 6. sort DUE tasks by due date (if anything has been changed)
+    if (settings.sortFutureItems() && itemsAdded) {
         // get done items from all non-archive projects
         const projects = filterProjects(items);
 

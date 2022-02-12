@@ -32,15 +32,17 @@ Items have flags that set their recurrence patterns.
 - item #3 @done(2020-01-03) @recur(2)     # new adjacent node created with @due=@done+2, @done removed, @recur/started/lasted removed
 - item #4 @done(2020-01-03) @annual(11/1) # new adjacent node created with @due=next 11/1 after @done, @done removed, @recur/started/lasted removed
 - item #5 @annual(11/1) @due(anything)    # no change
-- item #6 @annual(11/1)                   # add @due => next 11/1 after today
-- item #7 @due(2020-01-04) (no @done)     # if @due <= today and item not in Today, moved to Today
-- item #8 @due(2020-01-04) (no @done)     # if @due >= today and item in Today, moved to Future (if recurringItemsAdjacent=false)
-- item #9 @done                           # @project set, @recur removed, moved to Archive (if archiveDoneItems=true)
+- item #6 @annual(11/1) @done(1/3/2020)   # add adjacent @due => next 11/1 after @done; @annual removed
+- item #7 @annual(11/1)                   # add @due => next 11/1 after today
+- item #8 @recur(Monday) @due(anything)  # no change
+- item #9 @recur(Monday) @done(1/3)      # add adjacent node @due => next Monday after @done; @weekly removed
+- item #10 @recur(Monday)                # add @due => next Monday 
+
 ```
 
 Items are processed in this order:
 
-1. All items 0-6 are processed; new items accumulator is created
+1. All items 0-10 are processed; new items accumulator is created.
 2. New adjacent items inserted from the highest line index to the lowest
 3. Items not in Today where @due <= today are moved to Today
 4. Items in Today where @due >= today are moved to Future  (if recurringItemsAdjacent=false)

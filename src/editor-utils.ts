@@ -35,10 +35,13 @@ export function deleteLine(
     return vscode.workspace.applyEdit(edit);
 }
 
+export type CreateSectionOption = "top" | "bottom";
+
 export async function addLinesToSection(
     textEditor: vscode.TextEditor,
     section: string,
-    lines: string[]
+    lines: string[],
+    createSectionOption: CreateSectionOption = "bottom"
 ): Promise<boolean> {
     if (lines.length === 0) {
         // nothing to add
@@ -65,11 +68,18 @@ export async function addLinesToSection(
 
     // special case 2: the section doesn't exist => create it at the end, after two newlines
     if (lineStart === -1) {
-        line = textToEdit.length;
-        character = textToEdit[line - 1].length;
         lines.unshift(`${section}:`); // section name
-        lines.unshift(""); // two newline
-        lines.unshift(""); // two newline
+        if (createSectionOption === "bottom") {
+            line = textToEdit.length;
+            character = textToEdit[line - 1].length;
+            // add spacer: two lines
+            lines.unshift(""); // two newline
+            lines.unshift(""); // two newline
+        }
+        if (createSectionOption === "top") {
+            line = 0; // is this right?
+            character = 0;
+        }
     }
 
     const edit = new vscode.WorkspaceEdit();
