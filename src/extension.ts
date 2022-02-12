@@ -24,7 +24,8 @@ import { TaskPaperNode } from "task-parser/build/TaskPaperNode";
 
 let consoleChannel = vscode.window.createOutputChannel("ToDoTools");
 const settings = new Settings();
-var loopCount: number = 0;
+var minuteCount: number = 0;
+const TIMEOUT_INTERVAL = 60 * 1000; // one minute between runs
 
 /**
  *activate
@@ -60,7 +61,7 @@ export async function activate(context: vscode.ExtensionContext) {
     );
 
     // set a timer to do the automatic re-run interval
-    setInterval(documentOnEveryMinute, 1000 * 10); // run every minute
+    setTimeout(documentOnEveryMinute, TIMEOUT_INTERVAL); // run every minute
 
     // implement a mock "pretend we just opened" command
     disposable = vscode.commands.registerCommand("todotools.runOnOpen", () => {
@@ -87,20 +88,21 @@ function documentOnOpen() {
 }
 
 function documentOnEveryMinute() {
-    console.log("one minute...");
-
     const textEditor = vscode.window.activeTextEditor;
 
     // in case they were manually changed
     updateSettings(textEditor).then(() => {
         if (textEditor && settings.autoRun()) {
-            loopCount++;
-            if (loopCount >= settings.autoRunInterval()) {
-                loopCount = 0; // reset counter
+            minuteCount++;
+            if (minuteCount >= settings.autoRunInterval()) {
+                minuteCount = 0; // reset counter
                 performCopyAndSave(textEditor);
             }
         }
     });
+
+    // re-run in a minute
+    setTimeout(documentOnEveryMinute, TIMEOUT_INTERVAL); // run every minute
 }
 
 /**
