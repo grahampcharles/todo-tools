@@ -14,7 +14,7 @@ Other Project:
 	- item #13 @recur(10) @due(2022-11-02)
 
 Archive:
-
+	- item #21 @due(2022-02-10) @done
 
 Settings:
 	autoRun=true
