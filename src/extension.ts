@@ -176,7 +176,7 @@ async function performCopy(textEditor: vscode.TextEditor): Promise<boolean> {
         return false;
     }
 
-    // 3. move items to Today if @due <= today
+    // 3. move items to Today if @due <= today and not @done
     const newTodays = getNewTodays(items);
 
     if (newTodays.length > 0) {

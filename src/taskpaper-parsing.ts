@@ -244,8 +244,11 @@ export function processTaskNode(input: TaskPaperNode): TaskPaperNode[] {
 export function getNewTodays(input: TaskPaperNode): TaskPaperNode[] {
     const results = new Array<TaskPaperNode>();
 
-    // skip Today project
-    if (input.type === "project" && input.value === "Today") {
+    // skip Today and Archive projects
+    if (
+        input.type === "project" &&
+        ["Today", "Archive"].includes(input.value ?? "")
+    ) {
         return results;
     }
 
@@ -256,6 +259,7 @@ export function getNewTodays(input: TaskPaperNode): TaskPaperNode[] {
     if (
         input.type === "task" &&
         input.hasTag("due") &&
+        !input.hasTag("done") &&
         cleanDate(input.tagValue("due")).isSameOrBefore(todayDay)
     ) {
         const newNode = input.clone();

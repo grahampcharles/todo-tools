@@ -1,15 +1,19 @@
 Today:
-	- item #1 @recur(1) @done(22-02-11 22:25)
-	- item #2 @annual(11/1)
-	- item #3 @recur(Monday) @done(22-02-11 22:26)
-	- item #4 @recur(2) @done(22-02-11 22:26)
-	- item #5 @due(today)
-	- item #6 @due(tomorrow)
-	- item #7 @due(Wednesday)
-	- item #8 @done(22-02-01 22:28) @recur(12)
+	- item #1 @done(22-02-11 22:25)
+	- item #3 @done(22-02-11 22:26)
+	- item #4 @done(22-02-11 22:26)
+	- item #8 @done(22-02-01 22:28)
+	- item #10 @due(2011-08-22)
+	- item #1 @recur(1) @due(2022-02-12)
+	- item #5 @due(2022-02-12)
+	- item #4 @recur(2) @due(2022-02-13)
+	- item #6 @due(2022-02-13)
+	- item #8 @recur(12) @due(2022-02-13)
+	- item #3 @recur(Monday) @due(2022-02-15)
+	- item #7 @due(2022-02-16)
+	- item #2 @annual(11/1) @due(2022-11-01)
 
 Other Project:
-	- item #10 @due(2/10/2022) 
 	- item #12 @annual(11/1) @due(2022-11-01)
 	- item #13 @recur(10) @due(2022-11-02)
 

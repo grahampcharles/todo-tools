@@ -2,6 +2,7 @@
 
 All notable changes to the "todo-tools" extension will be documented in this file.
 
+## [0.5.4] - Unreleased
 
 ## [0.5.3] - 2022-02-11
 
