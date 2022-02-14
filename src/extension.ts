@@ -226,7 +226,7 @@ async function performCopy(textEditor: vscode.TextEditor): Promise<boolean> {
 
     // 5. move done items to Archive
     if (settings.archiveDoneItems()) {
-        // get done items
+        
         const done = getDoneTasks(items);
 
         if (done.length > 0) {

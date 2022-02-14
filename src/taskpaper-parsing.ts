@@ -136,7 +136,7 @@ export function getDoneTasks(
     newNode.depth = 2;
     results.push(newNode);
 
-    // set the task to be erased
+    // set the existing task to be erased
     node.setTag("action", "DELETE");
 
     return results;
@@ -244,10 +244,10 @@ export function processTaskNode(input: TaskPaperNode): TaskPaperNode[] {
 export function getNewTodays(input: TaskPaperNode): TaskPaperNode[] {
     const results = new Array<TaskPaperNode>();
 
-    // skip Today and Archive projects
+    // skip Today project
     if (
         input.type === "project" &&
-        ["Today", "Archive"].includes(input.value ?? "")
+        ["Today"].includes(input.value ?? "")
     ) {
         return results;
     }
