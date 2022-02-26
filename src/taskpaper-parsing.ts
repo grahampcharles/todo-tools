@@ -220,14 +220,14 @@ export function processTaskNode(input: TaskPaperNode): TaskPaperNode[] {
             // clone the node
             const newNode = input.clone();
 
-            newNode.removeTag(["done", "started", "lasted"]);
+            newNode.removeTag(["done", "started", "lasted", "project"]);
             newNode.setTag("due", nextDate.format(DEFAULT_DATE_FORMAT));
 
             // add new node to results
             results.push(newNode);
 
             // clear the recurrence from the original
-            input.removeTag(["recur", "annual"]);
+            input.removeTag(["recur", "annual", "project"]);
         } else {
             /// case 2: not yet @done, so just set the due date
             input.setTag("due", nextDate.format(DEFAULT_DATE_FORMAT));
@@ -245,10 +245,7 @@ export function getNewTodays(input: TaskPaperNode): TaskPaperNode[] {
     const results = new Array<TaskPaperNode>();
 
     // skip Today project
-    if (
-        input.type === "project" &&
-        ["Today"].includes(input.value ?? "")
-    ) {
+    if (input.type === "project" && ["Today"].includes(input.value ?? "")) {
         return results;
     }
 

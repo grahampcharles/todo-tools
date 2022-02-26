@@ -3,8 +3,12 @@
 All notable changes to the "todo-tools" extension will be documented in this file.
 
 ## [0.5.5] - Unreleased
+### enhance
+- retain project tag on tasks that are recurred
+
 ### fix
 - some undone items are being moved to Archive #5
+
 
 ## [0.5.4] - 2022-02-12
 ### fix 
