@@ -209,21 +209,22 @@ async function performCopy(textEditor: vscode.TextEditor): Promise<boolean> {
 
     // 6. sort DUE tasks by due date (if anything has been changed)
     if (settings.sortFutureItems() && itemsAdded) {
-        // get done items from all non-archive projects
+        // get done items from all non-archive, non-settings projects
         const projects = filterProjects(items);
 
         // for all the projects from bottom to top, get the due tasks
-        projects.sort((a: TaskPaperNode, b: TaskPaperNode) => {
-            return b.index.line - a.index.line;
-        });
+        projects
+            .sort((a: TaskPaperNode, b: TaskPaperNode) => {
+                return b.index.line - a.index.line;
+            });
 
         for (const projectNode of projects) {
             // sort the project
             await sortLines(
                 textEditor,
                 projectNode.index.line,
-                projectNode.lastLine(),
-                transformerSequences.sortNormal
+                projectNode.lastLine() - 1, // lastLine includes the blank
+                transformerSequences.sortDueDate
             );
         }
     }

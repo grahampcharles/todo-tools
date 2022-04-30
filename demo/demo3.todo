@@ -1,28 +1,20 @@
 Today:
+	- item #5 
+	- item #6 
 	- item #10 @due(2011-08-22)
-	- item #5 @due(2022-02-12)
-	- item #4 @recur(2) @due(2022-05-01)
-	- item #6 @due(2022-02-13)
-	- item #8 @recur(12) @due(2022-05-11)
-	- item #3 @recur(Monday) @due(2022-05-02)
-	- item #7 @due(2022-02-16)
-	- item #2 @annual(11/1) @due(2022-11-01)
-
+	- yyitem #3 @recur(Monday) @due(2022-05-02)
+	- zzitem #2 @annual(11/1) @due(2022-11-01)
+	
 Other Project:
-	- item #12 @annual(11/1) @due(2022-11-01)
 	- item #13 @recur(10) @due(2022-11-02)
+	- item #12 @annual(11/1) @due(2022-11-03)
 
 Archive:
-	- item #8 @due(2022-02-13) @done(22-04-29 17:37) @project(Today)
-	- item #1 @due(2022-04-30) @done(22-04-29 17:37) @project(Today)
-	- item #1 @done(22-02-11 22:25) @project(Today)
-	- item #3 @done(22-02-11 22:26) @project(Today)
-	- item #4 @done(22-02-11 22:26) @project(Today)
-	- item #8 @done(22-02-01 22:28) @project(Today)
-	- item #1 @due(2022-02-12) @done(22-04-29 17:35) @project(Today)
-	- item #4 @due(2022-02-13) @done(22-04-29 17:36) @project(Today)
-	- item #3 @due(2022-02-15) @done(22-04-29 17:35) @project(Today)
-	- item #21 @due(2022-02-10) @done
+	- zzitem #2 @done(22-04-30 11:29) @project(Today)
+	- zzitem #2 @done(22-04-30 11:28) @project(Today)
+	- yyitem #3 @done(22-04-30 11:27) @project(Today)
+	- yyitem #3 @done(22-04-30 11:26) @project(Today)
+
 
 Settings:
 	autoRun=true

@@ -59,6 +59,11 @@ export function filterProjects(node: TaskPaperNode): TaskPaperNode[] {
         return results;
     }
 
+    // skip Settings
+    if (node.type === "project" && node.value?.toLowerCase() === "settings") {
+        return results;
+    }
+
     // does this node have children? if so, act on the children
     if (node.children !== undefined) {
         node.children.forEach((childNode) =>
