@@ -28,7 +28,7 @@ function sortActiveSelection(transformers: ArrayTransformer[]): Thenable<boolean
   return sortLines(textEditor, selection.start.line, selection.end.line, transformers);
 }
 
-function sortLines(textEditor: vscode.TextEditor, startLine: number, endLine: number, transformers: ArrayTransformer[]): Thenable<boolean> {
+export function sortLines(textEditor: vscode.TextEditor, startLine: number, endLine: number, transformers: ArrayTransformer[]): Thenable<boolean> {
   let lines: string[] = [];
   for (let i = startLine; i <= endLine; i++) {
     lines.push(textEditor.document.lineAt(i).text);
@@ -81,6 +81,11 @@ function lineLengthCompare(a: string, b: string): number {
   return aLength > bLength ? 1 : -1;
 }
 
+// function dueDateCompare(a: string, b: string): number {
+//   const aDue = 
+
+// }
+
 function lineLengthReverseCompare(a: string, b: string): number {
   return lineLengthCompare(a, b) * -1;
 }
@@ -121,7 +126,7 @@ function shuffleSorter(lines: string[]): string[] {
     return lines;
 }
 
-const transformerSequences = {
+export const transformerSequences = {
   sortNormal: [makeSorter()],
   sortUnique: [makeSorter(), removeDuplicates],
   sortReverse: [makeSorter(reverseCompare)],
@@ -133,7 +138,8 @@ const transformerSequences = {
   sortVariableLengthReverse: [makeSorter(variableLengthReverseCompare)],
   sortNatural: [makeSorter(naturalCompare)],
   sortShuffle: [shuffleSorter],
-  removeDuplicateLines: [removeDuplicates]
+  removeDuplicateLines: [removeDuplicates],
+  // sortDueDate: [makeSorter(dueDateCompare)]
 };
 
 export const sortNormal = () => sortActiveSelection(transformerSequences.sortNormal);
