@@ -1,3 +1,4 @@
+import { allowedNodeEnvironmentFlags } from "process";
 import * as vscode from "vscode";
 import * as todoTools from "./todo-tools";
 
@@ -26,11 +27,8 @@ export function activate(context: vscode.ExtensionContext) {
 
     commands.forEach((command) => context.subscriptions.push(command));
 
-    // start by running code once
-    // todoTools.documentOnOpen();
-
-    // set a timer to do the automatic re-run interval
-    // setTimeout(documentOnEveryMinute, TIMEOUT_INTERVAL); // run every minute
+    // run once on activate
+    todoTools.documentOnOpen();
 }
 
 export function deactivate() {}

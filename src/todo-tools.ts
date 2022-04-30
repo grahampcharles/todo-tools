@@ -39,6 +39,7 @@ export function documentOnOpen() {
         if (textEditor && settings.runOnOpen()) {
             performCopyAndSave(textEditor);
         }
+        setTimeout(documentOnEveryMinute, TIMEOUT_INTERVAL);
     });
 }
 
@@ -213,10 +214,9 @@ async function performCopy(textEditor: vscode.TextEditor): Promise<boolean> {
         const projects = filterProjects(items);
 
         // for all the projects from bottom to top, get the due tasks
-        projects
-            .sort((a: TaskPaperNode, b: TaskPaperNode) => {
-                return b.index.line - a.index.line;
-            });
+        projects.sort((a: TaskPaperNode, b: TaskPaperNode) => {
+            return b.index.line - a.index.line;
+        });
 
         for (const projectNode of projects) {
             // sort the project

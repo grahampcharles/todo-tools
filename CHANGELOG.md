@@ -2,9 +2,10 @@
 
 All notable changes to the "todo-tools" extension will be documented in this file.
 
-## [0.5.5] - Unreleased
+## [0.6.0] - 2022-04-30
 ### enhance
 - retain project tag on tasks that are recurred
+- replaced sort algorithm with vscode-sort-lines
 
 ### fix
 - some undone items are being moved to Archive #5

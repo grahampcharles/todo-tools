@@ -10,6 +10,8 @@ Other Project:
 	- item #12 @annual(11/1) @due(2022-11-03)
 
 Archive:
+	- yyitem #3 @done(22-04-30 11:35) @project(Today)
+	- zzitem #2 @done(22-04-30 11:35) @project(Today)
 	- zzitem #2 @done(22-04-30 11:29) @project(Today)
 	- zzitem #2 @done(22-04-30 11:28) @project(Today)
 	- yyitem #3 @done(22-04-30 11:27) @project(Today)
@@ -17,7 +19,8 @@ Archive:
 
 
 Settings:
+	runOnOpen=true
 	autoRun=true
-	autoRunInterval=3
+	autoRunInterval=1
 	sortFutureItems=true
 	archiveDoneItems=true
