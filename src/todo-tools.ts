@@ -234,6 +234,7 @@ async function performCopy(textEditor: vscode.TextEditor): Promise<boolean> {
 }
 
 async function updateSettings(textEditor: vscode.TextEditor | undefined) {
+
     // update settings from current document
     if (textEditor) {
         const doc = await parseTaskDocument(textEditor);

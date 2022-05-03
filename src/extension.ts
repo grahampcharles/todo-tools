@@ -28,7 +28,9 @@ export function activate(context: vscode.ExtensionContext) {
     commands.forEach((command) => context.subscriptions.push(command));
 
     // run once on activate
-    todoTools.documentOnOpen();
+    // FIX: this seems to be blocking other extensions? or something?
+    // trying waiting a second first
+    setTimeout(() => todoTools.documentOnOpen(), 1000);
 }
 
 export function deactivate() {}
