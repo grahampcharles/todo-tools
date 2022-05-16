@@ -24,7 +24,7 @@ specifiers:
 
 dependencies:
   dayjs: 1.11.2
-  task-parser: github.com/grahampcharles/task-parser/a96221a1679c5e09d69051b7f7cb066a5b5ed058
+  task-parser: github.com/grahampcharles/task-parser/e1a994d1fe3f40a1dd528275751532fc89734f49
 
 devDependencies:
   '@types/chai': 4.3.1
@@ -3029,8 +3029,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  github.com/grahampcharles/task-parser/a96221a1679c5e09d69051b7f7cb066a5b5ed058:
-    resolution: {tarball: https://codeload.github.com/grahampcharles/task-parser/tar.gz/a96221a1679c5e09d69051b7f7cb066a5b5ed058}
+  github.com/grahampcharles/task-parser/e1a994d1fe3f40a1dd528275751532fc89734f49:
+    resolution: {tarball: https://codeload.github.com/grahampcharles/task-parser/tar.gz/e1a994d1fe3f40a1dd528275751532fc89734f49}
     name: task-parser
-    version: 1.0.5
+    version: 1.0.6
     dev: false
