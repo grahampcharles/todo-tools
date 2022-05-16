@@ -4,7 +4,6 @@ import utc from "dayjs/plugin/utc";
 import timeZone from "dayjs/plugin/timezone";
 import localeData from "dayjs/plugin/localeData";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { removeDuplicates } from "./taskpaper-parsing";
 
 // extend the parse formatter
 dayjs.extend(customParseFormat);
@@ -35,9 +34,8 @@ export function cleanDate(
     afterDate: dayjs.Dayjs = dayjs()
 ): dayjs.Dayjs {
     // attempts to turn the string into a Dayjs object
-
     if (dayString === undefined) {
-        return dayjs(dayString);
+        return afterDate;
     }
 
     // try a format string
@@ -75,7 +73,7 @@ export function cleanDate(
         }
     }
 
-    return dayjs();
+    return afterDate;
 }
 
 /// returns -1 on nonexistent
@@ -126,7 +124,7 @@ export function nextWeekday(
     fromDay: dayjs.Dayjs = dayjs()
 ): dayjs.Dayjs {
     const days = daysUntilWeekday(weekday, fromDay);
-    return dayjs().add(days, "day");
+    return fromDay.add(days, "day");
 }
 
 export function getDaysFromRecurrencePattern(

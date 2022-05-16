@@ -9,6 +9,7 @@ import {
     daysUntilWeekday,
     getDaysFromRecurrencePattern,
     monthNameToNumber,
+    nextWeekday,
     todayDay,
     todayName,
 } from "../../dates";
@@ -25,7 +26,6 @@ import { TaskPaperNode } from "task-parser/build/TaskPaperNode";
 import { testDone, testSettings } from "./testData";
 import { Settings } from "../../Settings";
 import { parseTaskPaper } from "task-parser/build";
-import { getDoneTasks } from "../../taskpaper-parsing";
 import dayjs from "dayjs";
 
 suite("Extension Test Suite", () => {
@@ -52,19 +52,6 @@ suite("Extension Test Suite", () => {
         expect(getDaysFromRecurrencePattern(undefined)).to.eql(1, "undefined");
     });
 
-    it("getDoneTasks", () => {
-        const source = new TaskPaperNode(testDone);
-
-        const done = getDoneTasks(source);
-        expect(done).to.have.lengthOf(3, "parsed done tasks");
-        expect(done[0].tagValue("project")).to.eq(
-            "Today",
-            "parsed project name from tree"
-        );
-        expect(done[1].tagValue("project")).to.eq("Today.SubProject");
-        expect(done[2].tagValue("project")).to.eq("Later");
-    });
-
     it("getSectionLineNumber", () => {
         const section = ["Project:", "\t-item", "", "Future:"];
         const bounds: SectionBounds = getSectionLineNumber(section, "Future");
@@ -76,6 +63,10 @@ suite("Extension Test Suite", () => {
         const date1 = new Date(2020, 1, 3);
         const date2 = new Date(2020, 1, 5);
         assert.strictEqual(2, daysPassed(date1, date2));
+
+        expect(
+            nextWeekday(1, dayjs("2022-05-10")).format("YYYY-MM-DD")
+        ).to.equal("2022-05-16", "next weekday");
 
         // day names
         assert.strictEqual("Sunday", dayNames[0]);
