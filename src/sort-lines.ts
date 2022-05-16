@@ -76,6 +76,15 @@ export function sortLines(
         lines
     );
 
+    return replaceLines(textEditor, startLine, endLine, lines);
+}
+
+export function replaceLines(
+    textEditor: vscode.TextEditor,
+    startLine: number,
+    endLine: number,
+    lines: string[]
+): Thenable<boolean> {
     return textEditor.edit((editBuilder) => {
         const range = new vscode.Range(
             startLine,
