@@ -3,7 +3,7 @@
     "displayName": "ToDo-Tools",
     "publisher": "grahampcharles",
     "description": "Auxiliary functions for taskpaper documents.",
-    "version": "0.6.1",
+    "version": "0.6.2",
     "repository": {
         "type": "git",
         "url": "https://github.com/grahampcharles/todo-tools.git"
@@ -15,8 +15,7 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:todotools.processTasks",
-        "onCommand:todotools.runOnOpen",
+        "onCommand:todotools.performCopy",
         "onLanguage:todo",
         "onLanguage:taskpaper"
     ],
@@ -61,12 +60,8 @@
         },
         "commands": [
             {
-                "command": "todotools.processTasks",
+                "command": "todotools.performCopy",
                 "title": "ToDo Tools: Copy Recurring Tasks"
-            },
-            {
-                "command": "todotools.runOnOpen",
-                "title": "ToDo Tools: Simulate On Open"
             }
         ],
         "languages": [
@@ -84,16 +79,21 @@
         ]
     },
     "scripts": {
-        "vscode:prepublish": "npm run package",
+        "_comment_changes_for_pnpm": "see https://github.com/microsoft/vscode-vsce/issues/421#issuecomment-1038911725",
+        "_old_vscode:prepublish": "npm run package",
+        "vscode:prepublish": "npm run compile -- --mode production --devtool hidden-source-map",
+        "x_esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node",
         "compile": "webpack",
         "watch": "webpack --watch",
-        "package": "webpack --mode production --devtool hidden-source-map",
         "compile-tests": "tsc -p . --outDir out",
         "watch-tests": "tsc -p . -w --outDir out",
         "pretest": "npm run compile-tests && npm run compile && npm run lint",
         "lint": "eslint src --ext ts",
         "test": "node ./out/test/runTest.js",
-        "scratch": "ts-node ./src/scratch.ts"
+        "scratch": "ts-node ./src/scratch.ts",
+        "_old_package": "webpack --mode production --devtool hidden-source-map",
+        "package": "pnpm vsce package --no-dependencies",
+        "publish": "pnpm vsce publish --no-dependencies"
     },
     "devDependencies": {
         "@types/chai": "^4.3.1",

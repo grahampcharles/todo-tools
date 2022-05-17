@@ -4,12 +4,8 @@ import * as todoTools from "./todo-tools";
 export function activate(context: vscode.ExtensionContext) {
     const commands = [
         vscode.commands.registerCommand(
-            "todotools.processTasks",
-            todoTools.processTasks
-        ),
-        vscode.commands.registerCommand(
-            "todotools.runOnOpen",
-            todoTools.performCopyAndSave
+            "todotools.performCopy",
+            todoTools.performCopy
         ),
         vscode.workspace.onDidOpenTextDocument(
             async (doc: vscode.TextDocument) => {

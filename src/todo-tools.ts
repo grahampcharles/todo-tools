@@ -20,13 +20,6 @@ var lastVersion: number;
 var maxStackSize = 999;
 var versions = { stack: new Array<number>(), position: -1 };
 
-export function processTasks() {
-    const textEditor = vscode.window.activeTextEditor;
-    if (textEditor) {
-        performCopy(textEditor);
-    }
-}
-
 export function documentOnChange(event: vscode.TextDocumentChangeEvent) {
     function hash(text: string): number {
         var hash = 0;
@@ -85,7 +78,7 @@ export function documentOnOpen() {
     const textEditor = vscode.window.activeTextEditor;
     updateSettings(textEditor).then(() => {
         if (textEditor && settings.runOnOpen()) {
-            performCopyAndSave(textEditor);
+            performCopyAndSave();
         }
     });
 }
@@ -110,7 +103,7 @@ function documentIsIdle() {
 
                 if (minutesIdle >= settings.autoRunInterval()) {
                     minutesIdle = 0; // reset counter
-                    performCopyAndSave(textEditor);
+                    performCopyAndSave();
                 }
             }
         })
@@ -125,16 +118,19 @@ function documentIsIdle() {
 /**
  * Perform the copy of items to the Today section,
  * Save the results
- *
- * @param {vscode.TextEditor} textEditor
  */
-export function performCopyAndSave(textEditor: vscode.TextEditor) {
+export function performCopyAndSave() {
+    const textEditor = vscode.window.activeTextEditor;
+    if (!textEditor) {
+        return false;
+    }
+
     if (!["todo", "taskpaper"].includes(textEditor.document.languageId)) {
         return;
     }
 
     try {
-        performCopy(textEditor)
+        performCopy()
             .then(async () => textEditor.document.save())
             .catch((reason: any) => {
                 if (reason instanceof Error) {
@@ -154,7 +150,12 @@ export function performCopyAndSave(textEditor: vscode.TextEditor) {
  * @param {vscode.TextEditor} textEditor
  * @return {*}  {Promise<boolean>}
  */
-async function performCopy(textEditor: vscode.TextEditor): Promise<boolean> {
+export async function performCopy(): Promise<boolean> {
+    const textEditor = vscode.window.activeTextEditor;
+    if (!textEditor) {
+        return false;
+    }
+
     // get items
     var allItems = await parseTaskDocument(textEditor);
     if (allItems === undefined) {

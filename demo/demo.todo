@@ -1,8 +1,10 @@
 Today:
+	- writing @recur(1) @due(2022-05-17)
 
 Future:
 	- eat groceries @recur(1) @due(2022-05-18)
 	- going over the timer barrier and everything! @recur(1) @due(2022-05-18)
+	- plan trip @recur(1) @due(2022-05-18)
 	- every other day task two @due(2022-05-19) @recur(2)
 	- mow lawn @due(2022-05-21)
 	- every Saturday test @recur(Saturday) @due(2022-05-21)
@@ -14,13 +16,16 @@ Archive:
 	- shopping trip @done
 	- this is done @done(22-05-16 21:44)
 	- every other day task two @due(2022-05-16) @done(22-05-16 21:48)
+	- plan trip @due(2022-05-17) @done(22-05-17 11:17)
 	- eat groceries @due(2022-05-18) @done
+	- plan trip @due(2022-05-18) @done(22-05-17 11:20)
+	- plan trip @due(2022-05-18) @done(22-05-17 11:22)
 	- every Saturday test @due(2022-05-21) @done(22-05-16 21:48)
 
 Settings:
 	archiveDoneItems: True
 	autoRun: True
-	autoRunInterval: 45
+	autoRunInterval: 20
 	recurringItemsAdjacent: False
 	runOnOpen: True
 	sortFutureItems: True
