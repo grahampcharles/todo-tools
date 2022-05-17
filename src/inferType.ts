@@ -1,5 +1,5 @@
 export function inferType(input: any): string | number | boolean {
-    const test = input.toString();
+    const test = input.toString().toLowerCase();
     switch (test) {
         case "true":
             return true;

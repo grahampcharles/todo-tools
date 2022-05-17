@@ -48,6 +48,41 @@ export function getProjectByName(
     );
 }
 
+export function addProject(
+    node: TaskPaperNode,
+    name: string,
+    location: "bottom" | "top" = "bottom"
+) {
+    // already exists?
+    if (projectExistsByName(node, name)) {
+        return;
+    }
+
+    const newProject = new TaskPaperNode(`${name}:`); // colon makes it a project
+    newProject.children.push(new TaskPaperNode("")); // blank line (TODO: check if this automatic?)
+
+    if (location === "top") {
+        node.children.unshift(newProject);
+        return;
+    }
+
+    // default to bottom
+    node.children.push(newProject);
+}
+
+// returns a top-level project with the given name
+export function projectExistsByName(
+    node: TaskPaperNode,
+    name: string
+): boolean {
+    return (
+        node.children.find(
+            (node: TaskPaperNode) =>
+                node.type === "project" && node.value === name
+        ) !== undefined
+    );
+}
+
 export function filterProjects(node: TaskPaperNode): TaskPaperNode[] {
     // returns only project nodes, flattened;
     const results = new Array<TaskPaperNode>();
@@ -120,8 +155,12 @@ export function processTaskNode(
 ): void {
     var newNode: TaskPaperNode | undefined = undefined;
 
-    // does this node have children? if so, act on the children TODO: not undefined but empty
-    if (taskNode.children !== undefined) {
+    if (taskNode.value?.includes("runOnOpen")) {
+        console.log();
+    }
+
+    // does this node have children? if so, act on the children
+    if (taskNode.children.length > 0) {
         taskNode.children.forEach((child) =>
             processTaskNode(child, settings, archive, today, future)
         );
@@ -131,8 +170,8 @@ export function processTaskNode(
             return item.tagValue("ACTION") === "DELETE" ? false : true;
         });
 
-        // sort the children
-        if (settings.sortFutureItems()) {
+        // sort the child tasks
+        if (settings.sortFutureItems() && taskNode.type === "project") {
             taskNode.children = taskNode.children.sort(taskDueDateCompare);
         }
     }
@@ -199,7 +238,6 @@ export function processTaskNode(
         /// FUTURE
         if (!settings.recurringItemsAdjacent()) {
             moveNode(taskNode, comparisonSequences.isFuture, archive);
-            moveNode(newNode, comparisonSequences.isFuture, archive);
         }
     }
 
@@ -217,6 +255,14 @@ export function taskDueDateCompare(
     aNode: TaskPaperNode,
     bNode: TaskPaperNode
 ): number {
+    // one has no value (e.g. blank line); always sort to bottom
+    if (aNode.value === "") {
+        return 1;
+    }
+    if (bNode.value === "") {
+        return -1;
+    }
+
     // no due dates: alphabetical order
     if (!aNode.hasTag("due") && !bNode.hasTag("due")) {
         return caseInsensitiveCompare(aNode.value ?? "", bNode.value ?? "");

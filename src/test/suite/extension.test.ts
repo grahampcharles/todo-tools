@@ -22,10 +22,17 @@ import {
     stringToLines,
     stripTrailingWhitespace,
 } from "../../strings";
-import { testSettings } from "./testData";
+import {
+    testArchive1Source,
+    testArchive1Target,
+    testSettings,
+} from "./testData";
 import { Settings } from "../../Settings";
 import { parseTaskPaper } from "task-parser";
 import dayjs from "dayjs";
+import { processTaskNode } from "../../taskpaper-parsing";
+import { TaskPaperNode } from "task-parser/TaskPaperNode";
+import { getSpecialProjects } from "../../todo-tools";
 
 suite("Extension Test Suite", () => {
     vscode.window.showInformationMessage("Start all tests.");
@@ -159,6 +166,20 @@ suite("Extension Test Suite", () => {
         expect(result).eq(`line 1\nline 2\nline 3\n\nline 4`);
     });
 
+    it("getSpecialProjects", () => {
+        const items = new TaskPaperNode(testArchive1Source);
+
+        var archiveProject: TaskPaperNode | undefined,
+            todayProject: TaskPaperNode | undefined,
+            futureProject: TaskPaperNode | undefined;
+        [archiveProject, todayProject, futureProject] =
+            getSpecialProjects(items);
+
+        expect(todayProject).to.have.property("value", "Today");
+        expect(archiveProject).to.have.property("value", "Archive");
+        expect(futureProject).to.be.undefined;
+    });
+
     it("settings", () => {
         const test = new Settings();
         const settingsNode = parseTaskPaper(testSettings);
@@ -169,5 +190,29 @@ suite("Extension Test Suite", () => {
         expect(test.sortFutureItems()).eq(false);
         expect(test.recurringItemsAdjacent()).eq(false);
         expect(test.autoRunInterval()).eq(45);
+    });
+
+    it("task updating", () => {
+        const items = new TaskPaperNode(testArchive1Source);
+
+        var archiveProject: TaskPaperNode | undefined,
+            todayProject: TaskPaperNode | undefined,
+            futureProject: TaskPaperNode | undefined;
+        [archiveProject, todayProject, futureProject] =
+            getSpecialProjects(items);
+
+        processTaskNode(
+            items,
+            new Settings(),
+            archiveProject,
+            todayProject,
+            futureProject
+        );
+
+        console.log(items.toStringWithChildren().join("\n"));
+
+        // expect(items.toStringWithChildren().join("\n")).to.equal(
+        //     testArchive1Target
+        // );
     });
 });

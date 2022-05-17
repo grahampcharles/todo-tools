@@ -42,11 +42,12 @@ export class Settings {
         if (settings === undefined) {
             return;
         }
-        // add overrides; they will be note items in yaml format (key = value)
+        // add overrides; they will be note items in yaml format (key = value) or (key: value)
+        // parser: https://regex101.com/r/GVKpON
         settings.children
             .filter((node) => node.type === "note")
             .forEach((node) => {
-                const parsePattern = /(\S+?)\s*=\s*(\S+)/;
+                const parsePattern = /(\S+?)\s*(?:=|:)\s*(\S+)/;
                 const parse = parsePattern.exec(node.value ?? "");
                 if (parse === null) {
                     return;

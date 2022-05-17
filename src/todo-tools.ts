@@ -4,14 +4,12 @@ import {
     parseTaskDocument,
     getProjectByName,
     processTaskNode,
+    projectExistsByName,
+    addProject,
 } from "./taskpaper-parsing";
 import { TaskPaperNode } from "task-parser/TaskPaperNode";
-import {
-    replaceLines,
-    sortLines,
-    sortNormal,
-    transformerSequences,
-} from "./sort-lines";
+import { replaceLines } from "./sort-lines";
+import { create } from "domain";
 
 const settings = new Settings();
 var minuteCount: number = 0;
@@ -85,28 +83,34 @@ export function performCopyAndSave(textEditor: vscode.TextEditor) {
  * @return {*}  {Promise<boolean>}
  */
 async function performCopy(textEditor: vscode.TextEditor): Promise<boolean> {
-    // flag that items have been added; suppress sort if nothing added
-    var itemsAdded = false;
-
     // get items
-    var items = await parseTaskDocument(textEditor);
-    if (items === undefined) {
+    var allItems = await parseTaskDocument(textEditor);
+    if (allItems === undefined) {
         return false;
     }
-
-    // get special projects
-    // TODO: create these projects if they are needed and don't
-    // exist
-    const archiveProject = getProjectByName(items, "Archive");
-    const todayProject = getProjectByName(items, "Today");
-    const futureProject = getProjectByName(items, "Future");
 
     // update settings
     await updateSettings(textEditor);
 
+    // create special projects if needed
+    if (!settings.recurringItemsAdjacent()) {
+        addProject(allItems, "Today", "top");
+        addProject(allItems, "Future", "bottom");
+    }
+    if (settings.archiveDoneItems()) {
+        addProject(allItems, "Archive", "bottom");
+    }
+
+    // get special projects
+    var archiveProject: TaskPaperNode | undefined,
+        todayProject: TaskPaperNode | undefined,
+        futureProject: TaskPaperNode | undefined;
+    [archiveProject, todayProject, futureProject] =
+        getSpecialProjects(allItems);
+
     // process task node
     processTaskNode(
-        items,
+        allItems,
         settings,
         archiveProject,
         todayProject,
@@ -114,7 +118,7 @@ async function performCopy(textEditor: vscode.TextEditor): Promise<boolean> {
     );
 
     // return a promise to write out the document
-    return Promise.resolve(writeOutItems(items));
+    return Promise.resolve(writeOutItems(allItems));
 }
 
 function writeOutItems(items: TaskPaperNode): Thenable<boolean> {
@@ -130,6 +134,20 @@ function writeOutItems(items: TaskPaperNode): Thenable<boolean> {
         textEditor.document.lineCount - 1,
         items.toStringWithChildren()
     );
+}
+
+export function getSpecialProjects(
+    node: TaskPaperNode
+): [
+    TaskPaperNode | undefined,
+    TaskPaperNode | undefined,
+    TaskPaperNode | undefined
+] {
+    return [
+        getProjectByName(node, "Archive"),
+        getProjectByName(node, "Today"),
+        getProjectByName(node, "Future"),
+    ];
 }
 
 async function updateSettings(textEditor: vscode.TextEditor | undefined) {

@@ -1,14 +1,14 @@
 Today:
-	- whatever's already here
 	- shop
-	- eat groceries @recur(1)
-	- every other day task two
-	- mow lawn
-	- every Saturday test
-
-Future:
+	- whatever's already here
+	- every other day task two @due(2022-05-16)
+	- eat groceries @recur(1) @due(2022-05-17)
+	- mow lawn @due(2022-05-21)
+	- every Saturday test @recur(Saturday) @due(2022-05-21)
 	- this should be due @due(2022-01-11)
 
 Settings:
+	archiveDoneItems: True
 	runOnOpen: True
-
+	sortFutureItems: True
+	recurringItemsAdjacent: False
