@@ -55,9 +55,9 @@ function isDone(inputNode: TaskPaperNode): boolean {
 }
 
 function isFuture(inputNode: TaskPaperNode): boolean {
-    // TODO: only return true if is done before today?
     return (
         inputNode.hasTag("due") &&
+        !inputNode.hasTag("done") &&
         cleanDate(inputNode.tagValue("due")).isAfter(todayDay)
     );
 }

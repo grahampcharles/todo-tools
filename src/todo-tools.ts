@@ -4,12 +4,10 @@ import {
     parseTaskDocument,
     getProjectByName,
     processTaskNode,
-    projectExistsByName,
     addProject,
 } from "./taskpaper-parsing";
 import { TaskPaperNode } from "task-parser/TaskPaperNode";
 import { replaceLines } from "./sort-lines";
-import { create } from "domain";
 
 const settings = new Settings();
 var minuteCount: number = 0;
@@ -28,7 +26,7 @@ export function documentOnOpen() {
         if (textEditor && settings.runOnOpen()) {
             performCopyAndSave(textEditor);
         }
-        setTimeout(documentOnEveryMinute, TIMEOUT_INTERVAL);
+        // setTimeout(documentOnEveryMinute, TIMEOUT_INTERVAL);
     });
 }
 
@@ -47,7 +45,7 @@ function documentOnEveryMinute() {
     });
 
     // re-run in a minute
-    setTimeout(documentOnEveryMinute, TIMEOUT_INTERVAL);
+    // setTimeout(documentOnEveryMinute, TIMEOUT_INTERVAL);
 }
 
 /**
@@ -95,10 +93,10 @@ async function performCopy(textEditor: vscode.TextEditor): Promise<boolean> {
     // create special projects if needed
     if (!settings.recurringItemsAdjacent()) {
         addProject(allItems, "Today", "top");
-        addProject(allItems, "Future", "bottom");
+        addProject(allItems, "Future", "above settings");
     }
     if (settings.archiveDoneItems()) {
-        addProject(allItems, "Archive", "bottom");
+        addProject(allItems, "Archive", "above settings");
     }
 
     // get special projects

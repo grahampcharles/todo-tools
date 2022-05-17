@@ -1,13 +1,6 @@
-import { allowedNodeEnvironmentFlags } from "process";
 import * as vscode from "vscode";
 import * as todoTools from "./todo-tools";
 
-/**
- *activate
- * this method is called when the extension is activated
- * @export
- * @param {vscode.ExtensionContext} context
- */
 export function activate(context: vscode.ExtensionContext) {
     const commands = [
         vscode.commands.registerCommand(
@@ -26,11 +19,6 @@ export function activate(context: vscode.ExtensionContext) {
     ];
 
     commands.forEach((command) => context.subscriptions.push(command));
-
-    // run once on activate
-    // FIX: this seems to be blocking other extensions? or something?
-    // trying waiting a second first
-    setTimeout(() => todoTools.documentOnOpen(), 1000);
 }
 
 export function deactivate() {}

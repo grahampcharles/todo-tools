@@ -51,7 +51,7 @@ export function getProjectByName(
 export function addProject(
     node: TaskPaperNode,
     name: string,
-    location: "bottom" | "top" = "bottom"
+    location: "bottom" | "top" | "above settings" = "above settings"
 ) {
     // already exists?
     if (projectExistsByName(node, name)) {
@@ -64,6 +64,16 @@ export function addProject(
     if (location === "top") {
         node.children.unshift(newProject);
         return;
+    }
+
+    if (location === "above settings") {
+        const settingsIndex = node.children.findIndex(
+            (child) => child.value?.toLowerCase() === "settings"
+        );
+        if (settingsIndex !== -1) {
+            node.children.splice(settingsIndex, 0, newProject);
+            return;
+        }
     }
 
     // default to bottom
@@ -155,9 +165,9 @@ export function processTaskNode(
 ): void {
     var newNode: TaskPaperNode | undefined = undefined;
 
-    if (taskNode.value?.includes("runOnOpen")) {
-        console.log();
-    }
+    // if (taskNode.value?.includes("every Saturday test")) {
+    //     console.log();
+    // }
 
     // does this node have children? if so, act on the children
     if (taskNode.children.length > 0) {
@@ -184,13 +194,6 @@ export function processTaskNode(
 
     // handle special @due tokens
     replaceDueTokens(taskNode);
-
-    // if there's a due date and no done date,
-    // stop processing; we don't recur any task
-    // that's due and undone
-    if (taskNode.hasTag("due") && !taskNode.hasTag("done")) {
-        return;
-    }
 
     // check for a recurrence pattern
     if (taskNode.hasTag(["recur", "annual"])) {
@@ -223,22 +226,22 @@ export function processTaskNode(
         else {
             taskNode.setTag("due", nextDate.format(DEFAULT_DATE_FORMAT));
         }
+    }
 
-        /// move nodes as needed
+    /// move nodes as needed
 
-        /// TODAY
-        moveNode(taskNode, comparisonSequences.dueToday, today);
-        moveNode(newNode, comparisonSequences.dueToday, today);
+    /// TODAY
+    moveNode(taskNode, comparisonSequences.dueToday, today);
+    moveNode(newNode, comparisonSequences.dueToday, today);
 
-        /// ARCHIVE
-        if (settings.archiveDoneItems()) {
-            moveNode(taskNode, comparisonSequences.isDone, archive);
-        }
+    /// ARCHIVE
+    if (settings.archiveDoneItems()) {
+        moveNode(taskNode, comparisonSequences.isDone, archive);
+    }
 
-        /// FUTURE
-        if (!settings.recurringItemsAdjacent()) {
-            moveNode(taskNode, comparisonSequences.isFuture, archive);
-        }
+    /// FUTURE
+    if (!settings.recurringItemsAdjacent()) {
+        moveNode(taskNode, comparisonSequences.isFuture, future);
     }
 
     return;
