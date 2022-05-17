@@ -16,7 +16,10 @@ export function activate(context: vscode.ExtensionContext) {
                 todoTools.documentOnOpen();
             }
         ),
+        vscode.workspace.onDidChangeTextDocument(todoTools.documentOnChange),
     ];
+
+    const x = setTimeout(() => {}, 1000);
 
     commands.forEach((command) => context.subscriptions.push(command));
 }
