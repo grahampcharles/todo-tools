@@ -22,10 +22,9 @@ import {
     stringToLines,
     stripTrailingWhitespace,
 } from "../../strings";
-import { TaskPaperNode } from "task-parser/build/TaskPaperNode";
-import { testDone, testSettings } from "./testData";
+import { testSettings } from "./testData";
 import { Settings } from "../../Settings";
-import { parseTaskPaper } from "task-parser/build";
+import { parseTaskPaper } from "task-parser";
 import dayjs from "dayjs";
 
 suite("Extension Test Suite", () => {

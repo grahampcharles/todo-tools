@@ -1,26 +1,17 @@
 import * as vscode from "vscode";
 import { Settings } from "./Settings";
 import {
-    deleteLine,
-    addLinesToSection,
-    replaceLine,
-    editorLines,
-    insertLineAfter,
-    insertLinesAfter,
-} from "./editor-utils";
-import {
-    getDoneTasks,
-    getUpdates,
     parseTaskDocument,
-    filterProjects,
-    getDueTasks,
-    dueSort,
+    getProjectByName,
     processTaskNode,
-    getNewTodays,
-    getNewFutures,
 } from "./taskpaper-parsing";
-import { TaskPaperNode } from "task-parser/build/TaskPaperNode";
-import { sortLines, sortNormal, transformerSequences } from "./sort-lines";
+import { TaskPaperNode } from "task-parser/TaskPaperNode";
+import {
+    replaceLines,
+    sortLines,
+    sortNormal,
+    transformerSequences,
+} from "./sort-lines";
 
 const settings = new Settings();
 var minuteCount: number = 0;
@@ -103,138 +94,45 @@ async function performCopy(textEditor: vscode.TextEditor): Promise<boolean> {
         return false;
     }
 
+    // get special projects
+    // TODO: create these projects if they are needed and don't
+    // exist
+    const archiveProject = getProjectByName(items, "Archive");
+    const todayProject = getProjectByName(items, "Today");
+    const futureProject = getProjectByName(items, "Future");
+
     // update settings
     await updateSettings(textEditor);
 
-    // 1. process task node
-    ////////////////////////////////////
-    const newTasks = processTaskNode(items);
+    // process task node
+    processTaskNode(
+        items,
+        settings,
+        archiveProject,
+        todayProject,
+        futureProject
+    );
 
-    // process any task update flags
-    await processUpdates(items, textEditor);
+    // return a promise to write out the document
+    return Promise.resolve(writeOutItems(items));
+}
 
-    // 2. insert new tasks in reverse order (so they get
-    // added to the end of the document first)
-    const newTasksSorted = newTasks
-        // filter to remove tasks that already exist
-        .filter((task) => !items?.containsItem(task))
-        // sort from bottom to top
-        .sort((taskA, taskB) => taskB.index.line - taskA.index.line);
-
-    for (const task of newTasksSorted) {
-        await insertLineAfter(
-            textEditor,
-            task.index.line - 1, // node index is 1-based; vscode editor is 0-based
-            task.toString()
-        );
-        itemsAdded = true;
+function writeOutItems(items: TaskPaperNode): Thenable<boolean> {
+    const textEditor = vscode.window.activeTextEditor;
+    if (!textEditor) {
+        // noop
+        return new Promise<boolean>(() => true);
     }
 
-    // reprocess items
-    items = await parseTaskDocument(textEditor);
-    if (items === undefined) {
-        return false;
-    }
-
-    // 3. move items to Today if @due <= today and not @done
-    const newTodays = getNewTodays(items);
-
-    if (newTodays.length > 0) {
-        // delete the originals
-        await processUpdates(items, textEditor);
-
-        // add to Today
-        await addLinesToSection(
-            textEditor,
-            "Today",
-            newTodays.map((node) => node.toString()),
-            "top"
-        );
-
-        // reprocess items
-        items = await parseTaskDocument(textEditor);
-        if (items === undefined) {
-            return false;
-        }
-        itemsAdded = true;
-    }
-
-    // 4. get future items
-    if (!settings.recurringItemsAdjacent()) {
-        const newFutures = getNewFutures(items);
-
-        if (newFutures.length > 0) {
-            // delete the originals
-            await processUpdates(items, textEditor);
-
-            // add to Today
-            await addLinesToSection(
-                textEditor,
-                "Future",
-                newFutures.map((node) => node.toString())
-            );
-
-            // reprocess items
-            items = await parseTaskDocument(textEditor);
-            if (items === undefined) {
-                return false;
-            }
-
-            itemsAdded = true;
-        }
-    }
-
-    // 5. move done items to Archive
-    if (settings.archiveDoneItems()) {
-        const done = getDoneTasks(items);
-
-        if (done.length > 0) {
-            // process any node updates
-            await processUpdates(items, textEditor);
-
-            // add the new lines to the Archive section
-            await addLinesToSection(
-                textEditor,
-                "Archive",
-                done.map((item) => item.toString())
-            );
-
-            // re-parse document to account for changes
-            items = await parseTaskDocument(textEditor);
-            if (items === undefined) {
-                return false;
-            }
-            itemsAdded = true;
-        }
-    }
-
-    // 6. sort DUE tasks by due date (if anything has been changed)
-    if (settings.sortFutureItems() && itemsAdded) {
-        // get done items from all non-archive, non-settings projects
-        const projects = filterProjects(items);
-
-        // for all the projects from bottom to top, get the due tasks
-        projects.sort((a: TaskPaperNode, b: TaskPaperNode) => {
-            return b.index.line - a.index.line;
-        });
-
-        for (const projectNode of projects) {
-            // sort the project
-            await sortLines(
-                textEditor,
-                projectNode.index.line,
-                projectNode.lastLine() - 1, // lastLine includes the blank
-                transformerSequences.sortDueDate
-            );
-        }
-    }
-
-    // nothing to execute: return true
-    return new Promise<boolean>(() => true);
+    return replaceLines(
+        textEditor,
+        0,
+        textEditor.document.lineCount - 1,
+        items.toStringWithChildren()
+    );
 }
 
 async function updateSettings(textEditor: vscode.TextEditor | undefined) {
-
     // update settings from current document
     if (textEditor) {
         const doc = await parseTaskDocument(textEditor);
@@ -242,34 +140,6 @@ async function updateSettings(textEditor: vscode.TextEditor | undefined) {
             settings.update(doc);
         }
     }
-}
-
-async function processUpdates(
-    items: TaskPaperNode,
-    textEditor: vscode.TextEditor
-): Promise<boolean> {
-    // Process any updates and deletes, in reverse order of line
-    // returns a flat map of only nodes that require an update
-    var updates = getUpdates(items).sort(
-        (nodeA, nodeB) => nodeB.index.line - nodeA.index.line
-    );
-
-    for (const updateNode of updates) {
-        if (updateNode.tagValue("action") === "DELETE") {
-            // delete the line
-            await deleteLine(textEditor, updateNode.index.line);
-        }
-        if (updateNode.tagValue("action") === "UPDATE") {
-            // replace the line
-            await replaceLine(
-                textEditor,
-                updateNode.index.line,
-                updateNode.toString(["action"])
-            );
-        }
-        updateNode.removeTag("action"); // handled
-    }
-    return true;
 }
 
 export function deactivate() {}

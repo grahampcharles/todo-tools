@@ -1,9 +1,9 @@
 // from vscode-sort-lines
 
-import { TaskPaperNode } from "task-parser/build/TaskPaperNode";
+import { TaskPaperNode } from "task-parser/TaskPaperNode";
 import * as vscode from "vscode";
 import { cleanDate } from "./dates";
-import { getDueTasks } from "./taskpaper-parsing";
+import { getDueTasks, taskDueDateCompare } from "./taskpaper-parsing";
 
 type ArrayTransformer = (lines: string[]) => string[];
 type SortingAlgorithm = (a: string, b: string) => number;
@@ -116,7 +116,7 @@ function reverseCompare(a: string, b: string): number {
     return a < b ? 1 : -1;
 }
 
-function caseInsensitiveCompare(a: string, b: string): number {
+export function caseInsensitiveCompare(a: string, b: string): number {
     return a.localeCompare(b, undefined, { sensitivity: "base" });
 }
 
@@ -124,25 +124,7 @@ function dueDateCompare(a: string, b: string): number {
     const aNode = new TaskPaperNode(a);
     const bNode = new TaskPaperNode(b);
 
-    // no due dates: alphabetical order
-    if (!aNode.hasTag("due") && !bNode.hasTag("due")) {
-        return caseInsensitiveCompare(a, b);
-    }
-
-    // one due date: sort item with no due date to the top
-    if (!aNode.hasTag("due") || !bNode.hasTag("due")) {
-        return aNode.hasTag("due") ? 1 : -1;
-    }
-
-    // two due dates
-    const aDate = cleanDate(aNode.tagValue("due"));
-    const bDate = cleanDate(bNode.tagValue("due"));
-
-    if (aDate.isSame(bDate)) {
-        return 0;
-    }
-
-    return aDate.isBefore(bDate) ? -1 : 1;
+    return taskDueDateCompare(aNode, bNode);
 }
 
 function lineLengthCompare(a: string, b: string): number {

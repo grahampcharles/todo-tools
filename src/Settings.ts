@@ -1,4 +1,4 @@
-import { TaskPaperNode } from "task-parser/build/TaskPaperNode";
+import { TaskPaperNode } from "task-parser/TaskPaperNode";
 import * as vscode from "vscode";
 import { inferType } from "./inferType";
 import { getProjectByName, parseTaskDocument } from "./taskpaper-parsing";
