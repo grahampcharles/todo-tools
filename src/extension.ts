@@ -4,18 +4,11 @@ import * as todoTools from "./todo-tools";
 export function activate(context: vscode.ExtensionContext) {
     const commands = [
         vscode.commands.registerCommand(
-            "todotools.processTasks",
-            todoTools.processTasks
+            "todotools.performCopy",
+            todoTools.performCopy
         ),
-        vscode.commands.registerCommand(
-            "todotools.runOnOpen",
-            todoTools.performCopyAndSave
-        ),
-        vscode.workspace.onDidOpenTextDocument(
-            async (doc: vscode.TextDocument) => {
-                todoTools.documentOnOpen();
-            }
-        ),
+        vscode.workspace.onDidOpenTextDocument(todoTools.documentOnOpen),
+        vscode.workspace.onDidChangeTextDocument(todoTools.documentOnChange),
     ];
 
     commands.forEach((command) => context.subscriptions.push(command));

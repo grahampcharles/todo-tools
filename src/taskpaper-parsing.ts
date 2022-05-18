@@ -165,7 +165,7 @@ export function processTaskNode(
 ): void {
     var newNode: TaskPaperNode | undefined = undefined;
 
-    // if (taskNode.value?.includes("every Saturday test")) {
+    // if (taskNode.value?.includes("plan trip")) {
     //     console.log();
     // }
 
@@ -195,8 +195,11 @@ export function processTaskNode(
     // handle special @due tokens
     replaceDueTokens(taskNode);
 
-    // check for a recurrence pattern
-    if (taskNode.hasTag(["recur", "annual"])) {
+    // if task is done (or has no due date) check for a recurrence pattern
+    if (
+        taskNode.hasTag(["recur", "annual"]) &&
+        (taskNode.hasTag("done") || !taskNode.hasTag("due"))
+    ) {
         // Get the "source date" -- the day
         // after which to generate the next task
         // This is the date the task was last done,
@@ -247,11 +250,17 @@ export function processTaskNode(
     return;
 }
 
-export function dueSort(a: TaskPaperNode, b: TaskPaperNode) {
-    if (!a.hasTag("due") || !b.hasTag("due")) {
-        return 0;
+export function taskUnknownToBottom(
+    aNode: TaskPaperNode,
+    bNode: TaskPaperNode
+): number {
+    if (aNode.type === "unknown") {
+        return 1;
     }
-    return dayjs(b.tagValue("due")).isSameOrBefore(a.tagValue("due")) ? 1 : -1;
+    if (bNode.type === "unknown") {
+        return -1;
+    }
+    return 0;
 }
 
 export function taskDueDateCompare(
@@ -259,6 +268,7 @@ export function taskDueDateCompare(
     bNode: TaskPaperNode
 ): number {
     // one has no value (e.g. blank line); always sort to bottom
+    // TODO: I think this is redundant?
     if (aNode.value === "") {
         return 1;
     }
