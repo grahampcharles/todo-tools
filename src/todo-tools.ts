@@ -14,8 +14,8 @@ const settings = new Settings();
 
 // versioning
 var minutesIdle: number = 0;
-const TIMEOUT_INTERVAL = 60 * 1000; // one minute between runs
-//DEBUG const TIMEOUT_INTERVAL = 2 * 1000; // one minute between runs
+const IS_DEBUG = false;
+const TIMEOUT_INTERVAL = (IS_DEBUG ? 2 : 60) * 1000; // one minute between runs
 var timer: NodeJS.Timeout;
 var lastVersion: number;
 var maxStackSize = 999;
@@ -82,6 +82,8 @@ export function documentOnOpen() {
             performCopyAndSave();
         }
     });
+    minutesIdle = 0; // clear counter
+    documentIsIdle(); // restart counter
 }
 
 function documentIsIdle() {
@@ -100,7 +102,9 @@ function documentIsIdle() {
         .then(() => {
             if (settings.autoRun()) {
                 minutesIdle++;
-                // DEBUG console.log(`idle, minute ${minutesIdle}`);
+                if (IS_DEBUG) {
+                    console.log(`idle, minute ${minutesIdle}`);
+                }
 
                 if (minutesIdle >= settings.autoRunInterval()) {
                     minutesIdle = 0; // reset counter

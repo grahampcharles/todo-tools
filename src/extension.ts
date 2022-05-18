@@ -7,15 +7,9 @@ export function activate(context: vscode.ExtensionContext) {
             "todotools.performCopy",
             todoTools.performCopy
         ),
-        vscode.workspace.onDidOpenTextDocument(
-            async (doc: vscode.TextDocument) => {
-                todoTools.documentOnOpen();
-            }
-        ),
+        vscode.workspace.onDidOpenTextDocument(todoTools.documentOnOpen),
         vscode.workspace.onDidChangeTextDocument(todoTools.documentOnChange),
     ];
-
-    const x = setTimeout(() => {}, 1000);
 
     commands.forEach((command) => context.subscriptions.push(command));
 }
