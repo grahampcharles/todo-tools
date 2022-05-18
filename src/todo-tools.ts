@@ -5,6 +5,7 @@ import {
     getProjectByName,
     processTaskNode,
     addProject,
+    taskUnknownToBottom,
 } from "./taskpaper-parsing";
 import { TaskPaperNode } from "task-parser/TaskPaperNode";
 import { replaceLines } from "./sort-lines";
@@ -189,6 +190,13 @@ export async function performCopy(): Promise<boolean> {
         todayProject,
         futureProject
     );
+
+    // sort unknowns to bottom
+    [archiveProject, todayProject, futureProject].forEach((project) => {
+        if (project !== undefined) {
+            project.children = project.children.sort(taskUnknownToBottom);
+        }
+    });
 
     // return a promise to write out the document
     return Promise.resolve(writeOutItems(allItems));

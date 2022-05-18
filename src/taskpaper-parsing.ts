@@ -250,11 +250,17 @@ export function processTaskNode(
     return;
 }
 
-export function dueSort(a: TaskPaperNode, b: TaskPaperNode) {
-    if (!a.hasTag("due") || !b.hasTag("due")) {
-        return 0;
+export function taskUnknownToBottom(
+    aNode: TaskPaperNode,
+    bNode: TaskPaperNode
+): number {
+    if (aNode.type === "unknown") {
+        return 1;
     }
-    return dayjs(b.tagValue("due")).isSameOrBefore(a.tagValue("due")) ? 1 : -1;
+    if (bNode.type === "unknown") {
+        return -1;
+    }
+    return 0;
 }
 
 export function taskDueDateCompare(
@@ -262,6 +268,7 @@ export function taskDueDateCompare(
     bNode: TaskPaperNode
 ): number {
     // one has no value (e.g. blank line); always sort to bottom
+    // TODO: I think this is redundant?
     if (aNode.value === "") {
         return 1;
     }
