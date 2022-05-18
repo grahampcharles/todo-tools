@@ -151,9 +151,6 @@ export function performCopyAndSave() {
 
 /**
  *Perform the copy of any due recurring tasks into the Today section
- *
- * @param {vscode.TextEditor} textEditor
- * @return {*}  {Promise<boolean>}
  */
 export async function performCopy(): Promise<boolean> {
     const textEditor = vscode.window.activeTextEditor;
