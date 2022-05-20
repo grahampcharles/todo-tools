@@ -33,6 +33,7 @@ import dayjs from "dayjs";
 import { processTaskNode } from "../../taskpaper-parsing";
 import { TaskPaperNode } from "task-parser/TaskPaperNode";
 import { getSpecialProjects } from "../../todo-tools";
+import { isDueToday } from "../../move-nodes";
 
 suite("Extension Test Suite", () => {
     vscode.window.showInformationMessage("Start all tests.");
@@ -192,6 +193,22 @@ suite("Extension Test Suite", () => {
         expect(test.autoRunInterval()).eq(45);
     });
 
+    it("date comparisons", () => {
+        const today = todayDay.format("YYYY-MM-DD");
+        const testTask = new TaskPaperNode(`  - test item @due(${today})`);
+
+        const answer1 = isDueToday(testTask);
+        expect(answer1).to.equal(true, "today is due today");
+
+        testTask.setTag("due", todayDay.add(-1, "day").format("YYYY-MM-DD"));
+        const answer2 = isDueToday(testTask);
+        expect(answer2).to.equal(true, "yesterday is due today");
+
+        testTask.setTag("due", todayDay.add(1, "day").format("YYYY-MM-DD"));
+        const answer3 = isDueToday(testTask);
+        expect(answer3).to.equal(false, "tomorrow is not due today");
+    });
+
     it("task updating", () => {
         const items = new TaskPaperNode(testArchive1Source);
 
@@ -208,11 +225,5 @@ suite("Extension Test Suite", () => {
             todayProject,
             futureProject
         );
-
-        console.log(items.toStringWithChildren().join("\n"));
-
-        // expect(items.toStringWithChildren().join("\n")).to.equal(
-        //     testArchive1Target
-        // );
     });
 });

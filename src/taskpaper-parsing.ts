@@ -7,7 +7,7 @@ import { TaskPaperNode } from "task-parser/TaskPaperNode";
 import { parseTaskPaper } from "task-parser/index";
 import { cleanDate, DEFAULT_DATE_FORMAT } from "./dates";
 import { Settings } from "./Settings";
-import { comparisonSequences, moveNode } from "./move-nodes";
+import { isDone, isDueToday, isFuture, moveNode } from "./move-nodes";
 import { caseInsensitiveCompare } from "./sort-lines";
 
 // work in the local time zone
@@ -165,10 +165,6 @@ export function processTaskNode(
 ): void {
     var newNode: TaskPaperNode | undefined = undefined;
 
-    // if (taskNode.value?.includes("plan trip")) {
-    //     console.log();
-    // }
-
     // does this node have children? if so, act on the children
     if (taskNode.children.length > 0) {
         taskNode.children.forEach((child) =>
@@ -234,17 +230,17 @@ export function processTaskNode(
     /// move nodes as needed
 
     /// TODAY
-    moveNode(taskNode, comparisonSequences.dueToday, today);
-    moveNode(newNode, comparisonSequences.dueToday, today);
+    moveNode(taskNode, isDueToday, today);
+    moveNode(newNode, isDueToday, today);
 
     /// ARCHIVE
     if (settings.archiveDoneItems()) {
-        moveNode(taskNode, comparisonSequences.isDone, archive);
+        moveNode(taskNode, isDone, archive);
     }
 
     /// FUTURE
     if (!settings.recurringItemsAdjacent()) {
-        moveNode(taskNode, comparisonSequences.isFuture, future);
+        moveNode(taskNode, isFuture, future);
     }
 
     return;
@@ -290,9 +286,9 @@ export function taskDueDateCompare(
     const aDate = cleanDate(aNode.tagValue("due"));
     const bDate = cleanDate(bNode.tagValue("due"));
 
-    if (aDate.isSame(bDate)) {
+    if (aDate.isSame(bDate, "day")) {
         return 0;
     }
 
-    return aDate.isBefore(bDate) ? -1 : 1;
+    return aDate.isBefore(bDate, "day") ? -1 : 1;
 }

@@ -1,22 +1,6 @@
-import * as vscode from "vscode";
 import { TaskPaperNode } from "task-parser/TaskPaperNode";
-import { Settings } from "../Settings";
-import { processTaskNode } from "../taskpaper-parsing";
-import { testArchive1Source, testArchive1Target } from "./suite/testData";
-import { getSpecialProjects } from "../todo-tools";
+import { todayDay } from "../dates";
 
-const items = new TaskPaperNode(testArchive1Source);
+const today = todayDay.format("YYYY-MM-DD");
+const testTask = new TaskPaperNode(`  - test item @due(${today}`);
 
-var archiveProject: TaskPaperNode | undefined,
-    todayProject: TaskPaperNode | undefined,
-    futureProject: TaskPaperNode | undefined;
-[archiveProject, todayProject, futureProject] = getSpecialProjects(items);
-
-const settings = new Settings();
-
-processTaskNode(items, settings, archiveProject, todayProject, futureProject);
-
-console.log(items.toStringWithChildren().join("/n"));
-console.log(testArchive1Target);
-
-console.log("");

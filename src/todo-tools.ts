@@ -16,66 +16,86 @@ const settings = new Settings();
 var minutesIdle: number = 0;
 const IS_DEBUG = false;
 const TIMEOUT_INTERVAL = (IS_DEBUG ? 2 : 60) * 1000; // one minute between runs
+const outputChannel = vscode.window.createOutputChannel("ToDo Tools");
 var timer: NodeJS.Timeout;
-var lastVersion: number;
+var lastIdleTicks: number = 0;
+const IDLE_TICKS = 1 * 1000;
+
+// TODO: why need versions?
 var maxStackSize = 999;
 var versions = { stack: new Array<number>(), position: -1 };
 
-export function documentOnChange(event: vscode.TextDocumentChangeEvent) {
-    function hash(text: string): number {
-        var hash = 0;
-        if (text.length === 0) {
-            return hash;
-        }
-        for (var i = 0; i < text.length; i++) {
-            var char = text.charCodeAt(i);
-            hash = (hash << 5) - hash + char;
-            hash = hash & hash; // Convert to 32bit integer
-        }
-        return hash;
-    }
-
-    if (!event.document) {
-        return;
-    }
-
-    minutesIdle = 0; // clear idle register
-
-    // trigger idle counter
-    var currentHash = hash(event.document.getText());
-
-    if (versions.stack.length === 0) {
-        versions.stack.push(currentHash);
-        versions.position = 0;
-        documentIsIdle();
-    } else {
-        var previous = versions.stack.indexOf(currentHash);
-        if (previous > -1) {
-            if (previous < versions.position) {
-                versions.position = previous;
-            } else if (previous > versions.position) {
-                versions.position = previous;
-            }
-        } else {
-            versions.stack.splice(
-                versions.position + 1,
-                versions.stack.length - versions.position
-            );
-            versions.stack.push(currentHash);
-            versions.position = versions.stack.length - 1;
-
-            if (versions.stack.length > maxStackSize) {
-                var previousLength = versions.stack.length;
-                versions.stack = versions.stack.splice(-maxStackSize);
-                versions.position -= previousLength - maxStackSize;
-            }
-
-            documentIsIdle();
-        }
+function log(message: string) {
+    if (outputChannel !== undefined && IS_DEBUG) {
+        outputChannel.appendLine(message);
     }
 }
 
+export function documentOnChange(event: vscode.TextDocumentChangeEvent) {
+    // function hash(text: string): number {
+    //     var hash = 0;
+    //     if (text.length === 0) {
+    //         return hash;
+    //     }
+    //     for (var i = 0; i < text.length; i++) {
+    //         var char = text.charCodeAt(i);
+    //         hash = (hash << 5) - hash + char;
+    //         hash = hash & hash; // Convert to 32bit integer
+    //     }
+    //     return hash;
+    // }
+
+    // log("documentOnChange");
+
+    // if (!event.document) {
+    //     return;
+    // }
+
+    minutesIdle = 0; // clear idle register
+
+    const nowTicks = new Date().getTime();
+
+    // only fire idle once a second at most
+    if (nowTicks - lastIdleTicks > IDLE_TICKS) {
+        lastIdleTicks = nowTicks;
+        documentIsIdle(); // restart idle sensor
+    }
+    // // trigger idle counter
+    // var currentHash = hash(event.document.getText());
+
+    // if (versions.stack.length === 0) {
+    //     versions.stack.push(currentHash);
+    //     versions.position = 0;
+    //     documentIsIdle();
+    // } else {
+    //     var previous = versions.stack.indexOf(currentHash);
+    //     if (previous > -1) {
+    //         if (previous < versions.position) {
+    //             versions.position = previous;
+    //         } else if (previous > versions.position) {
+    //             versions.position = previous;
+    //         }
+    //     } else {
+    //         versions.stack.splice(
+    //             versions.position + 1,
+    //             versions.stack.length - versions.position
+    //         );
+    //         versions.stack.push(currentHash);
+    //         versions.position = versions.stack.length - 1;
+
+    //         if (versions.stack.length > maxStackSize) {
+    //             var previousLength = versions.stack.length;
+    //             versions.stack = versions.stack.splice(-maxStackSize);
+    //             versions.position -= previousLength - maxStackSize;
+    //         }
+
+    //         documentIsIdle();
+    //     }
+    // }
+}
+
 export function documentOnOpen() {
+    log("documentOnOpen");
     const textEditor = vscode.window.activeTextEditor;
     updateSettings(textEditor).then(() => {
         if (textEditor && settings.runOnOpen()) {
@@ -87,6 +107,7 @@ export function documentOnOpen() {
 }
 
 function documentIsIdle() {
+    log("documentIsIdle");
     const textEditor = vscode.window.activeTextEditor;
     if (!textEditor) {
         return;
@@ -94,29 +115,30 @@ function documentIsIdle() {
 
     // clear current timer
     if (timer) {
+        log("stoppingTimer");
         clearTimeout(timer);
     }
 
     // in case they were manually changed
     updateSettings(textEditor)
         .then(() => {
+            log("settingsRetrieved");
+
+            log(`autoRun: ${settings.autoRun()}`);
+
             if (settings.autoRun()) {
                 minutesIdle++;
-                if (IS_DEBUG) {
-                    console.log(`idle, minute ${minutesIdle}`);
-                }
+                log(`idle, minute ${minutesIdle}`);
+            }
 
-                if (minutesIdle >= settings.autoRunInterval()) {
-                    minutesIdle = 0; // reset counter
-                    performCopyAndSave();
-                }
+            if (minutesIdle >= settings.autoRunInterval()) {
+                minutesIdle = 0; // reset counter
+                performCopyAndSave();
             }
         })
         .finally(() => {
-            var version = textEditor.document.version;
-            if (!lastVersion || version > lastVersion) {
-                timer = setTimeout(documentIsIdle, TIMEOUT_INTERVAL);
-            }
+            log(`restartingTimer, ${TIMEOUT_INTERVAL / 1000} seconds`);
+            timer = setTimeout(documentIsIdle, TIMEOUT_INTERVAL);
         });
 }
 
@@ -124,7 +146,7 @@ function documentIsIdle() {
  * Perform the copy of items to the Today section,
  * Save the results
  */
-export function performCopyAndSave() {
+function performCopyAndSave() {
     const textEditor = vscode.window.activeTextEditor;
     if (!textEditor) {
         return false;
@@ -139,12 +161,12 @@ export function performCopyAndSave() {
             .then(async () => textEditor.document.save())
             .catch((reason: any) => {
                 if (reason instanceof Error) {
-                    console.log(reason.message);
+                    log(reason.message);
                 }
             });
     } catch (err: unknown) {
         if (err instanceof Error) {
-            console.log(err.message);
+            log(err.message);
         }
     }
 }
