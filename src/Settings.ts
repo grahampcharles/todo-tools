@@ -25,8 +25,11 @@ export class Settings {
     archiveDoneItems(): boolean {
         return this.getValue("archiveDoneItems", true);
     }
-    sortFutureItems(): boolean {
-        return this.getValue("sortFutureItems", true);
+    overdueSection(): boolean {
+        return this.getValue("overdueSection", true);
+    }
+    sortByDueDate(): boolean {
+        return this.getValue("sortByDueDate", true);
     }
     recurringItemsAdjacent(): boolean {
         return this.getValue("recurringItemsAdjacent", true);

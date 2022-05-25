@@ -1,14 +1,15 @@
 Today:
+
+Overdue:
 	- writing @recur(1) @due(2022-05-17)
 	- eat groceries @recur(1) @due(2022-05-18)
 	- going over the timer barrier and everything! @recur(1) @due(2022-05-18)
-	- every other day task two @due(2022-05-19) @recur(2)
 	- plan trip @recur(1) @due(2022-05-19)
 	- test outside @due(2022-05-19) @recur(1)
+	- every Saturday test @recur(Saturday) @due(2022-05-21)
+	- every other day task two @due(2022-05-27) @recur(2)
 
 Future:
-	- mow lawn @due(2022-05-21)
-	- every Saturday test @recur(Saturday) @due(2022-05-21)
 	- this should be future @due(2023-01-11)
 	- it least I think it does.... okay, now what @due(2023-05-11)
 
@@ -23,12 +24,14 @@ Archive:
 	- plan trip @due(2022-05-18) @done(22-05-17 11:22)
 	- plan trip @due(2022-05-18) @done(22-05-18 09:31)
 	- test outside @due(2022-05-18) @done
+	- every other day task two @due(2022-05-19) @done(22-05-25 11:07)
 	- every Saturday test @due(2022-05-21) @done(22-05-16 21:48)
 
 Settings:
 	archiveDoneItems: True
 	autoRun: True
 	autoRunInterval: 20
+	overdueSection: True
 	recurringItemsAdjacent: False
 	runOnOpen: True
-	sortFutureItems: True
+	sortByDueDate: True

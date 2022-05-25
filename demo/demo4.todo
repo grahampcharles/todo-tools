@@ -104,7 +104,7 @@ Settings:
 	autoRun=true
 	runOnOpen=true
 	archiveDoneItems=true
-	sortFutureItems=true
+	sortByDueDate=true
 	recurringItemsAdjacent=false
 	autoRunInterval=45
 

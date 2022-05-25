@@ -1,12 +1,7 @@
-import dayjs from "dayjs";
-
 export const testDocument = `Today:
-\t- every Saturday test
-\t- done copy to future @done(2022-01-11) @recur(2)
-
-Future:
-\t- item 2 @due(2022-01-09)
-
+\t- not due
+\t- due second @due(2022-01-12)
+\t- due first @due(2022-01-11)
 `;
 
 export const testDone = `Today:
@@ -28,8 +23,9 @@ Settings:
 \tautoRun=false
 \trunOnOpen=FALSE
 \tarchiveDoneItems=False
-\tsortFutureItems:False
+\tsortByDueDate:False
 \trecurringItemsAdjacent=false
+\toverdueSection=false
 \tautoRunInterval=45`;
 
 export const testArchive1Source = `Today:

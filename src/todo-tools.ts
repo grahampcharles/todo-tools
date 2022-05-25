@@ -5,7 +5,7 @@ import {
     getProjectByName,
     processTaskNode,
     addProject,
-    taskUnknownToBottom,
+    taskBlankToBottom,
 } from "./taskpaper-parsing";
 import { TaskPaperNode } from "task-parser/TaskPaperNode";
 import { replaceLines } from "./sort-lines";
@@ -197,13 +197,21 @@ export async function performCopy(): Promise<boolean> {
     if (settings.archiveDoneItems()) {
         addProject(allItems, "Archive", "above settings");
     }
+    if (settings.overdueSection()) {
+        addProject(allItems, "Overdue", "top");
+    }
 
     // get special projects
     var archiveProject: TaskPaperNode | undefined,
         todayProject: TaskPaperNode | undefined,
-        futureProject: TaskPaperNode | undefined;
-    [archiveProject, todayProject, futureProject] =
+        futureProject: TaskPaperNode | undefined,
+        overdueProject: TaskPaperNode | undefined;
+    [archiveProject, todayProject, futureProject, overdueProject] =
         getSpecialProjects(allItems);
+
+    if (!settings.overdueSection()) {
+        overdueProject = todayProject;
+    }
 
     // process task node
     processTaskNode(
@@ -211,15 +219,18 @@ export async function performCopy(): Promise<boolean> {
         settings,
         archiveProject,
         todayProject,
-        futureProject
+        futureProject,
+        overdueProject
     );
 
     // sort unknowns to bottom
-    [archiveProject, todayProject, futureProject].forEach((project) => {
-        if (project !== undefined) {
-            project.children = project.children.sort(taskUnknownToBottom);
+    [archiveProject, todayProject, futureProject, overdueProject].forEach(
+        (project) => {
+            if (project !== undefined) {
+                project.children = project.children.sort(taskBlankToBottom);
+            }
         }
-    });
+    );
 
     // return a promise to write out the document
     return Promise.resolve(writeOutItems(allItems));
@@ -245,12 +256,14 @@ export function getSpecialProjects(
 ): [
     TaskPaperNode | undefined,
     TaskPaperNode | undefined,
+    TaskPaperNode | undefined,
     TaskPaperNode | undefined
 ] {
     return [
         getProjectByName(node, "Archive"),
         getProjectByName(node, "Today"),
         getProjectByName(node, "Future"),
+        getProjectByName(node, "Overdue"),
     ];
 }
 

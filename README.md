@@ -13,9 +13,10 @@ Settings:
   autoRun=true
   runOnOpen=false
   archiveDoneItems=true
-  sortFutureItems=true
+  sortByDueDate=true
   recurringItemsAdjacent=true
   autoRunInterval=15
+  overdueSection=TRUE
 ```
 
 **Copy Daily Tasks to Today**
@@ -47,7 +48,7 @@ Items are processed in this order:
 3. Items not in Today where @due <= today are moved to Today
 4. Items in Today where @due >= today are moved to Future  (if recurringItemsAdjacent=false)
 5. Items not in Archive where @done have @project set, @recur removed, moved to Archive (if archiveDoneItems=true)
-6. All projects except archive are sorted by @due (if sortFutureItems=true)
+6. All projects except archive are sorted by @due (if sortByDueDate=true)
 
 ## Extension Settings
 

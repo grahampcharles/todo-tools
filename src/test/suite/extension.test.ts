@@ -22,18 +22,28 @@ import {
     stringToLines,
     stripTrailingWhitespace,
 } from "../../strings";
-import {
-    testArchive1Source,
-    testArchive1Target,
-    testSettings,
-} from "./testData";
+import { testArchive1Source, testDocument, testSettings } from "./testData";
 import { Settings } from "../../Settings";
 import { parseTaskPaper } from "task-parser";
-import dayjs from "dayjs";
-import { processTaskNode } from "../../taskpaper-parsing";
+import dayjs, { Dayjs } from "dayjs";
+import {
+    isBlankLine,
+    processTaskNode,
+    taskDueDateCompare,
+    taskBlankToBottom,
+} from "../../taskpaper-parsing";
 import { TaskPaperNode } from "task-parser/TaskPaperNode";
 import { getSpecialProjects } from "../../todo-tools";
-import { isDueToday } from "../../move-nodes";
+import {
+    isDueToday,
+    isDueTodayOrBefore,
+    isFuture,
+    isOverdue,
+} from "../../move-nodes";
+
+const aBeforeB = -1;
+const bBeforeA = 1;
+const aAndBSame = 0;
 
 suite("Extension Test Suite", () => {
     vscode.window.showInformationMessage("Start all tests.");
@@ -172,13 +182,16 @@ suite("Extension Test Suite", () => {
 
         var archiveProject: TaskPaperNode | undefined,
             todayProject: TaskPaperNode | undefined,
-            futureProject: TaskPaperNode | undefined;
-        [archiveProject, todayProject, futureProject] =
+            futureProject: TaskPaperNode | undefined,
+            overdueProject: TaskPaperNode | undefined;
+
+        [archiveProject, todayProject, futureProject, overdueProject] =
             getSpecialProjects(items);
 
         expect(todayProject).to.have.property("value", "Today");
         expect(archiveProject).to.have.property("value", "Archive");
         expect(futureProject).to.be.undefined;
+        expect(overdueProject).to.be.undefined;
     });
 
     it("settings", () => {
@@ -188,25 +201,149 @@ suite("Extension Test Suite", () => {
         expect(test.autoRun()).eq(false);
         expect(test.runOnOpen()).eq(false);
         expect(test.archiveDoneItems()).eq(false);
-        expect(test.sortFutureItems()).eq(false);
+        expect(test.sortByDueDate()).eq(false);
         expect(test.recurringItemsAdjacent()).eq(false);
         expect(test.autoRunInterval()).eq(45);
+        expect(test.overdueSection()).eq(false);
     });
 
     it("date comparisons", () => {
         const today = todayDay.format("YYYY-MM-DD");
         const testTask = new TaskPaperNode(`  - test item @due(${today})`);
 
-        const answer1 = isDueToday(testTask);
-        expect(answer1).to.equal(true, "today is due today");
+        const answer1 = isDueTodayOrBefore(testTask);
+        expect(answer1).to.equal(true, "today is due today or before");
 
         testTask.setTag("due", todayDay.add(-1, "day").format("YYYY-MM-DD"));
-        const answer2 = isDueToday(testTask);
+        const answer2 = isDueTodayOrBefore(testTask);
         expect(answer2).to.equal(true, "yesterday is due today");
 
         testTask.setTag("due", todayDay.add(1, "day").format("YYYY-MM-DD"));
-        const answer3 = isDueToday(testTask);
+        const answer3 = isDueTodayOrBefore(testTask);
         expect(answer3).to.equal(false, "tomorrow is not due today");
+    });
+
+    type DueDateCompareTest = [TaskPaperNode, TaskPaperNode, number];
+
+    it("due date comparing", () => {
+        const tests = new Array<[string, string, number]>();
+
+        tests.push(
+            ["", "should be first", bBeforeA],
+            ["notes shouldn't change at all", "nope", aAndBSame],
+            [
+                "- task with due date, go to bottom @due(2022-01-01)",
+                "- task without due date, go to top",
+                bBeforeA,
+            ],
+            [
+                "- task with later due date, go to bottom @due(2022-02-01)",
+                "- task with earlier due date, go to top @due(2022-01-01)",
+                bBeforeA,
+            ],
+            [
+                "- ZZZ task with same due dates, alphabetize @due(2022-02-01)",
+                "- task with same due dates, alphabetize @due(2022-02-01)",
+                bBeforeA,
+            ],
+            [
+                "- task with same due dates, alphabetize @due(2022-02-01)",
+                "- ZZZ task with same due dates, alphabetize @due(2022-02-01)",
+                aBeforeB,
+            ],
+            ["", "- blank line should always come after tasks", bBeforeA]
+        );
+
+        const dueDateTests: Array<DueDateCompareTest> = tests.map((item) => [
+            new TaskPaperNode(item[0]),
+            new TaskPaperNode(item[1]),
+            item[2],
+        ]);
+
+        dueDateTests.forEach((testArrayItem: DueDateCompareTest, index) => {
+            const result = taskDueDateCompare(
+                testArrayItem[0],
+                testArrayItem[1]
+            );
+
+            expect(result).to.eq(
+                testArrayItem[2],
+                `due date comparison fail at index ${index}`
+            );
+        });
+    });
+
+    // task, isToday, isOverdue, isFuture
+    type TaskFlagCompareTest = [TaskPaperNode, boolean, boolean, boolean];
+    it("task flags", () => {
+        const todayString = todayDay.format("YYYY-MM-DD");
+
+        const taskFlagTests = new Array<Dayjs>();
+        taskFlagTests.push(
+            dayjs(todayString),
+            dayjs(todayString).add(1, "day"),
+            dayjs(todayString).subtract(1, "day")
+        );
+
+        // run tests
+        taskFlagTests
+            .map(
+                (date) =>
+                    [
+                        new TaskPaperNode(
+                            `  - sample task @due(${date.format("YYYY-MM-DD")})`
+                        ),
+                        date.isSame(todayDay, "day"),
+                        date.isBefore(todayDay, "day"),
+                        date.isAfter(todayDay, "day"),
+                    ] as TaskFlagCompareTest
+            )
+            .forEach((taskFlagTest, index) => {
+                const today = isDueToday(taskFlagTest[0]);
+                const overdue = isOverdue(taskFlagTest[0]);
+                const future = isFuture(taskFlagTest[0]);
+
+                expect(today).to.eq(
+                    taskFlagTest[1],
+                    `today fail at index ${index}`
+                );
+                expect(overdue).to.eq(
+                    taskFlagTest[2],
+                    `overdue fail at index ${index}`
+                );
+                expect(future).to.eq(
+                    taskFlagTest[3],
+                    `future fail at index ${index}`
+                );
+            });
+    });
+
+    it("project sorting", () => {
+        const project = new TaskPaperNode(testDocument);
+
+        project.children[0].children.sort(taskDueDateCompare);
+
+        const expectations = ["not due", "due first", "due second", ""];
+
+        project.children[0].children.forEach((node, index) => {
+            const expectation = expectations[index];
+            const nodeValue = node.value ?? "";
+            expect(nodeValue).to.equal(
+                expectation,
+                `'${nodeValue}' out of order at index ${index}`
+            );
+        });
+
+        // last one should be a blank line
+        const lastLine =
+            project.children[0].children[
+                project.children[0].children.length - 1
+            ];
+        const isBlank = isBlankLine(lastLine);
+        expect(isBlank).to.eq(
+            true,
+            "last line of sorted project should be blank"
+        );
     });
 
     it("task updating", () => {
@@ -214,8 +351,9 @@ suite("Extension Test Suite", () => {
 
         var archiveProject: TaskPaperNode | undefined,
             todayProject: TaskPaperNode | undefined,
-            futureProject: TaskPaperNode | undefined;
-        [archiveProject, todayProject, futureProject] =
+            futureProject: TaskPaperNode | undefined,
+            overdueProject: TaskPaperNode | undefined;
+        [archiveProject, todayProject, futureProject, overdueProject] =
             getSpecialProjects(items);
 
         processTaskNode(
@@ -223,7 +361,38 @@ suite("Extension Test Suite", () => {
             new Settings(),
             archiveProject,
             todayProject,
-            futureProject
+            futureProject,
+            overdueProject
         );
+    });
+
+    it("is blank line", () => {
+        const tests = ["", "this is a test", "\t\t", "\t\ttest: test"];
+        const results = [true, false, true, false];
+
+        tests.forEach((test, index) => {
+            const expectation = results[index];
+            const actual = isBlankLine(new TaskPaperNode(test));
+            expect(actual).to.equal(expectation, `fail on '${test}'`);
+        });
+    });
+
+    it("blank line sorting", () => {
+        const blankLineTests = new Array<[string, string]>();
+        blankLineTests.push(
+            ["", "test on top"],
+            ["", "  - test on top"],
+            ["test on top", ""],
+            ["- test on top", ""]
+        );
+        const results = [bBeforeA, bBeforeA, aBeforeB, aBeforeB];
+
+        blankLineTests.forEach((test, index) => {
+            const aNode = new TaskPaperNode(test[0]);
+            const bNode = new TaskPaperNode(test[1]);
+            const sortTest = taskBlankToBottom(aNode, bNode);
+
+            expect(sortTest).to.eq(results[index], `fail at index ${index}`);
+        });
     });
 });

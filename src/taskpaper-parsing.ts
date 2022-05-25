@@ -7,7 +7,14 @@ import { TaskPaperNode } from "task-parser/TaskPaperNode";
 import { parseTaskPaper } from "task-parser/index";
 import { cleanDate, DEFAULT_DATE_FORMAT } from "./dates";
 import { Settings } from "./Settings";
-import { isDone, isDueToday, isFuture, moveNode } from "./move-nodes";
+import {
+    isDone,
+    isDueToday,
+    isDueTodayOrBefore,
+    isFuture,
+    isOverdue,
+    moveNode,
+} from "./move-nodes";
 import { caseInsensitiveCompare } from "./sort-lines";
 
 // work in the local time zone
@@ -161,14 +168,15 @@ export function processTaskNode(
     settings: Settings,
     archive: TaskPaperNode | undefined,
     today: TaskPaperNode | undefined,
-    future: TaskPaperNode | undefined
+    future: TaskPaperNode | undefined,
+    overdue: TaskPaperNode | undefined
 ): void {
     var newNode: TaskPaperNode | undefined = undefined;
 
     // does this node have children? if so, act on the children
     if (taskNode.children.length > 0) {
         taskNode.children.forEach((child) =>
-            processTaskNode(child, settings, archive, today, future)
+            processTaskNode(child, settings, archive, today, future, overdue)
         );
 
         // remove any deleted children
@@ -177,7 +185,7 @@ export function processTaskNode(
         });
 
         // sort the child tasks
-        if (settings.sortFutureItems() && taskNode.type === "project") {
+        if (settings.sortByDueDate() && taskNode.type === "project") {
             taskNode.children = taskNode.children.sort(taskDueDateCompare);
         }
     }
@@ -229,9 +237,18 @@ export function processTaskNode(
 
     /// move nodes as needed
 
-    /// TODAY
-    moveNode(taskNode, isDueToday, today);
-    moveNode(newNode, isDueToday, today);
+    /// TODAY / OVERDUE
+    if (settings.overdueSection()) {
+        moveNode(taskNode, isDueToday, today);
+        moveNode(newNode, isDueToday, today);
+
+        moveNode(taskNode, isOverdue, overdue);
+        moveNode(newNode, isOverdue, overdue);
+    } else {
+        /// TODAY
+        moveNode(taskNode, isDueTodayOrBefore, today);
+        moveNode(newNode, isDueTodayOrBefore, today);
+    }
 
     /// ARCHIVE
     if (settings.archiveDoneItems()) {
@@ -246,30 +263,46 @@ export function processTaskNode(
     return;
 }
 
-export function taskUnknownToBottom(
+export function taskBlankToBottom(
     aNode: TaskPaperNode,
     bNode: TaskPaperNode
 ): number {
-    if (aNode.type === "unknown") {
-        return 1;
+    if (isBlankLine(aNode)) {
+        return isBlankLine(bNode) ? 0 : 1;
     }
-    if (bNode.type === "unknown") {
+    if (isBlankLine(bNode)) {
         return -1;
     }
     return 0;
+}
+
+export function isBlankLine(node: TaskPaperNode): boolean {
+    if (node.type !== "unknown") {
+        return false;
+    }
+    // return false if match anything non-whitespace
+    return (node.value ?? "").match(/\S.*/gm) === null;
 }
 
 export function taskDueDateCompare(
     aNode: TaskPaperNode,
     bNode: TaskPaperNode
 ): number {
-    // one has no value (e.g. blank line); always sort to bottom
-    // TODO: I think this is redundant?
-    if (aNode.value === "") {
-        return 1;
+    const aBeforeB = -1;
+    const bBeforeA = 1;
+    const aAndBSame = 0;
+
+    // always sort blank lines to bottom
+    if (isBlankLine(aNode)) {
+        return isBlankLine(bNode) ? aAndBSame : bBeforeA;
     }
-    if (bNode.value === "") {
-        return -1;
+    if (isBlankLine(bNode)) {
+        return aBeforeB;
+    }
+
+    // only sort tasks
+    if (!(aNode.type === "task" && bNode.type === "task")) {
+        return 0;
     }
 
     // no due dates: alphabetical order
@@ -279,7 +312,7 @@ export function taskDueDateCompare(
 
     // one due date: sort item with no due date to the top
     if (!aNode.hasTag("due") || !bNode.hasTag("due")) {
-        return aNode.hasTag("due") ? 1 : -1;
+        return aNode.hasTag("due") ? bBeforeA : aBeforeB;
     }
 
     // two due dates
@@ -287,8 +320,9 @@ export function taskDueDateCompare(
     const bDate = cleanDate(bNode.tagValue("due"));
 
     if (aDate.isSame(bDate, "day")) {
-        return 0;
+        // same date: alphabetical order
+        return caseInsensitiveCompare(aNode.value ?? "", bNode.value ?? "");
     }
 
-    return aDate.isBefore(bDate, "day") ? -1 : 1;
+    return aDate.isBefore(bDate, "day") ? aBeforeB : bBeforeA;
 }

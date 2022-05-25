@@ -1,26 +1,26 @@
 Today:
-	- item #5 
-	- item #6 
+	- item #5
+	- item #6
 	- item #10 @due(2011-08-22)
 	- yyitem #3 @recur(Monday) @due(2022-05-02)
 	- zzitem #2 @annual(11/1) @due(2022-11-01)
-	
+
 Other Project:
 	- item #13 @recur(10) @due(2022-11-02)
 	- item #12 @annual(11/1) @due(2022-11-03)
 
 Archive:
 	- yyitem #3 @done(22-04-30 11:35) @project(Today)
+	- yyitem #3 @done(22-04-30 11:27) @project(Today)
+	- yyitem #3 @done(22-04-30 11:26) @project(Today)
 	- zzitem #2 @done(22-04-30 11:35) @project(Today)
 	- zzitem #2 @done(22-04-30 11:29) @project(Today)
 	- zzitem #2 @done(22-04-30 11:28) @project(Today)
-	- yyitem #3 @done(22-04-30 11:27) @project(Today)
-	- yyitem #3 @done(22-04-30 11:26) @project(Today)
 
 
 Settings:
-	runOnOpen=true
+	archiveDoneItems=true
 	autoRun=true
 	autoRunInterval=1
-	sortFutureItems=true
-	archiveDoneItems=true
+	runOnOpen=true
+	sortByDueDate=true

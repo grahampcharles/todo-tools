@@ -2,6 +2,14 @@
 
 All notable changes to the "todo-tools" extension will be documented in this file.
 
+## [0.7.0] - 2022-05-25
+### add
+- OPTIONAL "overdue" section
+
+### fix
+- sorting; blank lines fixes
+
+
 ## [0.6.0] - 2022-04-30
 ### enhance
 - retain project tag on tasks that are recurred
