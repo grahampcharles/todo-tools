@@ -316,6 +316,15 @@ export function taskDueDateCompare(
     }
 
     // two due dates
+    // is one (and only) one node high priority?
+    if (aNode.hasTag("high") && !bNode.hasTag("high")) {
+        return aBeforeB;
+    }
+    if (bNode.hasTag("high") && !aNode.hasTag("high")) {
+        return bBeforeA;
+    }
+
+    // same priority: sort by date
     const aDate = cleanDate(aNode.tagValue("due"));
     const bDate = cleanDate(bNode.tagValue("due"));
 

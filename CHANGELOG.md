@@ -4,7 +4,11 @@ All notable changes to the "todo-tools" extension will be documented in this fil
 
 ## [0.7.0] - 2022-05-25
 ### add
-- OPTIONAL "overdue" section
+- @high tag handling (sorts to top)
+
+## [0.7.0] - 2022-05-25
+### add
+- optional "overdue" section
 
 ### fix
 - sorting; blank lines fixes

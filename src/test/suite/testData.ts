@@ -4,6 +4,12 @@ export const testDocument = `Today:
 \t- due first @due(2022-01-11)
 `;
 
+export const testDocumentWithHigh = `Today:
+\t- not due
+\t- due second @due(2022-01-10)
+\t- due first @due(2022-01-11) @high
+`;
+
 export const testDone = `Today:
 \t- first @done
 \tSubProject:

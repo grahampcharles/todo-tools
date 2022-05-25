@@ -22,7 +22,7 @@ import {
     stringToLines,
     stripTrailingWhitespace,
 } from "../../strings";
-import { testArchive1Source, testDocument, testSettings } from "./testData";
+import { testArchive1Source, testDocument, testDocumentWithHigh, testSettings } from "./testData";
 import { Settings } from "../../Settings";
 import { parseTaskPaper } from "task-parser";
 import dayjs, { Dayjs } from "dayjs";
@@ -316,6 +316,35 @@ suite("Extension Test Suite", () => {
                     `future fail at index ${index}`
                 );
             });
+    });
+
+
+    it("project sorting, including @high tag", () => {
+        const project = new TaskPaperNode(testDocumentWithHigh);
+
+        project.children[0].children.sort(taskDueDateCompare);
+
+        const expectations = ["not due", "due first", "due second", ""];
+
+        project.children[0].children.forEach((node, index) => {
+            const expectation = expectations[index];
+            const nodeValue = node.value ?? "";
+            expect(nodeValue).to.equal(
+                expectation,
+                `'${nodeValue}' out of order at index ${index}`
+            );
+        });
+
+        // last one should be a blank line
+        const lastLine =
+            project.children[0].children[
+                project.children[0].children.length - 1
+            ];
+        const isBlank = isBlankLine(lastLine);
+        expect(isBlank).to.eq(
+            true,
+            "last line of sorted project should be blank"
+        );
     });
 
     it("project sorting", () => {

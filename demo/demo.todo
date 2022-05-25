@@ -1,15 +1,16 @@
 Today:
+	- plan trip @recur(1) @due(2022-05-25) @high
+	- plan trip less important @recur(1) @due(2022-05-25)
 
 Overdue:
+	- test outside @due(2022-05-19) @recur(1) @high
 	- writing @recur(1) @due(2022-05-17)
 	- eat groceries @recur(1) @due(2022-05-18)
 	- going over the timer barrier and everything! @recur(1) @due(2022-05-18)
-	- plan trip @recur(1) @due(2022-05-19)
-	- test outside @due(2022-05-19) @recur(1)
 	- every Saturday test @recur(Saturday) @due(2022-05-21)
-	- every other day task two @due(2022-05-27) @recur(2)
 
 Future:
+	- every other day task two @due(2022-05-27) @recur(2)
 	- this should be future @due(2023-01-11)
 	- it least I think it does.... okay, now what @due(2023-05-11)
 
