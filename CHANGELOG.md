@@ -2,13 +2,15 @@
 
 All notable changes to the "todo-tools" extension will be documented in this file.
 
-## [0.7.0] - 2022-05-25
-### add
-- @high tag handling (sorts to top)
+## [0.7.1] - 2022-05-26
+### fix
+- future recurring items not moving to future
+
 
 ## [0.7.0] - 2022-05-25
 ### add
 - optional "overdue" section
+- @high tag handling (sorts to top)
 
 ### fix
 - sorting; blank lines fixes

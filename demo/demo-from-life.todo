@@ -1,0 +1,167 @@
+Today:
+
+Overdue:
+	- get suit altered @due(2022-05-18) @high
+	- enroll Claudia @due(2022-05-19) @high
+	- get summer schedule to Fern's therapist @due(2022-05-19) @high
+	- clean out fire safe @due(2022-05-24) @high
+	- smoralsupport.com e-mail through Zoho @due(2022-03-13)
+	- theclassroombeyond.com e-mail through Zoho @due(2022-03-13)
+	- close Umpqua @due(2022-04-01)
+	- finish phenology lesson plan @due(2022-04-01)
+	- start seeds @due(2022-04-30)
+	- theclassroombeyond.com voice mail through Google Voice @due(2022-05-01)
+	- plant pumpkin 🎃 @due(2022-05-02)
+	- garage @recur(3) @household @due(2022-05-04)
+	- sort tech stuff in garage @due(2022-05-13)
+	- install plug by fireplace @due(2022-05-14)
+	- tidy up cables on front porch @due(2022-05-16)
+	- trim front trees @due(2022-05-16) @recur(3)
+	- very short Hilo stories @recur(3) @due(2022-05-16)
+	- work on garage workout setup @due(2022-05-16) @recur(3)
+	- ask Fern for something @recur(1) @due(2022-05-18)
+	- call Main Street scholars 650.440.4725 @due(2022-05-18)
+	- bridge @due(2022-05-19) @recur(2)
+	- clean master bath garbage @due(2022-05-19)
+	- music @due(2022-05-19) @recur(2)
+	- plank @due(2022-05-19) @recur(2)
+	- squat @due(2022-05-19) @recur(2)
+	- trash management @recur(3) @due(2022-05-20)
+	- work on AIID.com @recur(1) @due(2022-05-20)
+	- work on theclassroombeyond.com @recur(1) @due(2022-05-20)
+	- work on theclassroombeyond.com recruitment @recur(1) @due(2022-05-21)
+	- clean out car @due(2022-05-22) @recur(5)
+	- clean under washer lid @due(2022-05-22) @recur(300) @household
+	- downstairs bathroom @recur(5) @household @due(2022-05-22)
+	- guest bathroom @recur(5) @household @due(2022-05-22)
+	- master bathroom @recur(5) @household @due(2022-05-22)
+	- vacuum upstairs @due(2022-05-22) @recur(5) @household
+	- baseboards @due(2022-05-23) @recur(3)
+	- clean microwave @recur(6) @due(2022-05-23)
+	- desk @due(2022-05-23) @recur(6) @household
+	- garden @recur(3) @due(2022-05-23)
+	- ask Claudia for something @recur(1) @due(2022-05-24)
+	- tidy back patio @recur(7) @due(2022-05-24) @household
+
+Future:
+	- trash cans out @high @recur(Thursday) @due(2022-05-26)
+	- Coastal Vine @due(2022-05-26) @recur(2)
+	- crossword @recur(1) @due(2022-05-26)
+	- family room cleanup @recur(3) @due(2022-05-26) @household
+	- finances/bills @recur(6) @due(2022-05-26)
+	- Hamline @recur(3) @due(2022-05-26)
+	- horse @recur(1) @due(2022-05-26)
+	- master sheets @due(2022-05-26) @recur(9)
+	- metal kitchen appliances @due(2022-05-26) @recur(9)
+	- plan trip @recur(1) @due(2022-05-26)
+	- restart thought box @due(2022-05-26)
+	- ten minutes of emptiness @due(2022-05-26) @recur(1)
+	- theclassroombeyond.com web configuration @due(2022-05-26)
+	- wash wood stairs and upstairs @due(2022-05-26) @recur(9) @household
+	- writing @recur(1) @due(2022-05-26)
+	- 00ToFile directory @recur(7) @due(2022-05-27)
+	- clean project table @due(2022-05-27) @recur(10)
+	- detach from something @recur(1) @due(2022-05-27)
+	- Duolingo @recur(1) @due(2022-05-27)
+	- exercise @recur(2) @due(2022-05-27)
+	- Kaiser for COVID tests @recur(10) @due(2022-05-27)
+	- kitchen @due(2022-05-27) @household @recur(1)
+	- mow lawn @due(2022-05-27) @recur(10)
+	- organize something random @due(2022-05-27) @recur(2)
+	- reading @recur(1) @due(2022-05-27)
+	- refill hydroponics @recur(7) @due(2022-05-27)
+	- Timothy run @due(2022-05-27) @recur(12)
+	- trash cans in @recur(Friday) @household @due(2022-05-27)
+	- kitchen cabinets @recur(11) @due(2022-05-28) @household
+	- put something into greenwaste @recur(Saturday) @due(2022-05-28)
+	- Sortly @due(2022-05-28) @recur(11)
+	- wash a wall @due(2022-05-28) @recur(11)
+	- coding @recur(4) @due(2022-05-29)
+	- grocery plan @recur(Sunday) @due(2022-05-29)
+	- laundry @recur(5) @due(2022-05-29)
+	- top off TP @recur(5) @due(2022-05-29)
+	- empty compost bin @due(2022-05-30)
+	- empty veggie garden @due(2022-05-30)
+	- groceries @due(2022-05-30) @recur(Monday)
+	- smoral cleanup old blog @recur(13) @due(2022-05-30)
+	- stovetop @due(2022-05-30) @recur(5) @household
+	- small trash cans @due(2022-05-31) @recur(Tuesday)
+	- Claudia surf lessons? @due(2022-06-01)
+	- fix Fern's shelf @due(2022-06-01) @repairs
+	- meet up with Melissa @due(2022-06-01)
+	- switch from google anayltics to matomo @due(2022-06-01)
+	- switch veggie / compost @due(2022-06-04)
+	- NZ traveler declaration @due(2022-06-07)
+	- fix toilet paper fixture in kids bathroom @due(2022-06-09) @repairs
+	- Bart flea/tick @recur(30) @due(2022-06-16)
+	- coffee maker @recur(35) @household @due(2022-06-21)
+	- archive taskpaper @due(2022-06-22) @recur(28)
+	- wash shower curtain @due(2022-07-01) @recur(45)
+	- transfer domains from winhost (aiid, drlindacharles) @due(2022-10-01)
+	- schedule Kidsmiles @due(2022-11-10) @recur(170)
+
+Household:
+	- address signs
+	- cat5 in family room
+	- fire extinguishers
+	- lumber rack
+	- paint balcony
+	- pullup bar
+	- replace balcony
+	- seal Claudia’s window
+	- switch in master bedroom
+	- touchup paint front door
+	- under-cabinet lighting (1 x 35.5", 3 x 23", 1 x 18") @started(2021-12-01)
+	- weatherstrip front door
+
+Projects:
+	- analysis paralysis
+	- Aristotle on memory
+	- choose-your-own-adventure style nature walk
+	- chords on songs to Song app
+	- combine Amazon accounts
+	- combine Visa cards
+	- doodaddy e-mail
+	- dunker candle problem
+	- extract Half Moon Bay text from https://www.podtrac.com/pts/redirect.mp3/archive.org/download/rr22021/Thriller707.mp3
+	- felt pads on doors
+	- https://www.nytimes.com/interactive/2021/10/21/well/move/midlife-hiit-workout.html?shared=1
+	- Ifshin Music
+	- learn the Pledge of Allegiance in sign language
+	- look up reptation / saltation / aeolian processes
+	- make QQT back/front template
+	- next time you get cards, add "amateur" as your job title
+	- one-word theme for my year
+	- outline with logs
+	- science site 📎➰🔱🔗📒🧸⚛️🧫🔬💡🐻🛴🌽🥨🪐🐞🗣🧠 atomicladybug.com
+	- server and dns map
+	- Sophocles and Euripides
+	- yoga for Claudia and me?
+
+Electrician:
+	- 240 for car
+	- check outlet ground in garage
+	- new outlet in yard (although I could run that from deck)
+
+Archive:
+	- cleancult @done(22-05-26 10:41)
+	- reading @done(2022-05-25)
+	- stovetop @due(2022-05-22) @household @done(22-05-25 19:37)
+	- create a guest thank-you note @due(2022-05-24) @done(2022-05-25)
+	- detach from something @due(2022-05-24) @done(2022-05-25)
+	- writing @due(2022-05-24) @done(22-05-25 19:38)
+	- archive taskpaper @due(2022-05-25) @done(2022-05-25)
+	- small trash cans @due(2022-05-25) @done(22-05-25 19:37)
+	- detach from something @due(2022-05-26) @done(2022-05-26)
+	- Duolingo @due(2022-05-26) @done(2022-05-26)
+	- kitchen @due(2022-05-26) @household @done(2022-05-26)
+	- reading @due(2022-05-26) @done(2022-05-26)
+
+Settings:
+	archiveDoneItems=true
+	autoRun=true
+	autoRunInterval=10
+	recurringItemsAdjacent=false
+	runOnOpen=true
+	sortFutureItems=true
+	overdueSection=true

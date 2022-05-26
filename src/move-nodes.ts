@@ -9,22 +9,27 @@ export function moveNode(
     test?: NodeComparisonAlgorithm,
     target?: TaskPaperNode
 ) {
-    if (target === undefined || node === undefined) {
+    // guards
+    const nodeOrTargetMissing = target === undefined || node === undefined;
+    if (nodeOrTargetMissing) {
+        return;
+    }
+    const nodeHasBeenDeleted = target.tagValue("ACTION") === "DELETE";
+    if (nodeHasBeenDeleted) {
+        return;
+    }
+    const nodeAlreadyInTarget = node.parent === target;
+    if (nodeAlreadyInTarget) {
         return;
     }
 
-    // check if node is already in target
-    // TODO:  will this work?
-    // if not, add a comparison (isParent())
-    if (node.parent === target) {
-        return;
-    }
-
+    // run the test on the node
     const move = test ? test(node) : true;
 
     if (move) {
         const newNode = node.clone();
         newNode.depth = target.depth + 1;
+        newNode.parent = target;
         target.children.push(newNode);
 
         node.setTag("ACTION", "DELETE");
@@ -59,7 +64,6 @@ export function isDueToday(inputNode: TaskPaperNode): boolean {
         cleanDate(inputNode.tagValue("due")).isSame(todayDay, "day")
     );
 }
-
 
 export function isOverdue(inputNode: TaskPaperNode): boolean {
     return (

@@ -200,15 +200,17 @@ export function processTaskNode(
     replaceDueTokens(taskNode);
 
     // if task is done (or has no due date) check for a recurrence pattern
-    if (
+    const taskHasRecurrenceAndIsDone =
         taskNode.hasTag(["recur", "annual"]) &&
-        (taskNode.hasTag("done") || !taskNode.hasTag("due"))
-    ) {
+        (taskNode.hasTag("done") || !taskNode.hasTag("due"));
+
+    if (taskHasRecurrenceAndIsDone) {
         // Get the "source date" -- the day
         // after which to generate the next task
         // This is the date the task was last done,
-        // or if that's unknown, then today.
-        var sourceDate = cleanDate(taskNode.tagValue("done"));
+        // or if that's unknown, then default to
+        // today.
+        const sourceDate = cleanDate(taskNode.tagValue("done"));
 
         /// next recurrence date
         const nextDate = cleanDate(
@@ -236,9 +238,8 @@ export function processTaskNode(
     }
 
     /// move nodes as needed
-
-    /// TODAY / OVERDUE
     if (settings.overdueSection()) {
+        /// TODAY / OVERDUE
         moveNode(taskNode, isDueToday, today);
         moveNode(newNode, isDueToday, today);
 
@@ -258,6 +259,7 @@ export function processTaskNode(
     /// FUTURE
     if (!settings.recurringItemsAdjacent()) {
         moveNode(taskNode, isFuture, future);
+        moveNode(newNode, isFuture, future);
     }
 
     return;

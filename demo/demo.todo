@@ -1,16 +1,16 @@
 Today:
-	- plan trip @recur(1) @due(2022-05-25) @high
-	- plan trip less important @recur(1) @due(2022-05-25)
 
 Overdue:
-	- test outside @due(2022-05-19) @recur(1) @high
-	- writing @recur(1) @due(2022-05-17)
-	- eat groceries @recur(1) @due(2022-05-18)
 	- going over the timer barrier and everything! @recur(1) @due(2022-05-18)
 	- every Saturday test @recur(Saturday) @due(2022-05-21)
 
 Future:
+	- plan trip @recur(1) @due(2022-05-27) @high
+	- test outside @due(2022-05-27) @recur(1) @high
+	- eat groceries @recur(1) @due(2022-05-27)
 	- every other day task two @due(2022-05-27) @recur(2)
+	- plan trip less important @recur(1) @due(2022-05-27)
+	- writing @recur(1) @due(2022-05-27)
 	- this should be future @due(2023-01-11)
 	- it least I think it does.... okay, now what @due(2023-05-11)
 
@@ -18,15 +18,24 @@ Archive:
 	- going over the timer barrier and everything! @done(2022-05-17)
 	- shopping trip @done
 	- this is done @done(22-05-16 21:44)
+	- test outside @due(2022-05-19) @high @done(22-05-26 16:42)
+	- plan trip @due(2022-05-25) @high @done(22-05-25 16:32)
+	- plan trip @due(2022-05-26) @high @done(22-05-26 16:35)
+	- plan trip @due(2022-05-26) @high @done(22-05-26 16:39)
 	- every other day task two @due(2022-05-16) @done(22-05-16 21:48)
 	- plan trip @due(2022-05-17) @done(22-05-17 11:17)
+	- writing @due(2022-05-17) @done(22-05-26 16:35)
 	- eat groceries @due(2022-05-18) @done
+	- eat groceries @due(2022-05-18) @done(22-05-25 16:31)
 	- plan trip @due(2022-05-18) @done(22-05-17 11:20)
 	- plan trip @due(2022-05-18) @done(22-05-17 11:22)
 	- plan trip @due(2022-05-18) @done(22-05-18 09:31)
 	- test outside @due(2022-05-18) @done
 	- every other day task two @due(2022-05-19) @done(22-05-25 11:07)
 	- every Saturday test @due(2022-05-21) @done(22-05-16 21:48)
+	- plan trip less important @due(2022-05-25) @done(22-05-25 16:23)
+	- eat groceries @due(2022-05-26) @done(22-05-26 16:32)
+	- plan trip less important @due(2022-05-26) @done(22-05-26 16:32)
 
 Settings:
 	archiveDoneItems: True
