@@ -22,7 +22,12 @@ import {
     stringToLines,
     stripTrailingWhitespace,
 } from "../../strings";
-import { testArchive1Source, testDocument, testDocumentWithHigh, testSettings } from "./testData";
+import {
+    testArchive1Source,
+    testDocument,
+    testDocumentWithHigh,
+    testSettings,
+} from "./testData";
 import { Settings } from "../../Settings";
 import { parseTaskPaper } from "task-parser";
 import dayjs, { Dayjs } from "dayjs";
@@ -90,7 +95,8 @@ suite("Extension Test Suite", () => {
         assert.strictEqual(0, dayNameToWeekday("Sunday"));
 
         // today's day name
-        assert.strictEqual(todayName, dayNames[todayDay.day()]);
+        const todayNameString = todayName();
+        assert.strictEqual(todayNameString, dayNames[todayDay().day()]);
 
         expect(monthNameToNumber("September")).to.equal(
             8,
@@ -208,17 +214,17 @@ suite("Extension Test Suite", () => {
     });
 
     it("date comparisons", () => {
-        const today = todayDay.format("YYYY-MM-DD");
+        const today = todayDay().format("YYYY-MM-DD");
         const testTask = new TaskPaperNode(`  - test item @due(${today})`);
 
         const answer1 = isDueTodayOrBefore(testTask);
         expect(answer1).to.equal(true, "today is due today or before");
 
-        testTask.setTag("due", todayDay.add(-1, "day").format("YYYY-MM-DD"));
+        testTask.setTag("due", todayDay().add(-1, "day").format("YYYY-MM-DD"));
         const answer2 = isDueTodayOrBefore(testTask);
         expect(answer2).to.equal(true, "yesterday is due today");
 
-        testTask.setTag("due", todayDay.add(1, "day").format("YYYY-MM-DD"));
+        testTask.setTag("due", todayDay().add(1, "day").format("YYYY-MM-DD"));
         const answer3 = isDueTodayOrBefore(testTask);
         expect(answer3).to.equal(false, "tomorrow is not due today");
     });
@@ -276,7 +282,7 @@ suite("Extension Test Suite", () => {
     // task, isToday, isOverdue, isFuture
     type TaskFlagCompareTest = [TaskPaperNode, boolean, boolean, boolean];
     it("task flags", () => {
-        const todayString = todayDay.format("YYYY-MM-DD");
+        const todayString = todayDay().format("YYYY-MM-DD");
 
         const taskFlagTests = new Array<Dayjs>();
         taskFlagTests.push(
@@ -293,9 +299,9 @@ suite("Extension Test Suite", () => {
                         new TaskPaperNode(
                             `  - sample task @due(${date.format("YYYY-MM-DD")})`
                         ),
-                        date.isSame(todayDay, "day"),
-                        date.isBefore(todayDay, "day"),
-                        date.isAfter(todayDay, "day"),
+                        date.isSame(todayDay(), "day"),
+                        date.isBefore(todayDay(), "day"),
+                        date.isAfter(todayDay(), "day"),
                     ] as TaskFlagCompareTest
             )
             .forEach((taskFlagTest, index) => {
@@ -317,7 +323,6 @@ suite("Extension Test Suite", () => {
                 );
             });
     });
-
 
     it("project sorting, including @high tag", () => {
         const project = new TaskPaperNode(testDocumentWithHigh);

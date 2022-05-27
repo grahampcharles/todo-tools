@@ -5,6 +5,7 @@ All notable changes to the "todo-tools" extension will be documented in this fil
 ## [0.7.1] - 2022-05-26
 ### fix
 - future recurring items not moving to future
+- 'today' day not being reevaluated as time PASSES
 
 
 ## [0.7.0] - 2022-05-25

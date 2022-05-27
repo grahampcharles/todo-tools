@@ -45,7 +45,7 @@ export function isFuture(inputNode: TaskPaperNode): boolean {
     return (
         inputNode.hasTag("due") &&
         !inputNode.hasTag("done") &&
-        cleanDate(inputNode.tagValue("due")).isAfter(todayDay, "day")
+        cleanDate(inputNode.tagValue("due")).isAfter(todayDay(), "day")
     );
 }
 
@@ -53,7 +53,7 @@ export function isDueTodayOrBefore(inputNode: TaskPaperNode): boolean {
     return (
         inputNode.hasTag("due") &&
         !inputNode.hasTag("done") &&
-        cleanDate(inputNode.tagValue("due")).isSameOrBefore(todayDay, "day")
+        cleanDate(inputNode.tagValue("due")).isSameOrBefore(todayDay(), "day")
     );
 }
 
@@ -61,7 +61,7 @@ export function isDueToday(inputNode: TaskPaperNode): boolean {
     return (
         inputNode.hasTag("due") &&
         !inputNode.hasTag("done") &&
-        cleanDate(inputNode.tagValue("due")).isSame(todayDay, "day")
+        cleanDate(inputNode.tagValue("due")).isSame(todayDay(), "day")
     );
 }
 
@@ -69,6 +69,6 @@ export function isOverdue(inputNode: TaskPaperNode): boolean {
     return (
         inputNode.hasTag("due") &&
         !inputNode.hasTag("done") &&
-        cleanDate(inputNode.tagValue("due")).isBefore(todayDay, "day")
+        cleanDate(inputNode.tagValue("due")).isBefore(todayDay(), "day")
     );
 }

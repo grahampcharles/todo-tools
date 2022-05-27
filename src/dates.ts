@@ -1,5 +1,5 @@
 // days of the week
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timeZone from "dayjs/plugin/timezone";
 import localeData from "dayjs/plugin/localeData";
@@ -76,6 +76,13 @@ export function cleanDate(
     return afterDate;
 }
 
+export function todayDay(): Dayjs {
+    return dayjs();
+}
+export function todayName(): string {
+    return dayNames[todayDay().day()];
+}
+
 /// returns -1 on nonexistent
 export function dayNameToWeekday(dayName: string): number {
     // find the singular version of the day name
@@ -105,9 +112,6 @@ export function treatAsUTC(date: Date): number {
     result.setMinutes(result.getMinutes() - result.getTimezoneOffset());
     return result.getTime();
 }
-
-export const todayDay = dayjs();
-export const todayName = dayNames[todayDay.day()];
 
 export function daysUntilWeekday(
     weekday: number,
