@@ -7,6 +7,18 @@ export function activate(context: vscode.ExtensionContext) {
             "todotools.performCopy",
             todoTools.performCopy
         ),
+        vscode.commands.registerCommand("todotools.setPriorityHigh", () =>
+            todoTools.setPriority("high")
+        ),
+        vscode.commands.registerCommand("todotools.setPriorityRegular", () =>
+            todoTools.setPriority(undefined)
+        ),
+        vscode.commands.registerCommand("todotools.setPriorityLow", () =>
+            todoTools.setPriority("low")
+        ),
+        vscode.commands.registerCommand("todotools.setDueInAWeek", () =>
+            todoTools.setDue(7)
+        ),
         vscode.workspace.onDidOpenTextDocument(todoTools.documentOnOpen),
         vscode.workspace.onDidChangeTextDocument(todoTools.documentOnChange),
     ];

@@ -8,7 +8,10 @@ import {
     taskBlankToBottom,
 } from "./taskpaper-parsing";
 import { TaskPaperNode } from "task-parser/TaskPaperNode";
-import { replaceLines } from "./sort-lines";
+import { replaceCurrentLine, replaceLines } from "./sort-lines";
+import dayjs from "dayjs";
+import { DEFAULT_DATE_FORMAT } from "./dates";
+import { replaceLine } from "./editor-utils";
 
 const settings = new Settings();
 
@@ -171,6 +174,65 @@ function performCopyAndSave() {
     }
 }
 
+export async function setDue(daysAhead: number): Promise<boolean> {
+    // get current task, if the cursor is under a task
+    const task = taskUnderCursor(vscode.window.activeTextEditor);
+    const format = DEFAULT_DATE_FORMAT; // kludge; why is this not importing?
+
+    if (task === undefined || vscode.window.activeTextEditor === undefined) {
+        return new Promise<boolean>(() => false);
+    }
+
+    // set this duedate
+    const day = dayjs().add(daysAhead, "day");
+    task.setTag("due", day.format(format));
+
+    // update the line
+    return replaceCurrentLine(vscode.window.activeTextEditor, task.toString());
+}
+
+export async function setPriority(
+    priority: string | undefined = undefined,
+    priorityValue: string | undefined = undefined
+): Promise<boolean> {
+    // get current task, if the cursor is under a task
+    const task = taskUnderCursor(vscode.window.activeTextEditor);
+
+    if (task === undefined || vscode.window.activeTextEditor === undefined) {
+        return new Promise<boolean>(() => false);
+    }
+
+    // remove all priorities
+    task.removeTag(["high", "medium", "low", "priority"]);
+
+    // set this priority
+    if (priority !== undefined) {
+        task.setTag(priority, priorityValue);
+    }
+
+    // update the line
+    return replaceCurrentLine(vscode.window.activeTextEditor, task.toString());
+}
+
+// return the task on which the cursor sits
+const taskUnderCursor = (
+    textEditor: vscode.TextEditor | undefined
+): TaskPaperNode | undefined => {
+    if (!textEditor || !textEditor.selection.isSingleLine) {
+        return undefined;
+    }
+
+    const textLine = textEditor.document.lineAt(
+        textEditor.selection.start.line
+    ).text;
+    const node = new TaskPaperNode(textLine);
+
+    if (node.type !== "task") {
+        return undefined;
+    }
+    return node;
+};
+
 /**
  *Perform the copy of any due recurring tasks into the Today section
  */
@@ -181,7 +243,7 @@ export async function performCopy(): Promise<boolean> {
     }
 
     // get items
-    var allItems = await parseTaskDocument(textEditor);
+    let allItems = await parseTaskDocument(textEditor);
     if (allItems === undefined) {
         return false;
     }

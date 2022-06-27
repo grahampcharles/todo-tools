@@ -79,6 +79,19 @@ export function sortLines(
     return replaceLines(textEditor, startLine, endLine, lines);
 }
 
+// convenience function 
+export function replaceCurrentLine(
+    textEditor: vscode.TextEditor,
+    line: string
+): Thenable<boolean> {
+    return replaceLines(
+        textEditor,
+        textEditor.selection.start.line,
+        textEditor.selection.start.line,
+        [line]
+    );
+}
+
 export function replaceLines(
     textEditor: vscode.TextEditor,
     startLine: number,

@@ -5,7 +5,7 @@ import timezone from "dayjs/plugin/timezone";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import { TaskPaperNode } from "task-parser/TaskPaperNode";
 import { parseTaskPaper } from "task-parser/index";
-import { cleanDate, DEFAULT_DATE_FORMAT } from "./dates";
+import { cleanDate, todayDay, DEFAULT_DATE_FORMAT } from "./dates";
 import { Settings } from "./Settings";
 import {
     isDone,
@@ -151,6 +151,11 @@ export function replaceDueTokens(input: TaskPaperNode): void {
     // only further process tasks that have due dates
     if (input.type !== "task" || !input.hasTag("due")) {
         return;
+    }
+
+    if (input.hasTag("today")) {
+        input.setTag("due", todayDay().format(DEFAULT_DATE_FORMAT));
+        input.removeTag("today");
     }
 
     // replace date tokens
@@ -323,6 +328,21 @@ export function taskDueDateCompare(
         return aBeforeB;
     }
     if (bNode.hasTag("high") && !aNode.hasTag("high")) {
+        return bBeforeA;
+    }
+    // is one (and only) one node low priority?
+    if (aNode.hasTag("low") && !bNode.hasTag("low")) {
+        return bBeforeA;
+    }
+    if (bNode.hasTag("low") && !aNode.hasTag("low")) {
+        return aBeforeB;
+    }
+
+    // is one (and only) one node already started?
+    if (aNode.hasTag("started") && !bNode.hasTag("started")) {
+        return aBeforeB;
+    }
+    if (bNode.hasTag("started") && !aNode.hasTag("started")) {
         return bBeforeA;
     }
 

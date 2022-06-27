@@ -3,7 +3,7 @@
     "displayName": "ToDo-Tools",
     "publisher": "grahampcharles",
     "description": "Auxiliary functions for taskpaper documents.",
-    "version": "0.7.1",
+    "version": "0.7.3",
     "repository": {
         "type": "git",
         "url": "https://github.com/grahampcharles/todo-tools.git"
@@ -21,6 +21,38 @@
     ],
     "main": "./dist/extension.js",
     "contributes": {
+        "keybindings": [
+            {
+                "command": "todotools.performCopy",
+                "key": "ctrl+alt+t c",
+                "mac": "cmd+alt+t c",
+                "when": "editorTextFocus"
+            },
+            {
+                "command": "todotools.setPriorityHigh",
+                "key": "ctrl+alt+t h",
+                "mac": "cmd+alt+t h",
+                "when": "editorTextFocus"
+            },
+            {
+                "command": "todotools.setPriorityRegular",
+                "key": "ctrl+alt+t r",
+                "mac": "cmd+alt+t r",
+                "when": "editorTextFocus"
+            },
+            {
+                "command": "todotools.setPriorityLow",
+                "key": "ctrl+alt+t l",
+                "mac": "cmd+alt+t l",
+                "when": "editorTextFocus"
+            },
+            {
+                "command": "todotools.setDueInAWeek",
+                "key": "ctrl+alt+t w",
+                "mac": "cmd+alt+t w",
+                "when": "editorTextFocus"
+            }
+        ],
         "configuration": {
             "title": "To-Do Tools",
             "properties": {
@@ -55,7 +87,7 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Sort @due items by due date to the end of their projects."
-                }, 
+                },
                 "todotools.overdueSection": {
                     "type": "boolean",
                     "default": false,
@@ -67,6 +99,22 @@
             {
                 "command": "todotools.performCopy",
                 "title": "ToDo Tools: Copy Recurring Tasks"
+            },
+            {
+                "command": "todotools.setPriorityHigh",
+                "title": "ToDo Tools: Set to High Priority"
+            },
+            {
+                "command": "todotools.setPriorityRegular",
+                "title": "ToDo Tools: Set to Regular Priority"
+            },
+            {
+                "command": "todotools.setPriorityLow",
+                "title": "ToDo Tools: Set to Low Priority"
+            },
+            {
+                "command": "todotools.setDueInAWeek",
+                "title": "ToDo Tools: Set Due Date to a Week From Now"
             }
         ],
         "languages": [
