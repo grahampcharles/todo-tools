@@ -5,7 +5,12 @@ import timezone from "dayjs/plugin/timezone";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import { TaskPaperNode } from "task-parser/TaskPaperNode";
 import { parseTaskPaper } from "task-parser/index";
-import { cleanDate, todayDay, DEFAULT_DATE_FORMAT } from "./dates";
+import {
+    cleanDate,
+    todayDay,
+    DEFAULT_DATE_FORMAT,
+    RELATIVE_DAYS,
+} from "./dates";
 import { Settings } from "./Settings";
 import {
     isDone,
@@ -149,13 +154,21 @@ export function getDueTasks(node: TaskPaperNode): TaskPaperNode[] {
 // replaces date tokens (like "today", "Monday") with clean due dates
 export function replaceDueTokens(input: TaskPaperNode): void {
     // only further process tasks that have due dates
-    if (input.type !== "task" || !input.hasTag("due")) {
+    if (input.type !== "task") {
         return;
     }
 
-    if (input.hasTag("today")) {
-        input.setTag("due", todayDay().format(DEFAULT_DATE_FORMAT));
-        input.removeTag("today");
+    // pre-process special tags (yesterday, today, tomorrow)
+    RELATIVE_DAYS.forEach((relativeDay) => {
+        if (input.hasTag(relativeDay)) {
+            input.setTag("due", relativeDay);
+            input.removeTag(relativeDay);
+        }
+    });
+
+    // if there's a due date, clean it
+    if (!input.hasTag("due")) {
+        return;
     }
 
     // replace date tokens

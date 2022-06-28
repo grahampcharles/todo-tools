@@ -24,32 +24,38 @@
         "keybindings": [
             {
                 "command": "todotools.performCopy",
-                "key": "ctrl+alt+t c",
-                "mac": "cmd+alt+t c",
+                "key": "ctrl+alt+. c",
+                "mac": "cmd+alt+. c",
                 "when": "editorTextFocus"
             },
             {
                 "command": "todotools.setPriorityHigh",
-                "key": "ctrl+alt+t h",
-                "mac": "cmd+alt+t h",
+                "key": "ctrl+alt+. h",
+                "mac": "cmd+alt+. h",
                 "when": "editorTextFocus"
             },
             {
                 "command": "todotools.setPriorityRegular",
-                "key": "ctrl+alt+t r",
-                "mac": "cmd+alt+t r",
+                "key": "ctrl+alt+. r",
+                "mac": "cmd+alt+. r",
                 "when": "editorTextFocus"
             },
             {
                 "command": "todotools.setPriorityLow",
-                "key": "ctrl+alt+t l",
-                "mac": "cmd+alt+t l",
+                "key": "ctrl+alt+. l",
+                "mac": "cmd+alt+. l",
                 "when": "editorTextFocus"
             },
             {
                 "command": "todotools.setDueInAWeek",
-                "key": "ctrl+alt+t w",
-                "mac": "cmd+alt+t w",
+                "key": "ctrl+alt+. w",
+                "mac": "cmd+alt+. w",
+                "when": "editorTextFocus"
+            },
+            {
+                "command": "todotools.setDueTomorrow",
+                "key": "ctrl+alt+. .",
+                "mac": "cmd+alt+. .",
                 "when": "editorTextFocus"
             }
         ],
@@ -115,6 +121,10 @@
             {
                 "command": "todotools.setDueInAWeek",
                 "title": "ToDo Tools: Set Due Date to a Week From Now"
+            },
+            {
+                "command": "todotools.setDueTomorrow",
+                "title": "ToDo Tools: Set Due Date to Tomorrow"
             }
         ],
         "languages": [

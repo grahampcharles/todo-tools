@@ -25,7 +25,7 @@ const FORMAT_STRINGS = [
     "M-D",
 ];
 
-const RELATIVE_DAYS = ["yesterday", "today", "tomorrow"];
+export const RELATIVE_DAYS = ["yesterday", "today", "tomorrow"];
 export const DEFAULT_DATE_FORMAT = "YYYY-MM-DD";
 export const dayNames = dayjs.weekdays();
 
