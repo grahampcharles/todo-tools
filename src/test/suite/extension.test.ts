@@ -55,7 +55,6 @@ suite("Extension Test Suite", () => {
 
     it("clean date", () => {
         const thisYear = new Date().getFullYear();
-
         const date1 = cleanDate("1/11");
         expect(date1.year()).eq(thisYear);
         expect(date1.format("YYYY-MM-DD")).eq(`${thisYear}-01-11`);
@@ -67,6 +66,23 @@ suite("Extension Test Suite", () => {
             "2020-01-03",
             "simple date"
         );
+    });
+
+    it("next due date; annual", () => {
+        // completed annual items: should be moved to next year
+        const thisYear = new Date().getFullYear();
+        const nextYear = thisYear + 1;
+        const currentDueDate = cleanDate("1/11");
+
+        const doneDateAfter = currentDueDate.add(1, "day"); // done the day after it was due
+        const nextDateAfter = cleanDate("1/11", doneDateAfter);
+        expect(nextDateAfter.year()).eq(nextYear);
+        expect(nextDateAfter.format("YYYY-MM-DD")).eq(`${nextYear}-01-11`);
+
+        const doneDateBefore = currentDueDate.subtract(1, "day"); // done the day before it was due; still should be due next year
+        const nextDateBefore = cleanDate("1/11", doneDateBefore);
+        expect(nextDateBefore.format("YYYY-MM-DD")).eq(`${nextYear}-01-11`);        
+        
     });
 
     it("getDaysFromRecurrencePattern", () => {
@@ -327,11 +343,11 @@ suite("Extension Test Suite", () => {
     it("project sorting, including @high tag", () => {
         const project = new TaskPaperNode(testDocumentWithHigh);
 
-        project.children[0].children.sort(taskDueDateCompare);
+        const sorted = project.children[0].children.sort(taskDueDateCompare);
 
         const expectations = ["not due", "due first", "due second", ""];
 
-        project.children[0].children.forEach((node, index) => {
+        sorted.forEach((node, index) => {
             const expectation = expectations[index];
             const nodeValue = node.value ?? "";
             expect(nodeValue).to.equal(
@@ -341,25 +357,23 @@ suite("Extension Test Suite", () => {
         });
 
         // last one should be a blank line
-        const lastLine =
-            project.children[0].children[
-                project.children[0].children.length - 1
-            ];
-        const isBlank = isBlankLine(lastLine);
-        expect(isBlank).to.eq(
-            true,
-            "last line of sorted project should be blank"
-        );
+        // DEBUG: no, task-parser now removes blank lines.
+        // const lastLine = sorted[sorted.length - 1];
+        // const isBlank = isBlankLine(lastLine);
+        // expect(isBlank).to.eq(
+        //     true,
+        //     "last line of sorted project should be blank"
+        // );
     });
 
     it("project sorting", () => {
         const project = new TaskPaperNode(testDocument);
 
-        project.children[0].children.sort(taskDueDateCompare);
+        const sorted = project.children[0].children.sort(taskDueDateCompare);
 
-        const expectations = ["not due", "due first", "due second", ""];
+        const expectations = ["not due", "due first", "due second"];
 
-        project.children[0].children.forEach((node, index) => {
+        sorted.forEach((node, index) => {
             const expectation = expectations[index];
             const nodeValue = node.value ?? "";
             expect(nodeValue).to.equal(
@@ -367,17 +381,6 @@ suite("Extension Test Suite", () => {
                 `'${nodeValue}' out of order at index ${index}`
             );
         });
-
-        // last one should be a blank line
-        const lastLine =
-            project.children[0].children[
-                project.children[0].children.length - 1
-            ];
-        const isBlank = isBlankLine(lastLine);
-        expect(isBlank).to.eq(
-            true,
-            "last line of sorted project should be blank"
-        );
     });
 
     it("task updating", () => {

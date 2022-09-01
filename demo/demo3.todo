@@ -1,26 +1,29 @@
 Today:
 	- item #5
 	- item #6
-	- item #10 @due(2011-08-22)
-	- yyitem #3 @recur(Monday) @due(2022-05-02)
+	- item #10 @due(2011-08-22) @ret
+	- yyitem #3 @recur(Monday) @due(2022-09-05)
 	- zzitem #2 @annual(11/1) @due(2022-11-01)
 
 Other Project:
-	- item #13 @recur(10) @due(2022-11-02)
-	- item #12 @annual(11/1) @due(2022-11-03)
+	- item #13 @recur(10) @due(2022-09-11)
+	- item #12 @annual(11/1) @due(2022-11-01)
 
 Archive:
 	- yyitem #3 @done(22-04-30 11:35) @project(Today)
-	- yyitem #3 @done(22-04-30 11:27) @project(Today)
-	- yyitem #3 @done(22-04-30 11:26) @project(Today)
-	- zzitem #2 @done(22-04-30 11:35) @project(Today)
-	- zzitem #2 @done(22-04-30 11:29) @project(Today)
-	- zzitem #2 @done(22-04-30 11:28) @project(Today)
-
+	- yyitem #3 @due(2022-09-05) @done(22-09-01 14:56)
+	- item #13 @due(2022-09-11) @done(22-09-01 16:40)
+	- item #12 @due(2022-11-01) @done(22-09-01 16:32)
+	- item #12 @due(2022-11-01) @done(22-09-01 16:36)
+	- item #12 @due(2022-11-01) @done(22-09-01 16:36)
+	- zzitem #2 @due(2022-11-01) @done(22-09-01 14:21)
+	- zzitem #2 @due(2022-11-01) @done(22-09-01 14:21)
+	- item #13 @due(2022-11-02) @done(22-09-01 16:37)
+	- item #12 @due(2022-11-03) @done(22-09-01 16:31)
 
 Settings:
 	archiveDoneItems=true
 	autoRun=true
-	autoRunInterval=1
+	autoRunInterval=10
 	runOnOpen=true
 	sortByDueDate=true

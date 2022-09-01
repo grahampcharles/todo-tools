@@ -11,94 +11,49 @@ import { TaskPaperNode } from "task-parser/TaskPaperNode";
 import { replaceCurrentLine, replaceLines } from "./sort-lines";
 import dayjs from "dayjs";
 import { DEFAULT_DATE_FORMAT } from "./dates";
-import { replaceLine } from "./editor-utils";
 
 const settings = new Settings();
 
 // versioning
 var minutesIdle: number = 0;
 const IS_DEBUG = false;
-const TIMEOUT_INTERVAL = (IS_DEBUG ? 2 : 60) * 1000; // one minute between runs
-const outputChannel = vscode.window.createOutputChannel("ToDo Tools");
+const TIMEOUT_INTERVAL = (IS_DEBUG ? 10 : 60) * 1000; // one minute between runs (or two seconds in debug)
+// const outputChannel = vscode.window.createOutputChannel("ToDo Tools");
+// outputChannel.show();
 var timer: NodeJS.Timeout;
 var lastIdleTicks: number = 0;
 const IDLE_TICKS = 1 * 1000;
 
-// TODO: why need versions?
-var maxStackSize = 999;
-var versions = { stack: new Array<number>(), position: -1 };
-
-function log(message: string) {
-    if (outputChannel !== undefined && IS_DEBUG) {
-        outputChannel.appendLine(message);
+export function log(message: string) {
+    // DO NOT LOG to the output channel! 
+    // Logging causes a document change event. 
+    // See: https://github.com/eclipse-theia/theia/issues/8855
+    // if (outputChannel !== undefined && IS_DEBUG) {
+    //     outputChannel.appendLine(message);
+    if ( IS_DEBUG) {        
+        console.log(message);
     }
 }
 
 export function documentOnChange(event: vscode.TextDocumentChangeEvent) {
-    // function hash(text: string): number {
-    //     var hash = 0;
-    //     if (text.length === 0) {
-    //         return hash;
-    //     }
-    //     for (var i = 0; i < text.length; i++) {
-    //         var char = text.charCodeAt(i);
-    //         hash = (hash << 5) - hash + char;
-    //         hash = hash & hash; // Convert to 32bit integer
-    //     }
-    //     return hash;
-    // }
-
-    // log("documentOnChange");
-
-    // if (!event.document) {
-    //     return;
-    // }
 
     minutesIdle = 0; // clear idle register
+    if (event.contentChanges.length > 0)
+    {
+        log("documentOnChange");  
+        const nowTicks = new Date().getTime();
 
-    const nowTicks = new Date().getTime();
-
-    // only fire idle once a second at most
-    if (nowTicks - lastIdleTicks > IDLE_TICKS) {
-        lastIdleTicks = nowTicks;
-        documentIsIdle(); // restart idle sensor
+        // only fire idle once a second at most
+        if (nowTicks - lastIdleTicks > IDLE_TICKS) {
+            lastIdleTicks = nowTicks;
+            documentIsIdle(); // restart idle sensor
+        }
     }
-    // // trigger idle counter
-    // var currentHash = hash(event.document.getText());
-
-    // if (versions.stack.length === 0) {
-    //     versions.stack.push(currentHash);
-    //     versions.position = 0;
-    //     documentIsIdle();
-    // } else {
-    //     var previous = versions.stack.indexOf(currentHash);
-    //     if (previous > -1) {
-    //         if (previous < versions.position) {
-    //             versions.position = previous;
-    //         } else if (previous > versions.position) {
-    //             versions.position = previous;
-    //         }
-    //     } else {
-    //         versions.stack.splice(
-    //             versions.position + 1,
-    //             versions.stack.length - versions.position
-    //         );
-    //         versions.stack.push(currentHash);
-    //         versions.position = versions.stack.length - 1;
-
-    //         if (versions.stack.length > maxStackSize) {
-    //             var previousLength = versions.stack.length;
-    //             versions.stack = versions.stack.splice(-maxStackSize);
-    //             versions.position -= previousLength - maxStackSize;
-    //         }
-
-    //         documentIsIdle();
-    //     }
-    // }
 }
 
 export function documentOnOpen() {
     log("documentOnOpen");
+
     const textEditor = vscode.window.activeTextEditor;
     updateSettings(textEditor).then(() => {
         if (textEditor && settings.runOnOpen()) {
@@ -126,12 +81,11 @@ function documentIsIdle() {
     updateSettings(textEditor)
         .then(() => {
             log("settingsRetrieved");
-
             log(`autoRun: ${settings.autoRun()}`);
 
             if (settings.autoRun()) {
                 minutesIdle++;
-                log(`idle, minute ${minutesIdle}`);
+                log(`idle, interval ${minutesIdle}`);
             }
 
             if (minutesIdle >= settings.autoRunInterval()) {
@@ -237,6 +191,7 @@ const taskUnderCursor = (
  *Perform the copy of any due recurring tasks into the Today section
  */
 export async function performCopy(): Promise<boolean> {
+    log("performCopy");
     const textEditor = vscode.window.activeTextEditor;
     if (!textEditor) {
         return false;

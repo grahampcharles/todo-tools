@@ -3,4 +3,5 @@ general:
 	-   alpha test! @done(22-01-24 13:45)
 
 fix:
+	- annual events that are completed before the due date get regenerated on the same day
 	- in adjacent mode, creates multiples

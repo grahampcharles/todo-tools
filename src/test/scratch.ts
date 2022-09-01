@@ -1,6 +1,7 @@
 import { TaskPaperNode } from "task-parser/TaskPaperNode";
-import { todayDay } from "../dates";
+import { taskDueDateCompare } from "../taskpaper-parsing";
+import { testDocumentWithHigh } from "./suite/testData";
 
-const today = todayDay().format("YYYY-MM-DD");
-const testTask = new TaskPaperNode(`  - test item @due(${today}`);
-
+const project = new TaskPaperNode(testDocumentWithHigh);
+project.children[0].children.sort(taskDueDateCompare);
+console.log(project);
