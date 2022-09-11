@@ -1,16 +1,18 @@
 Today:
 	- item #5
-	- item #6
-	- item #10 @due(2011-08-22) @ret
 	- yyitem #3 @recur(Monday) @due(2022-09-05)
+	- item #13 @recur(10) @due(2022-09-11)
+	- the document is being edited now it is idle @recur(1) @due(2022-09-12)
+	- item #10 @due(2022-09-14) @recur(3)
 	- zzitem #2 @annual(11/1) @due(2022-11-01)
 
 Other Project:
-	- item #13 @recur(10) @due(2022-09-11)
 	- item #12 @annual(11/1) @due(2022-11-01)
 
 Archive:
+	- item #6 @done(22-09-11 16:43)
 	- yyitem #3 @done(22-04-30 11:35) @project(Today)
+	- item #10 @due(2011-08-22) @done(22-09-11 16:40)
 	- yyitem #3 @due(2022-09-05) @done(22-09-01 14:56)
 	- item #13 @due(2022-09-11) @done(22-09-01 16:40)
 	- item #12 @due(2022-11-01) @done(22-09-01 16:32)
@@ -24,6 +26,6 @@ Archive:
 Settings:
 	archiveDoneItems=true
 	autoRun=true
-	autoRunInterval=10
+	autoRunInterval=3
 	runOnOpen=true
 	sortByDueDate=true

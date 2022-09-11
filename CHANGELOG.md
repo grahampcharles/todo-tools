@@ -2,6 +2,10 @@
 
 All notable changes to the "todo-tools" extension will be documented in this file.
 
+## [0.7.5] - 2022-09-11
+### fix
+- autoRun troubleshooting
+
 ## [0.7.3] - 2022-06-27
 ### add
 - priority setting commands

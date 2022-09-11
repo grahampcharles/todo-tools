@@ -16,8 +16,8 @@ const settings = new Settings();
 
 // versioning
 var minutesIdle: number = 0;
-const IS_DEBUG = false;
-const TIMEOUT_INTERVAL = (IS_DEBUG ? 10 : 60) * 1000; // one minute between runs (or two seconds in debug)
+const IS_DEBUG = true;
+const SECONDS_PER_MINUTE = IS_DEBUG ? 10 : 60 ; // one minute between runs (or two seconds in debug)
 // const outputChannel = vscode.window.createOutputChannel("ToDo Tools");
 // outputChannel.show();
 var timer: NodeJS.Timeout;
@@ -38,6 +38,7 @@ export function log(message: string) {
 export function documentOnChange(event: vscode.TextDocumentChangeEvent) {
 
     minutesIdle = 0; // clear idle register
+
     if (event.contentChanges.length > 0)
     {
         log("documentOnChange");  
@@ -64,28 +65,32 @@ export function documentOnOpen() {
     documentIsIdle(); // restart counter
 }
 
+function stopTimer() {
+    // clear current timer
+    if (timer) {
+        log("stopping timer");
+        clearTimeout(timer);
+    }
+}
+
 function documentIsIdle() {
+
     log("documentIsIdle");
+
     const textEditor = vscode.window.activeTextEditor;
     if (!textEditor) {
         return;
     }
 
     // clear current timer
-    if (timer) {
-        log("stoppingTimer");
-        clearTimeout(timer);
-    }
+    stopTimer();
 
     // in case they were manually changed
     updateSettings(textEditor)
         .then(() => {
-            log("settingsRetrieved");
-            log(`autoRun: ${settings.autoRun()}`);
-
             if (settings.autoRun()) {
                 minutesIdle++;
-                log(`idle, interval ${minutesIdle}`);
+                log(`idle for ${minutesIdle} minutes`);
             }
 
             if (minutesIdle >= settings.autoRunInterval()) {
@@ -94,8 +99,8 @@ function documentIsIdle() {
             }
         })
         .finally(() => {
-            log(`restartingTimer, ${TIMEOUT_INTERVAL / 1000} seconds`);
-            timer = setTimeout(documentIsIdle, TIMEOUT_INTERVAL);
+            log(`restarting minute timer (minute = ${SECONDS_PER_MINUTE} seconds)`);
+            timer = setTimeout(documentIsIdle, SECONDS_PER_MINUTE * 1000);
         });
 }
 
@@ -120,6 +125,9 @@ function performCopyAndSave() {
                 if (reason instanceof Error) {
                     log(reason.message);
                 }
+            }).finally( ()=> {     
+                // restart timer
+                documentIsIdle();
             });
     } catch (err: unknown) {
         if (err instanceof Error) {
@@ -191,7 +199,9 @@ const taskUnderCursor = (
  *Perform the copy of any due recurring tasks into the Today section
  */
 export async function performCopy(): Promise<boolean> {
+
     log("performCopy");
+
     const textEditor = vscode.window.activeTextEditor;
     if (!textEditor) {
         return false;
