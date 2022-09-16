@@ -38,6 +38,9 @@ export class Settings {
         const ret: number = this.getValue("autoRunInterval", 10);
         return Math.min(Math.max(ret, 1), 1440);
     }
+    addTodayTomorrowOverdueTags(): boolean {
+        return this.getValue("addTodayTomorrowOverdueTags", true);
+    }
 
     update(settingsDocument: TaskPaperNode): void {
         const settings = getProjectByName(settingsDocument, "Settings");

@@ -1,13 +1,15 @@
 // from vscode-sort-lines
 import { TaskPaperNode } from "task-parser/TaskPaperNode";
 import { cleanDate, todayDay } from "./dates";
+import { addProjectTag } from "./taskpaper-utils";
 
 type NodeComparisonAlgorithm = (inputNode: TaskPaperNode) => boolean;
 
 export function moveNode(
     node?: TaskPaperNode,
     test?: NodeComparisonAlgorithm,
-    target?: TaskPaperNode
+    target?: TaskPaperNode, 
+    addProjectTagOnMove: boolean = false
 ) {
     // guards
     const nodeOrTargetMissing = target === undefined || node === undefined;
@@ -28,8 +30,11 @@ export function moveNode(
 
     if (move) {
         const newNode = node.clone();
+        if ( addProjectTagOnMove) { addProjectTag(newNode);}  
+
         newNode.depth = target.depth + 1;
         newNode.parent = target;
+
         target.children.push(newNode);
 
         node.setTag("ACTION", "DELETE");

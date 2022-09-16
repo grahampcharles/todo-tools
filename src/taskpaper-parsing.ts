@@ -159,12 +159,15 @@ export function replaceDueTokens(input: TaskPaperNode): void {
     }
 
     // pre-process special tags (yesterday, today, tomorrow)
-    RELATIVE_DAYS.forEach((relativeDay) => {
-        if (input.hasTag(relativeDay)) {
-            input.setTag("due", relativeDay);
-            input.removeTag(relativeDay);
-        }
-    });
+        RELATIVE_DAYS.forEach((relativeDay) => {
+            if (input.hasTag(relativeDay)) {
+                if (!input.hasTag("due")) {
+                    input.setTag("due", relativeDay);
+                }
+                input.removeTag(relativeDay);
+            }
+        });
+
 
     // if there's a due date, clean it
     if (!input.hasTag("due")) {
@@ -178,6 +181,19 @@ export function replaceDueTokens(input: TaskPaperNode): void {
         if (dueFormatted !== input.tagValue("due")) {
             input.setTag("due", dueFormatted);
         }
+    }
+}
+
+export function addRelativeDateFlag(input: TaskPaperNode) {
+    
+    if (input.hasTag("done") || !input.hasTag("due")) { return;}
+
+    const due = cleanDate(input.tagValue("due"));
+    if (due.isValid()) {
+        // add relative date flags
+        if (due.isSame(todayDay(), "day") ) {            input.setTag("today", undefined);        }
+        if (due.add(1, "day").isSame(todayDay(), "day") ) {        input.setTag("yesterday", undefined);        }
+        if (due.subtract(1, "day").isSame(todayDay(), "day") ) {        input.setTag("tomorrow", undefined);        }
     }
 }
 
@@ -216,6 +232,11 @@ export function processTaskNode(
 
     // handle special @due tokens
     replaceDueTokens(taskNode);
+
+    // add relative date tag
+    if (settings.addTodayTomorrowOverdueTags()) {
+        addRelativeDateFlag(taskNode);
+    }
 
     // if task is done (or has no due date) check for a recurrence pattern
     const taskHasRecurrenceAndIsDone =
@@ -271,7 +292,7 @@ export function processTaskNode(
 
     /// ARCHIVE
     if (settings.archiveDoneItems()) {
-        moveNode(taskNode, isDone, archive);
+        moveNode(taskNode, isDone, archive, true);
     }
 
     /// FUTURE

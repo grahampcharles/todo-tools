@@ -2,6 +2,14 @@
 
 All notable changes to the "todo-tools" extension will be documented in this file.
 
+## [0.7.7] - 2022-09-16
+### add
+- added option to tag with @today, @tomorrow, @yesterday
+
+## [0.7.6] - 2022-09-14
+### add
+- save project name to archive
+
 ## [0.7.5] - 2022-09-11
 ### fix
 - autoRun troubleshooting

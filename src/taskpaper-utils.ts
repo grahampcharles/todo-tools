@@ -1,3 +1,6 @@
+import { TaskPaperNode } from "task-parser/TaskPaperNode";
+import { Task } from "vscode";
+
 const yamlDelimiter = "---";
 /**
  *getSection
@@ -47,3 +50,7 @@ export function isSectionHead(line: string): string | Boolean {
 
     return false;
 }
+
+export const addProjectTag  = (node: TaskPaperNode) : void => {
+    node.setTag("project", node.parents().map((parentNode) => parentNode.value ).join(".") || "" );
+};
