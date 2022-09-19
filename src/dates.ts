@@ -1,4 +1,5 @@
 // days of the week
+// TODO: much of this code could be removed by creating a dates module and exporting a custom dayjs
 import dayjs, { Dayjs } from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timeZone from "dayjs/plugin/timezone";
@@ -14,6 +15,7 @@ dayjs.extend(utc);
 dayjs.extend(timeZone);
 dayjs.tz.guess();
 
+// two-digit YY strings because that's how ToDo+ marks items done
 const FORMAT_STRINGS = [
     "YYYY-MM-DD hh:mm:ss",
     "YY-MM-DD hh:mm:ss",
@@ -31,23 +33,28 @@ export const dayNames = dayjs.weekdays();
 
 export function cleanDate(
     dayString: string | undefined,
-    afterDate: dayjs.Dayjs = dayjs()
+    afterDate: dayjs.Dayjs | undefined = undefined
 ): dayjs.Dayjs {
     // attempts to turn the string into a Dayjs object
     if (dayString === undefined) {
-        return afterDate;
+        return afterDate ?? dayjs();
     }
 
     // try a format string
     var ret = dayjs(dayString, FORMAT_STRINGS);
     if (ret.isValid()) {
+        // do we need to return a date after a specific date?
+        while (ret.isBefore(afterDate ?? ret)) {
+            ret = ret.add(1, "year");
+        }
+
         return ret;
     }
 
     // simple number: just add it
     const dayOffset = parseInt(dayString);
     if (!isNaN(dayOffset)) {
-        ret = afterDate.add(dayOffset, "day");
+        ret = (afterDate ?? dayjs()).add(dayOffset, "day");
         if (ret.isValid()) {
             return ret;
         }
@@ -67,13 +74,13 @@ export function cleanDate(
         (item: string) => item === dayString
     );
     if (relativeDayIndex !== -1) {
-        ret = afterDate.add(relativeDayIndex - 1, "day"); // -1 because "yesterday" will have an index of 0
+        ret = (afterDate ?? dayjs()).add(relativeDayIndex - 1, "day"); // -1 because "yesterday" will have an index of 0
         if (ret.isValid()) {
             return ret;
         }
     }
 
-    return afterDate;
+    return afterDate ?? dayjs();
 }
 
 export function todayDay(): Dayjs {

@@ -19,6 +19,15 @@ export const testDone = `Today:
 Later:
 \t- third @done`;
 
+export const testDocumentWithSubprojectLines = `Today:
+\tSubProject 1:
+\t\t- task 
+\t\t- task
+
+\tSubproject 2:
+\t\t- task @done`;
+
+
 export const testSettings = `Today:
 \t- first @done
 \tSubProject:

@@ -1,5 +1,5 @@
 // from vscode-sort-lines
-import { TaskPaperNode } from "task-parser/TaskPaperNode";
+import { TaskPaperNode } from "./task-parser";
 import { cleanDate, todayDay } from "./dates";
 import { addProjectTag } from "./taskpaper-utils";
 
@@ -8,7 +8,7 @@ type NodeComparisonAlgorithm = (inputNode: TaskPaperNode) => boolean;
 export function moveNode(
     node?: TaskPaperNode,
     test?: NodeComparisonAlgorithm,
-    target?: TaskPaperNode, 
+    target?: TaskPaperNode,
     addProjectTagOnMove: boolean = false
 ) {
     // guards
@@ -30,7 +30,9 @@ export function moveNode(
 
     if (move) {
         const newNode = node.clone();
-        if ( addProjectTagOnMove) { addProjectTag(newNode);}  
+        if (addProjectTagOnMove) {
+            addProjectTag(newNode);
+        }
 
         newNode.depth = target.depth + 1;
         newNode.parent = target;
@@ -41,12 +43,16 @@ export function moveNode(
     }
 }
 
+// TODO: for these, only return true for tasks?
+
 export function isDone(inputNode: TaskPaperNode): boolean {
     // TODO: only return true if is done before today?
+    // TODO: only return true for tasks?
     return inputNode.hasTag("done");
 }
 
 export function isFuture(inputNode: TaskPaperNode): boolean {
+    // TODO: only return true for tasks?
     return (
         inputNode.hasTag("due") &&
         !inputNode.hasTag("done") &&

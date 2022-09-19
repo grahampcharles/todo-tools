@@ -1,7 +1,7 @@
-import { TaskPaperNode } from "task-parser/TaskPaperNode";
+import { TaskPaperNode } from "./task-parser";
 import * as vscode from "vscode";
 import { inferType } from "./inferType";
-import { getProjectByName, parseTaskDocument } from "./taskpaper-parsing";
+import { getProjectByName } from "./taskpaper-parsing";
 
 export class Settings {
     // document-specific overrides
@@ -38,8 +38,11 @@ export class Settings {
         const ret: number = this.getValue("autoRunInterval", 10);
         return Math.min(Math.max(ret, 1), 1440);
     }
-    addTodayTomorrowOverdueTags(): boolean {
-        return this.getValue("addTodayTomorrowOverdueTags", true);
+    addTodayTomorrowYesterday(): boolean {
+        return this.getValue("addTodayTomorrowYesterday", false);
+    }
+    statisticsSection(): boolean {
+        return this.getValue("statisticsSection", false);
     }
 
     update(settingsDocument: TaskPaperNode): void {

@@ -1,4 +1,4 @@
-import { TaskPaperNode } from "task-parser/TaskPaperNode";
+import { TaskPaperNode } from "../task-parser";
 import { taskDueDateCompare } from "../taskpaper-parsing";
 import { testDocumentWithHigh } from "./suite/testData";
 

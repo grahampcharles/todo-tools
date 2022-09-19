@@ -1,30 +1,43 @@
 Today:
-	- fecal @high @due(2022-09-16) @today
-	- ten minutes of emptiness @due(2022-09-16) @recur(1) @high @today
-	- work on theclassroombeyond.com @recur(1) @due(2022-09-16) @high @today
-	- audio editing @recur(1) @due(2022-09-16) @today
-	- check and replace emergency food @recur(365) @due(2022-09-16) @today
-	- detach from something @recur(1) @due(2022-09-16) @today
-	- downstairs bathroom @recur(5) @household @due(2022-09-16) @today
-	- exercise @recur(1) @due(2022-09-16) @exercise @today
-	- plank @due(2022-09-16) @recur(2) @exercise @today
-	- reading @recur(1) @due(2022-09-16) @today
-	- writing @recur(1) @due(2022-09-16) @today
+	- crossword @recur(1) @due(2022-09-19) @high
+	- fecal @high @due(2022-09-19)
+	- record todo totals @recur(1) @high @due(2022-09-19)
+	- check Fern’s car codes @due(2022-09-19)
+	- clean something random @recur(1) @due(2022-09-19)
+	- Coastal Vine @due(2022-09-19) @recur(3)
+	- Duolingo @recur(1) @due(2022-09-19)
+	- exercise @recur(1) @due(2022-09-19) @exercise
+	- garden @recur(3) @due(2022-09-19)
+	- groceries @due(2022-09-19) @recur(Monday)
+	- Hamline @recur(1) @due(2022-09-19)
+	- horse @recur(1) @due(2022-09-19)
+	- kitchen @due(2022-09-19) @household @recur(1)
+	- laundry @recur(5) @due(2022-09-19)
+	- leg lifts 3x10 @recur(2) @due(2022-09-19) @exercise
+	- mom @recur(3) @due(2022-09-19)
+	- new light switch for Claudia @due(2022-09-19)
+	- reading @recur(1) @due(2022-09-19)
+	- reset bedroom @recur(1) @due(2022-09-19)
+	- scan some stuff @due(2022-09-19) @recur(3)
+	- tidy up cables on front porch @due(2022-09-19)
+	- toe touch 3x10 @recur(2) @due(2022-09-19) @exercise
+	- trash management @recur(3) @due(2022-09-19)
+	- writing @recur(1) @due(2022-09-19)
 
 Overdue:
 	- call ADT : credit balance, medical device issues. @due(2022-08-12) @dad @high
 	- winter travel plans @due(2022-08-21) @high
 	- call dentist @due(2022-08-29) @high
 	- call Ifshin Music @due(2022-08-29) @high
+	- ten minutes of emptiness @due(2022-09-17) @recur(1) @high
+	- work on theclassroombeyond.com @recur(1) @due(2022-09-17) @high
 	- check for credit fraud @due(2022-07-23)
-	- scan some stuff @due(2022-08-12) @recur(3)
 	- try black rolling thing as wood rack? @due(2022-08-12)
 	- add air to K tire @due(2022-08-13)
 	- close Umpqua @due(2022-08-15)
 	- install plug by fireplace @due(2022-08-17)
 	- switch veggie / compost @due(2022-08-17)
 	- tidy back patio @recur(7) @due(2022-08-17) @household
-	- tidy up cables on front porch @due(2022-08-17)
 	- train blackberries @garden @due(2022-08-17)
 	- clean project table @due(2022-08-23) @recur(10)
 	- fix downstairs bathroom tp @household @due(2022-08-25)
@@ -33,9 +46,6 @@ Overdue:
 	- paint family room low shelf @due(2022-08-27)
 	- wash balcony wood @due(2022-08-27) @recur(120) @household
 	- work on garage workout setup @due(2022-08-27) @recur(3)
-	- mow lawn @due(2022-08-28) @recur(14)
-	- new light switch for Claudia @due(2022-08-29)
-	- vacuum upstairs @due(2022-08-29) @recur(5) @household
 	- bridge @due(2022-08-30) @recur(2) @exercise
 	- vacuum downstairs @due(2022-09-01) @recur(5) @household
 	- look into a 7.5x13.5 filter @household @due(2022-09-02)
@@ -50,71 +60,67 @@ Overdue:
 	- fix sfkids.org @due(2022-09-05)
 	- solarize the old vegetable garden 🏡 @due(2022-09-05)
 	- sweep/wash wood stairs @recur(6) @household @due(2022-09-08)
-	- kitchen cabinets @recur(11) @due(2022-09-09) @household
-	- guest bathroom @recur(5) @household @due(2022-09-10)
-	- master bathroom @recur(5) @household @due(2022-09-10)
 	- empty small trash cans @due(2022-09-13) @recur(Tuesday)
-	- clean something random @recur(1) @due(2022-09-15) @yesterday
-	- music @due(2022-09-15) @recur(2) @yesterday
-	- push-ups 3x12 @due(2022-09-15) @recur(2) @exercise @yesterday
-	- toe touch 3x10 @recur(2) @due(2022-09-15) @exercise @yesterday
+	- music @due(2022-09-15) @recur(2)
+	- check and replace emergency food @recur(365) @due(2022-09-16)
+	- downstairs bathroom @recur(5) @household @due(2022-09-16)
+	- plank @due(2022-09-16) @recur(2) @exercise
+	- audio editing @recur(1) @due(2022-09-17)
+	- carpet clean @recur(6) @due(2022-09-17)
+	- chair dips @recur(3) @due(2022-09-17) @exercise
+	- detach from something @recur(1) @due(2022-09-17)
+	- finances/bills @recur(6) @due(2022-09-17)
+	- fix something random @recur(2) @due(2022-09-17)
+	- start seeds @due(2022-09-17)
+	- trim front trees @due(2022-09-17) @recur(3)
+	- squat 3x6 @due(2022-09-18) @recur(3) @exercise
 
 Future:
-	- crossword @recur(1) @due(2022-09-17) @high @tomorrow
-	- put something into greenwaste @recur(Saturday) @due(2022-09-17) @high @tomorrow
-	- record todo totals @recur(1) @high @due(2022-09-17) @tomorrow
 	- refill hydroponics @recur(7) @due(2022-09-20) @high
+	- put something into greenwaste @recur(Saturday) @due(2022-09-24) @high
 	- send Brittany Sabol Zoom invite @due(2022-09-25) @high
 	- Bart schedule annual exam 10/1 @due(2023-09-16) @high @recur(365)
-	- carpet clean @recur(6) @due(2022-09-17) @tomorrow
-	- chair dips @recur(3) @due(2022-09-17) @exercise @tomorrow
-	- clean microwave @recur(6) @due(2022-09-17) @tomorrow
-	- desk @due(2022-09-17) @recur(6) @household @tomorrow
-	- Duolingo @recur(1) @due(2022-09-17) @tomorrow
-	- finances/bills @recur(6) @due(2022-09-17) @tomorrow
-	- fix something random @recur(2) @due(2022-09-17) @tomorrow
-	- garden @recur(3) @due(2022-09-17) @tomorrow
-	- Hamline @recur(1) @due(2022-09-17) @tomorrow
-	- horse @recur(1) @due(2022-09-17) @tomorrow
-	- kitchen @due(2022-09-17) @household @recur(1) @tomorrow
-	- leg lifts 3x10 @recur(2) @due(2022-09-17) @exercise @tomorrow
-	- master sheets @due(2022-09-17) @recur(9) @tomorrow
-	- organize something random @due(2022-09-17) @recur(2) @tomorrow
-	- reset family room @recur(3) @due(2022-09-17) @household @tomorrow
-	- trash management @recur(3) @due(2022-09-17) @tomorrow
-	- trim front trees @due(2022-09-17) @recur(3) @tomorrow
-	- 00ToFile directory @recur(7) @due(2022-09-18)
-	- car research @recur(3) @due(2022-09-18)
-	- Coastal Vine @due(2022-09-18) @recur(3)
-	- coding @recur(2) @due(2022-09-18)
-	- grocery plan @recur(Sunday) @due(2022-09-18)
-	- reset bedroom @recur(1) @due(2022-09-18)
-	- squat 3x6 @due(2022-09-18) @recur(3) @exercise
-	- stovetop @due(2022-09-18) @recur(5) @household
-	- trim trees under neighbor cables @due(2022-09-18) @recur(3)
-	- wash a wall @due(2022-09-18) @recur(11)
-	- groceries @due(2022-09-19) @recur(Monday)
-	- laundry @recur(5) @due(2022-09-19)
-	- mom @recur(3) @due(2022-09-19)
+	- coding @recur(2) @due(2022-09-20)
 	- dishwasher drain filter @due(2022-09-20) @recur(28)
 	- front yard @recur(6) @due(2022-09-20)
+	- K - changed Hulu password? @due(2022-09-20)
+	- organize something random @due(2022-09-20) @recur(2)
 	- pix for dad @due(2022-09-20)
+	- push-ups 3x12 @due(2022-09-20) @recur(2) @exercise
+	- reset family room @recur(3) @due(2022-09-20) @household
 	- spreadsheets with Claudia @due(2022-09-20)
+	- treat Shawnee's window @due(2022-09-20)
+	- trim trees under neighbor cables @due(2022-09-20) @recur(3)
 	- clean out car @due(2022-09-21) @recur(5)
 	- fix Fern's shelf @due(2022-09-21) @repairs
+	- mow lawn @due(2022-09-21) @recur(14)
 	- top off toilet paper TP @recur(5) @due(2022-09-21)
 	- trash cans out @recur(Thursday) @due(2022-09-22)
+	- 00ToFile directory @recur(7) @due(2022-09-23)
+	- desk @due(2022-09-23) @recur(6) @household
+	- guest bathroom @recur(5) @household @due(2022-09-23)
+	- master bathroom @recur(5) @household @due(2022-09-23)
 	- metal kitchen appliances @due(2022-09-23) @recur(11)
+	- stovetop @due(2022-09-23) @recur(5) @household
+	- take Fern’s car in @due(2022-09-23)
 	- trash cans in @recur(Friday) @household @due(2022-09-23)
+	- vacuum upstairs @due(2022-09-23) @recur(5) @household
+	- clean microwave @recur(6) @due(2022-09-24)
+	- grocery plan @recur(Sunday) @due(2022-09-25)
 	- Kaiser for COVID tests @recur(24) @due(2022-09-25)
 	- wash out kitchen trash cans @recur(20) @due(2022-09-25)
+	- fix Kristin's towel bar @due(2022-09-26)
 	- haircut @recur(35) @due(2022-09-26)
 	- photos @due(2022-09-26) @recur(13)
 	- smoral cleanup old blog @recur(13) @due(2022-09-26)
+	- master sheets @due(2022-09-27) @recur(9)
 	- organize coffee table @due(2022-09-27) @recur(22) @household
 	- empty ice bin @recur(25) @household @due(2022-09-28)
 	- downstairs shower curtain @recur(33) @household @due(2022-09-29)
+	- kitchen cabinets @recur(11) @due(2022-09-29) @household
+	- wash a wall @due(2022-09-29) @recur(11)
 	- Bart haircut @due(2022-09-30) @recur(35)
+	- take my car in @due(2022-09-30)
 	- transfer domains from winhost (aiid, drlindacharles) @due(2022-10-01)
 	- work on AIID.com @recur(24) @due(2022-10-01)
 	- Timothy run @due(2022-10-03) @recur(26)
@@ -176,24 +182,84 @@ Electrician:
 	- new outlet in yard (although I could run that from deck)
 
 Archive:
+	- look up giving voice to values curriculum @done(22-09-18 22:56) @project(Today)
 	- Bart schedule annual exam 10/1 @due(2022-09-10) @high @done(22-09-16 09:40) @project(Today)
 	- crossword @due(2022-09-16) @high @done(22-09-16 09:35) @project(Today)
 	- record todo totals @high @due(2022-09-16) @done(22-09-16 09:35) @project(Today)
+	- ten minutes of emptiness @due(2022-09-16) @high @done(22-09-16 18:39) @project(Today)
+	- work on theclassroombeyond.com @due(2022-09-16) @high @done(22-09-16 16:01) @project(Today)
+	- crossword @due(2022-09-17) @high @done(2022-09-17) @project(Today)
+	- put something into greenwaste @due(2022-09-17) @high @done(2022-09-17) @project(Today)
+	- record todo totals @high @due(2022-09-17) @done(2022-09-17) @project(Today)
+	- crossword @due(2022-09-18) @high @done(22-09-18 10:38) @project(Today)
+	- record todo totals @high @due(2022-09-18) @done(22-09-18 10:38) @project(Today)
+	- unpack @high @due(2022-09-18) @done(22-09-18 11:56) @project(Today)
+	- scan some stuff @due(2022-08-12) @done(2022-09-16) @project(Overdue)
 	- trim trees under neighbor cables @due(2022-08-24) @done(22-09-15 09:41) @project(Overdue)
+	- vacuum upstairs @due(2022-08-29) @household @done(22-09-18 17:36) @project(Overdue)
 	- pay Chaunda $20 @due(2022-09-02) @done(22-09-16 11:49) @project(Overdue)
 	- fix something random @due(2022-09-06) @done(22-09-15 11:50) @project(Overdue)
+	- kitchen cabinets @due(2022-09-09) @household @done(22-09-18 22:56) @project(Overdue)
+	- guest bathroom @household @due(2022-09-10) @done(22-09-18 11:56) @project(Overdue)
+	- master bathroom @household @due(2022-09-10) @done(22-09-18 11:56) @project(Overdue)
 	- audio editing @due(2022-09-14) @done(22-09-15 11:49) @project(Overdue)
+	- clean something random @due(2022-09-15) @done(22-09-16 16:02) @project(Overdue)
+	- push-ups 3x12 @due(2022-09-15) @exercise @done(22-09-18 17:37) @project(Overdue)
+	- toe touch 3x10 @due(2022-09-15) @exercise @done(2022-09-17) @project(Overdue)
 	- archive taskpaper @due(2022-09-16) @done(22-09-16 09:42) @project(Today)
+	- audio editing @due(2022-09-16) @done(22-09-16 16:01) @project(Today)
 	- clean out car @due(2022-09-16) @done(22-09-16 09:35) @project(Today)
+	- detach from something @due(2022-09-16) @done(22-09-16 13:47) @project(Today)
 	- Duolingo @due(2022-09-16) @done(22-09-16 09:35) @project(Today)
 	- exercise @due(2022-09-16) @exercise @done(22-09-15 09:41) @project(Today)
+	- exercise @due(2022-09-16) @exercise @done(22-09-16 16:13) @project(Today)
 	- Hamline @due(2022-09-16) @done(22-09-16 10:25) @project(Today)
 	- horse @due(2022-09-16) @done(22-09-16 11:50) @project(Today)
 	- kitchen @due(2022-09-16) @household @done(22-09-16 09:35) @project(Today)
+	- reading @due(2022-09-16) @done(22-09-16 16:01) @project(Today)
 	- top off toilet paper TP @due(2022-09-16) @done(22-09-16 09:46) @project(Today)
 	- trash cans in @household @due(2022-09-16) @done(22-09-16 09:35) @project(Today)
+	- writing @due(2022-09-16) @done(22-09-16 16:01) @project(Today)
+	- clean microwave @due(2022-09-17) @done(2022-09-18) @project(Today)
 	- coding @due(2022-09-17) @done(22-09-16 12:02) @project(Future)
+	- desk @due(2022-09-17) @household @done(22-09-17 11:38) @project(Today)
+	- Duolingo @due(2022-09-17) @done(2022-09-17) @project(Today)
+	- exercise @due(2022-09-17) @exercise @done(2022-09-17) @project(Today)
+	- Hamline @due(2022-09-17) @done(22-09-17 11:34) @project(Today)
+	- horse @due(2022-09-17) @done(2022-09-17) @project(Today)
+	- kitchen @due(2022-09-17) @household @done(2022-09-17) @project(Today)
+	- leg lifts 3x10 @due(2022-09-17) @exercise @done(2022-09-17) @project(Today)
+	- master sheets @due(2022-09-17) @done(22-09-18 11:56) @project(Overdue)
+	- organize something random @due(2022-09-17) @done(22-09-18 22:56) @project(Overdue)
+	- reading @due(2022-09-17) @done(22-09-17 11:33) @project(Today)
+	- reset family room @due(2022-09-17) @household @done(22-09-17 11:33) @project(Today)
+	- thank you cards @due(2022-09-17) @done(22-09-18 10:51) @project(Overdue)
+	- trash management @due(2022-09-17) @done(22-09-16 21:02) @project(Future)
+	- writing @due(2022-09-17) @done(22-09-18 22:56) @project(Overdue)
+	- 00ToFile directory @due(2022-09-18) @done(22-09-16 13:50) @project(Future)
+	- Coastal Vine @due(2022-09-18) @done(22-09-16 13:10) @project(Future)
+	- coding @due(2022-09-18) @done(22-09-16 13:47) @project(Future)
+	- coding @due(2022-09-18) @done(22-09-18 22:55) @project(Today)
+	- Duolingo @due(2022-09-18) @done(22-09-18 11:56) @project(Today)
+	- exercise @due(2022-09-18) @exercise @done(2022-09-18) @project(Today)
+	- grocery plan @due(2022-09-18) @done(2022-09-18) @project(Today)
+	- Hamline @due(2022-09-18) @done(22-09-18 10:48) @project(Today)
+	- kitchen @due(2022-09-18) @household @done(22-09-18 10:38) @project(Today)
 	- mom @due(2022-09-18) @done(22-09-16 09:35) @project(Future)
+	- reading @due(2022-09-18) @done(22-09-18 10:39) @project(Today)
+	- reset bedroom @due(2022-09-18) @done(22-09-18 17:36) @project(Today)
+	- stovetop @due(2022-09-18) @household @done(22-09-18 17:37) @project(Today)
+	- wash a wall @due(2022-09-18) @done(22-09-18 11:56) @project(Today)
+	- top off toilet paper TP @due(2022-09-21) @done(22-09-16 21:02) @project(Future)
+
+Statistics:
+	Today: 24
+	Overdue: 48
+	Done:
+		2022-09-18: 24
+		2022-09-16: 28
+		2022-09-17: 13
+		2022-09-15: 4
 
 Settings:
 	archiveDoneItems=true
@@ -204,3 +270,4 @@ Settings:
 	sortFutureItems=true
 	overdueSection=true
 	addTodayTomorrowOverdueTags=true
+	statisticsSection=true

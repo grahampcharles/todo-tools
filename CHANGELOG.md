@@ -2,6 +2,14 @@
 
 All notable changes to the "todo-tools" extension will be documented in this file.
 
+## [0.7.8] - unreleased
+### add
+- statistics option
+
+### fix
+- clears "today", "tomorrow", "yesterday" from archived tasks
+- performance on large files
+
 ## [0.7.7] - 2022-09-16
 ### add
 - added option to tag with @today, @tomorrow, @yesterday

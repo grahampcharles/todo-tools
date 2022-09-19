@@ -1,0 +1,5 @@
+How to refresh task-parser; not sure why it's not working as a dependency.
+
+rimraf ./lib/task-parser/
+mkdir ./lib/task-parser 
+copy ../task-parser/build/*.* ./lib/task-parser/

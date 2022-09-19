@@ -1,6 +1,6 @@
 // from vscode-sort-lines
 
-import { TaskPaperNode } from "task-parser/TaskPaperNode";
+import { TaskPaperNode } from "./task-parser";
 import * as vscode from "vscode";
 import { cleanDate } from "./dates";
 import { getDueTasks, taskDueDateCompare } from "./taskpaper-parsing";
@@ -79,7 +79,7 @@ export function sortLines(
     return replaceLines(textEditor, startLine, endLine, lines);
 }
 
-// convenience function 
+// convenience function
 export function replaceCurrentLine(
     textEditor: vscode.TextEditor,
     line: string

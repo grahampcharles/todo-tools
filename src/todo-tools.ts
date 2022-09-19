@@ -6,18 +6,20 @@ import {
     processTaskNode,
     addProject,
     taskBlankToBottom,
+    updateStatistics,
 } from "./taskpaper-parsing";
-import { TaskPaperNode } from "task-parser/TaskPaperNode";
+import { TaskPaperNode } from "./task-parser";
 import { replaceCurrentLine, replaceLines } from "./sort-lines";
 import dayjs from "dayjs";
 import { DEFAULT_DATE_FORMAT } from "./dates";
+import { stat } from "fs";
 
 const settings = new Settings();
 
 // versioning
 var minutesIdle: number = 0;
 const IS_DEBUG = true;
-const SECONDS_PER_MINUTE = IS_DEBUG ? 10 : 60 ; // one minute between runs (or two seconds in debug)
+const SECONDS_PER_MINUTE = IS_DEBUG ? 10 : 60; // one minute between runs (or two seconds in debug)
 // const outputChannel = vscode.window.createOutputChannel("ToDo Tools");
 // outputChannel.show();
 var timer: NodeJS.Timeout;
@@ -25,23 +27,21 @@ var lastIdleTicks: number = 0;
 const IDLE_TICKS = 1 * 1000;
 
 export function log(message: string) {
-    // DO NOT LOG to the output channel! 
-    // Logging causes a document change event. 
+    // DO NOT LOG to the output channel!
+    // Logging causes a document change event.
     // See: https://github.com/eclipse-theia/theia/issues/8855
     // if (outputChannel !== undefined && IS_DEBUG) {
     //     outputChannel.appendLine(message);
-    if ( IS_DEBUG) {        
+    if (IS_DEBUG) {
         console.log(message);
     }
 }
 
 export function documentOnChange(event: vscode.TextDocumentChangeEvent) {
-
     minutesIdle = 0; // clear idle register
 
-    if (event.contentChanges.length > 0)
-    {
-        log("documentOnChange");  
+    if (event.contentChanges.length > 0) {
+        log("documentOnChange");
         const nowTicks = new Date().getTime();
 
         // only fire idle once a second at most
@@ -56,11 +56,12 @@ export function documentOnOpen() {
     log("documentOnOpen");
 
     const textEditor = vscode.window.activeTextEditor;
-    updateSettings(textEditor).then(() => {
-        if (textEditor && settings.runOnOpen()) {
-            performCopyAndSave();
-        }
-    });
+    updateSettings(textEditor);
+
+    if (textEditor && settings.runOnOpen()) {
+        performCopyAndSave();
+    }
+
     minutesIdle = 0; // clear counter
     documentIsIdle(); // restart counter
 }
@@ -74,7 +75,6 @@ function stopTimer() {
 }
 
 function documentIsIdle() {
-
     log("documentIsIdle");
 
     const textEditor = vscode.window.activeTextEditor;
@@ -86,22 +86,20 @@ function documentIsIdle() {
     stopTimer();
 
     // in case they were manually changed
-    updateSettings(textEditor)
-        .then(() => {
-            if (settings.autoRun()) {
-                minutesIdle++;
-                log(`idle for ${minutesIdle} minutes`);
-            }
+    updateSettings(textEditor);
 
-            if (minutesIdle >= settings.autoRunInterval()) {
-                minutesIdle = 0; // reset counter
-                performCopyAndSave();
-            }
-        })
-        .finally(() => {
-            log(`restarting minute timer (minute = ${SECONDS_PER_MINUTE} seconds)`);
-            timer = setTimeout(documentIsIdle, SECONDS_PER_MINUTE * 1000);
-        });
+    if (settings.autoRun()) {
+        minutesIdle++;
+        log(`idle for ${minutesIdle} minutes`);
+    }
+
+    if (minutesIdle >= settings.autoRunInterval()) {
+        minutesIdle = 0; // reset counter
+        performCopyAndSave();
+    }
+
+    log(`restarting minute timer (minute = ${SECONDS_PER_MINUTE} seconds)`);
+    timer = setTimeout(documentIsIdle, SECONDS_PER_MINUTE * 1000);
 }
 
 /**
@@ -125,7 +123,8 @@ function performCopyAndSave() {
                 if (reason instanceof Error) {
                     log(reason.message);
                 }
-            }).finally( ()=> {     
+            })
+            .finally(() => {
                 // restart timer
                 documentIsIdle();
             });
@@ -199,7 +198,6 @@ const taskUnderCursor = (
  *Perform the copy of any due recurring tasks into the Today section
  */
 export async function performCopy(): Promise<boolean> {
-
     log("performCopy");
 
     const textEditor = vscode.window.activeTextEditor;
@@ -208,7 +206,7 @@ export async function performCopy(): Promise<boolean> {
     }
 
     // get items
-    let allItems = await parseTaskDocument(textEditor);
+    let allItems = parseTaskDocument(textEditor);
     if (allItems === undefined) {
         return false;
     }
@@ -227,14 +225,23 @@ export async function performCopy(): Promise<boolean> {
     if (settings.overdueSection()) {
         addProject(allItems, "Overdue", "top");
     }
+    if (settings.statisticsSection()) {
+        addProject(allItems, "Statistics", "above settings");
+    }
 
     // get special projects
     var archiveProject: TaskPaperNode | undefined,
         todayProject: TaskPaperNode | undefined,
         futureProject: TaskPaperNode | undefined,
-        overdueProject: TaskPaperNode | undefined;
-    [archiveProject, todayProject, futureProject, overdueProject] =
-        getSpecialProjects(allItems);
+        overdueProject: TaskPaperNode | undefined,
+        statisticsProject: TaskPaperNode | undefined;
+    [
+        archiveProject,
+        todayProject,
+        futureProject,
+        overdueProject,
+        statisticsProject,
+    ] = getSpecialProjects(allItems);
 
     if (!settings.overdueSection()) {
         overdueProject = todayProject;
@@ -250,14 +257,23 @@ export async function performCopy(): Promise<boolean> {
         overdueProject
     );
 
+    // add statistics
+    if (settings.statisticsSection()) {
+        updateStatistics(allItems, statisticsProject);
+    }
+
     // sort unknowns to bottom
-    [archiveProject, todayProject, futureProject, overdueProject].forEach(
-        (project) => {
-            if (project !== undefined) {
-                project.children = project.children.sort(taskBlankToBottom);
-            }
+    [
+        archiveProject,
+        todayProject,
+        futureProject,
+        overdueProject,
+        statisticsProject,
+    ].forEach((project) => {
+        if (project !== undefined) {
+            project.children = project.children.sort(taskBlankToBottom);
         }
-    );
+    });
 
     // return a promise to write out the document
     return Promise.resolve(writeOutItems(allItems));
@@ -284,6 +300,7 @@ export function getSpecialProjects(
     TaskPaperNode | undefined,
     TaskPaperNode | undefined,
     TaskPaperNode | undefined,
+    TaskPaperNode | undefined,
     TaskPaperNode | undefined
 ] {
     return [
@@ -291,13 +308,14 @@ export function getSpecialProjects(
         getProjectByName(node, "Today"),
         getProjectByName(node, "Future"),
         getProjectByName(node, "Overdue"),
+        getProjectByName(node, "Statistics"),
     ];
 }
 
-async function updateSettings(textEditor: vscode.TextEditor | undefined) {
+function updateSettings(textEditor: vscode.TextEditor | undefined) {
     // update settings from current document
     if (textEditor) {
-        const doc = await parseTaskDocument(textEditor);
+        const doc = parseTaskDocument(textEditor);
         if (doc) {
             settings.update(doc);
         }

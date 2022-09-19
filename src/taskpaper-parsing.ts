@@ -3,8 +3,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
-import { TaskPaperNode } from "task-parser/TaskPaperNode";
-import { parseTaskPaper } from "task-parser/index";
+
 import {
     cleanDate,
     todayDay,
@@ -21,6 +20,7 @@ import {
     moveNode,
 } from "./move-nodes";
 import { caseInsensitiveCompare } from "./sort-lines";
+import { TaskPaperNode } from "./task-parser";
 
 // work in the local time zone
 dayjs.extend(utc);
@@ -37,15 +37,15 @@ dayjs.extend(isSameOrBefore);
  * @param {*} document Document returned by the taskpaper parser.
  * @return {*} all the tasks in the document.
  */
-export async function parseTaskDocument(
+export function parseTaskDocument(
     editor: vscode.TextEditor
-): Promise<TaskPaperNode | undefined> {
-    // parse the taskpaper again if possible
+): TaskPaperNode | undefined {
     try {
-        return parseTaskPaper(editor.document.getText());
+        const ret = new TaskPaperNode(editor.document.getText());
+        return ret;
     } catch (error: any) {
         // report error to user
-        await vscode.window.showInformationMessage(error.toString());
+        vscode.window.showInformationMessage(error.toString());
         return undefined;
     }
 }
@@ -159,15 +159,14 @@ export function replaceDueTokens(input: TaskPaperNode): void {
     }
 
     // pre-process special tags (yesterday, today, tomorrow)
-        RELATIVE_DAYS.forEach((relativeDay) => {
-            if (input.hasTag(relativeDay)) {
-                if (!input.hasTag("due")) {
-                    input.setTag("due", relativeDay);
-                }
-                input.removeTag(relativeDay);
+    RELATIVE_DAYS.forEach((relativeDay) => {
+        if (input.hasTag(relativeDay)) {
+            if (!input.hasTag("due")) {
+                input.setTag("due", relativeDay);
             }
-        });
-
+            input.removeTag(relativeDay);
+        }
+    });
 
     // if there's a due date, clean it
     if (!input.hasTag("due")) {
@@ -185,16 +184,123 @@ export function replaceDueTokens(input: TaskPaperNode): void {
 }
 
 export function addRelativeDateFlag(input: TaskPaperNode) {
-    
-    if (input.hasTag("done") || !input.hasTag("due")) { return;}
+    if (input.hasTag("done") || !input.hasTag("due")) {
+        return;
+    }
 
     const due = cleanDate(input.tagValue("due"));
     if (due.isValid()) {
         // add relative date flags
-        if (due.isSame(todayDay(), "day") ) {            input.setTag("today", undefined);        }
-        if (due.add(1, "day").isSame(todayDay(), "day") ) {        input.setTag("yesterday", undefined);        }
-        if (due.subtract(1, "day").isSame(todayDay(), "day") ) {        input.setTag("tomorrow", undefined);        }
+        if (due.isSame(todayDay(), "day")) {
+            input.setTag("today", undefined);
+        }
+        if (due.add(1, "day").isSame(todayDay(), "day")) {
+            input.setTag("yesterday", undefined);
+        }
+        if (due.subtract(1, "day").isSame(todayDay(), "day")) {
+            input.setTag("tomorrow", undefined);
+        }
     }
+}
+
+export function updateStatistics(
+    taskNode: TaskPaperNode,
+    statsProject: TaskPaperNode | undefined
+) {
+    if (statsProject === undefined) {
+        return;
+    }
+
+    const statistics = getStatistics(taskNode);
+
+    const doneProject = new TaskPaperNode("\tDone:");
+    const dueProject = new TaskPaperNode("\tDue:");
+
+    pushStatisticMapToProject(statistics.done, doneProject);
+    pushStatisticMapToProject(statistics.due, dueProject);
+
+    statsProject.children = [
+        new TaskPaperNode(`\tToday: ${statistics.today}`),
+        new TaskPaperNode(`\tOverdue: ${statistics.overdue}`),
+        doneProject,
+        // dueProject,
+    ];
+}
+
+export function pushStatisticMapToProject(
+    map: Map<string, number>,
+    project: TaskPaperNode
+) {
+    for (let [date, value] of map) {
+        project.children.push(new TaskPaperNode(`\t\t${date}: ${value}`));
+    }
+}
+
+type StatisticsType = {
+    done: Map<string, number>;
+    due: Map<string, number>;
+    today: number;
+    overdue: number;
+};
+
+export function getStatistics(node: TaskPaperNode): StatisticsType {
+    const ret = {
+        done: new Map<string, number>(),
+        due: new Map<string, number>(),
+        today: 0,
+        overdue: 0,
+    } as StatisticsType;
+
+    console.log(node.value);
+
+    if (node.value === "Archive") {
+        console.log("made it!");
+    }
+
+    // get this task count
+    if (isDone(node)) {
+        addTally(ret.done, node.tagValue("done"));
+    }
+    if (isDueTodayOrBefore(node)) {
+        addTally(ret.due, node.tagValue("due"));
+    }
+    if (isOverdue(node)) {
+        ret.overdue += 1;
+    }
+    if (isDueToday(node)) {
+        ret.today += 1;
+    }
+
+    // get child task counts
+    node.children.forEach((childNode) => {
+        const childStats = getStatistics(childNode);
+
+        if (childStats.done.size > 0) {
+            for (let [date, value] of childStats.done) {
+                addTally(ret.done, date, value);
+            }
+        }
+
+        if (childStats.due.size > 0) {
+            for (let [date, value] of childStats.due) {
+                addTally(ret.due, date, value);
+            }
+        }
+
+        ret.overdue += childStats.overdue;
+        ret.today += childStats.today;
+    });
+
+    return ret;
+}
+
+export function addTally(
+    accumulator: Map<string, number>,
+    date: string | undefined,
+    count: number = 1
+) {
+    const dateString = cleanDate(date).format("YYYY-MM-DD");
+    accumulator.set(dateString, (accumulator.get(dateString) ?? 0) + count);
 }
 
 export function processTaskNode(
@@ -234,7 +340,7 @@ export function processTaskNode(
     replaceDueTokens(taskNode);
 
     // add relative date tag
-    if (settings.addTodayTomorrowOverdueTags()) {
+    if (settings.addTodayTomorrowYesterday()) {
         addRelativeDateFlag(taskNode);
     }
 
@@ -248,8 +354,15 @@ export function processTaskNode(
         // after which to generate the next task
         // This is the date the task was last done,
         // or if that's unknown, then default to
-        // today.
-        const sourceDate = cleanDate(taskNode.tagValue("done"));
+        // today. For done annual items, default to the higher
+        // of the due date or the done date.
+        const isAnnual = (taskNode.tagValue("due") ?? "")?.length <= 5;
+
+        const doneDate = cleanDate(taskNode.tagValue("done"));
+        const dueDate = cleanDate(taskNode.tagValue("due"));
+
+        const sourceDate =
+            isAnnual && dueDate.isAfter(doneDate) ? dueDate : doneDate;
 
         /// next recurrence date
         const nextDate = cleanDate(
@@ -262,7 +375,16 @@ export function processTaskNode(
             // clone the node
             newNode = taskNode.clone();
 
-            newNode.removeTag(["done", "started", "lasted", "project"]);
+            newNode.removeTag([
+                "done",
+                "started",
+                "lasted",
+                "project",
+                "duration",
+                "today",
+                "tomorrow",
+                "yesterday",
+            ]);
             newNode.setTag("due", nextDate.format(DEFAULT_DATE_FORMAT));
 
             // add new node as a sibling

@@ -26,10 +26,10 @@ import {
     testArchive1Source,
     testDocument,
     testDocumentWithHigh,
+    testDocumentWithSubprojectLines,
     testSettings,
 } from "./testData";
 import { Settings } from "../../Settings";
-import { parseTaskPaper } from "task-parser";
 import dayjs, { Dayjs } from "dayjs";
 import {
     isBlankLine,
@@ -37,7 +37,7 @@ import {
     taskDueDateCompare,
     taskBlankToBottom,
 } from "../../taskpaper-parsing";
-import { TaskPaperNode } from "task-parser/TaskPaperNode";
+import { TaskPaperNode } from "../../task-parser";
 import { getSpecialProjects } from "../../todo-tools";
 import {
     isDueToday,
@@ -51,13 +51,22 @@ const bBeforeA = 1;
 const aAndBSame = 0;
 
 suite("Extension Test Suite", () => {
-    vscode.window.showInformationMessage("Start all tests.");
+    it("test document with subproject lines", () => {
+        const node = new TaskPaperNode(testDocumentWithSubprojectLines);
+
+        const project = node.children[0];
+        expect(project).to.have.property("children").of.length(2);
+
+        const subproject1 = project.children[0];
+        expect(subproject1).to.have.property("value").eq("SubProject 1");
+    });
 
     it("clean date", () => {
-        const thisYear = new Date().getFullYear();
         const date1 = cleanDate("1/11");
-        expect(date1.year()).eq(thisYear);
-        expect(date1.format("YYYY-MM-DD")).eq(`${thisYear}-01-11`);
+        const targetYear = new Date().getFullYear();
+
+        expect(date1.year()).eq(targetYear);
+        expect(date1.format("YYYY-MM-DD")).eq(`${targetYear}-01-11`);
 
         const date2 = cleanDate("22-01-13 13:45");
         expect(date2.format("YYYY-MM-DD HH:mm")).eq("2022-01-13 13:45");
@@ -70,19 +79,14 @@ suite("Extension Test Suite", () => {
 
     it("next due date; annual", () => {
         // completed annual items: should be moved to next year
-        const thisYear = new Date().getFullYear();
+        const dueDate = cleanDate("1/11");
+        const thisYear = dueDate.year();
         const nextYear = thisYear + 1;
-        const currentDueDate = cleanDate("1/11");
 
-        const doneDateAfter = currentDueDate.add(1, "day"); // done the day after it was due
-        const nextDateAfter = cleanDate("1/11", doneDateAfter);
-        expect(nextDateAfter.year()).eq(nextYear);
-        expect(nextDateAfter.format("YYYY-MM-DD")).eq(`${nextYear}-01-11`);
-
-        const doneDateBefore = currentDueDate.subtract(1, "day"); // done the day before it was due; still should be due next year
-        const nextDateBefore = cleanDate("1/11", doneDateBefore);
-        expect(nextDateBefore.format("YYYY-MM-DD")).eq(`${nextYear}-01-11`);        
-        
+        const done = dueDate.add(1, "day"); // done the day after it was due
+        const nextDueDate = cleanDate(`${thisYear}-01-11`, done);
+        expect(nextDueDate.year()).eq(nextYear);
+        expect(nextDueDate.format("YYYY-MM-DD")).eq(`${nextYear}-01-11`);
     });
 
     it("getDaysFromRecurrencePattern", () => {
@@ -218,7 +222,7 @@ suite("Extension Test Suite", () => {
 
     it("settings", () => {
         const test = new Settings();
-        const settingsNode = parseTaskPaper(testSettings);
+        const settingsNode = new TaskPaperNode(testSettings);
         test.update(settingsNode);
         expect(test.autoRun()).eq(false);
         expect(test.runOnOpen()).eq(false);
