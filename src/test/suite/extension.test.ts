@@ -9,6 +9,7 @@ import {
     daysUntilWeekday,
     getDaysFromRecurrencePattern,
     monthNameToNumber,
+    nextAnnual,
     nextWeekday,
     todayDay,
     todayName,
@@ -45,6 +46,7 @@ import {
     isFuture,
     isOverdue,
 } from "../../move-nodes";
+import { getNextDueDate, latestDate } from "../../task-tools";
 
 const aBeforeB = -1;
 const bBeforeA = 1;
@@ -78,15 +80,50 @@ suite("Extension Test Suite", () => {
     });
 
     it("next due date; annual", () => {
-        // completed annual items: should be moved to next year
-        const dueDate = cleanDate("1/11");
-        const thisYear = dueDate.year();
-        const nextYear = thisYear + 1;
+        // completed annual items: should be moved to the year after they were done or due
+        const node = new TaskPaperNode("- test task");
+        node.setTag("annual", "9/19");
+        node.setTag("due", "2122-09-19");
+        node.setTag("done", "2122-09-18");
 
-        const done = dueDate.add(1, "day"); // done the day after it was due
-        const nextDueDate = cleanDate(`${thisYear}-01-11`, done);
-        expect(nextDueDate.year()).eq(nextYear);
-        expect(nextDueDate.format("YYYY-MM-DD")).eq(`${nextYear}-01-11`);
+        let nextDueDate = getNextDueDate(node);
+        expect(nextDueDate.format("YYYY-MM-DD")).to.eq("2123-09-19");
+
+        // node.setTag("done", "2122-09-20");
+        // nextDueDate = getNextDueDate(node);
+        // expect(nextDueDate.format("YYYY-MM-DD")).to.eq("2123-09-19");
+
+        // node.setTag("done", "2123-09-20");
+        // nextDueDate = getNextDueDate(node);
+        // expect(nextDueDate.format("YYYY-MM-DD")).to.eq("2124-09-19");
+    });
+
+    it("next due date; day of the week", () => {
+        const node = new TaskPaperNode("- test task");
+        node.setTag("recur", "Friday");
+        node.setTag("due", "2122-09-18");
+        node.setTag("done", "2122-09-18"); // this is a Friday
+
+        let nextDueDate = getNextDueDate(node);
+        expect(nextDueDate.format("YYYY-MM-DD")).to.eq("2122-09-25"); // the next Friday
+
+        node.setTag("done", "2122-09-19"); // this is a Saturday
+        nextDueDate = getNextDueDate(node);
+        expect(nextDueDate.format("YYYY-MM-DD")).to.eq("2122-09-25"); // the next Friday
+    });
+
+    it("next due date; number of days recurrence", () => {
+        const node = new TaskPaperNode("- test task");
+        node.setTag("recur", "3");
+        node.setTag("due", "2122-09-18");
+        node.setTag("done", "2122-09-18");
+
+        let nextDueDate = getNextDueDate(node);
+        expect(nextDueDate.format("YYYY-MM-DD")).to.eq("2122-09-21");
+
+        node.setTag("done", "2122-09-17");
+        nextDueDate = getNextDueDate(node);
+        expect(nextDueDate.format("YYYY-MM-DD")).to.eq("2122-09-20");
     });
 
     it("getDaysFromRecurrencePattern", () => {
@@ -109,6 +146,18 @@ suite("Extension Test Suite", () => {
         expect(
             nextWeekday(1, dayjs("2022-05-10")).format("YYYY-MM-DD")
         ).to.equal("2022-05-16", "next weekday");
+
+        expect(
+            nextAnnual("5/10", dayjs("2022-05-01")).format("YYYY-MM-DD")
+        ).to.equal("2022-05-10", "next annual (before)");
+
+        expect(
+            nextAnnual("5/10", dayjs("2022-05-11")).format("YYYY-MM-DD")
+        ).to.equal("2023-05-10", "next annual (after)");
+
+        expect(
+            nextAnnual("9/19", dayjs("2021-09-20")).format("YYYY-MM-DD")
+        ).to.equal("2022-09-19", "next annual (after 2)");
 
         // day names
         assert.strictEqual("Sunday", dayNames[0]);
@@ -158,18 +207,9 @@ suite("Extension Test Suite", () => {
         expect(cleanDate("tomorrow").format("YYYY-MM-DD")).to.equal(
             tomorrow.toLocaleDateString("sv")
         );
-        expect(cleanDate("1").format("YYYY-MM-DD")).to.equal(
-            tomorrow.toLocaleDateString("sv")
-        );
-        expect(cleanDate("2").format("YYYY-MM-DD")).to.equal(
-            dayAfterTomorrow.toLocaleDateString("sv")
-        );
         expect(cleanDate("yesterday").format("YYYY-MM-DD")).to.equal(
             yesterday.toLocaleDateString("sv")
         );
-        expect(
-            cleanDate("Monday", dayjs("2022-02-11")).format("YYYY-MM-DD")
-        ).to.equal("2022-02-14");
     });
 
     it("string utilities", () => {
@@ -233,7 +273,13 @@ suite("Extension Test Suite", () => {
         expect(test.overdueSection()).eq(false);
     });
 
-    it("date comparisons", () => {
+    it("date latest", () => {
+        const date1 = dayjs("2022-01-01");
+        const date2 = dayjs("2022-02-01");
+
+        const pickLatestDate = latestDate([date1, date2]);
+        expect(pickLatestDate.format("YYYY-MM-DD")).to.eql("2022-02-01");
+
         const today = todayDay().format("YYYY-MM-DD");
         const testTask = new TaskPaperNode(`  - test item @due(${today})`);
 

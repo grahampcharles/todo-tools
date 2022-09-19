@@ -31,42 +31,16 @@ export const RELATIVE_DAYS = ["yesterday", "today", "tomorrow"];
 export const DEFAULT_DATE_FORMAT = "YYYY-MM-DD";
 export const dayNames = dayjs.weekdays();
 
-export function cleanDate(
-    dayString: string | undefined,
-    afterDate: dayjs.Dayjs | undefined = undefined
-): dayjs.Dayjs {
+export function cleanDate(dayString: string | undefined): dayjs.Dayjs {
     // attempts to turn the string into a Dayjs object
     if (dayString === undefined) {
-        return afterDate ?? dayjs();
+        return dayjs();
     }
 
     // try a format string
     var ret = dayjs(dayString, FORMAT_STRINGS);
     if (ret.isValid()) {
-        // do we need to return a date after a specific date?
-        while (ret.isBefore(afterDate ?? ret)) {
-            ret = ret.add(1, "year");
-        }
-
         return ret;
-    }
-
-    // simple number: just add it
-    const dayOffset = parseInt(dayString);
-    if (!isNaN(dayOffset)) {
-        ret = (afterDate ?? dayjs()).add(dayOffset, "day");
-        if (ret.isValid()) {
-            return ret;
-        }
-    }
-
-    // try a weekday
-    const weekday = dayNameToWeekday(dayString);
-    if (weekday !== -1) {
-        ret = nextWeekday(weekday, afterDate);
-        if (ret.isValid()) {
-            return ret;
-        }
     }
 
     // try a relative day name token
@@ -74,13 +48,14 @@ export function cleanDate(
         (item: string) => item === dayString
     );
     if (relativeDayIndex !== -1) {
-        ret = (afterDate ?? dayjs()).add(relativeDayIndex - 1, "day"); // -1 because "yesterday" will have an index of 0
+        ret = dayjs().add(relativeDayIndex - 1, "day"); // -1 because "yesterday" will have an index of 0
         if (ret.isValid()) {
             return ret;
         }
     }
 
-    return afterDate ?? dayjs();
+    // default to today
+    return dayjs();
 }
 
 export function todayDay(): Dayjs {
@@ -136,6 +111,19 @@ export function nextWeekday(
 ): dayjs.Dayjs {
     const days = daysUntilWeekday(weekday, fromDay);
     return fromDay.add(days, "day");
+}
+
+export function nextAnnual(
+    anniversary: string,
+    fromDay: dayjs.Dayjs = dayjs()
+): dayjs.Dayjs {
+    let currentAnniverary = cleanDate(anniversary);
+
+    while (fromDay.isSame(currentAnniverary) || fromDay.isAfter(currentAnniverary)) {
+        currentAnniverary = currentAnniverary.add(1, "year");
+    }
+
+    return currentAnniverary;
 }
 
 export function getDaysFromRecurrencePattern(

@@ -21,6 +21,7 @@ import {
 } from "./move-nodes";
 import { caseInsensitiveCompare } from "./sort-lines";
 import { TaskPaperNode } from "./task-parser";
+import { getNextDueDate } from "./task-tools";
 
 // work in the local time zone
 dayjs.extend(utc);
@@ -251,12 +252,6 @@ export function getStatistics(node: TaskPaperNode): StatisticsType {
         overdue: 0,
     } as StatisticsType;
 
-    console.log(node.value);
-
-    if (node.value === "Archive") {
-        console.log("made it!");
-    }
-
     // get this task count
     if (isDone(node)) {
         addTally(ret.done, node.tagValue("done"));
@@ -350,25 +345,7 @@ export function processTaskNode(
         (taskNode.hasTag("done") || !taskNode.hasTag("due"));
 
     if (taskHasRecurrenceAndIsDone) {
-        // Get the "source date" -- the day
-        // after which to generate the next task
-        // This is the date the task was last done,
-        // or if that's unknown, then default to
-        // today. For done annual items, default to the higher
-        // of the due date or the done date.
-        const isAnnual = (taskNode.tagValue("due") ?? "")?.length <= 5;
-
-        const doneDate = cleanDate(taskNode.tagValue("done"));
-        const dueDate = cleanDate(taskNode.tagValue("due"));
-
-        const sourceDate =
-            isAnnual && dueDate.isAfter(doneDate) ? dueDate : doneDate;
-
-        /// next recurrence date
-        const nextDate = cleanDate(
-            taskNode.tagValue("recur") || taskNode.tagValue("annual") || "1",
-            sourceDate
-        );
+        const nextDate = getNextDueDate(taskNode);
 
         /// case 1: already @done, so clone the node
         if (taskNode.hasTag("done")) {
