@@ -3,13 +3,13 @@
     "displayName": "ToDo-Tools",
     "publisher": "grahampcharles",
     "description": "Auxiliary functions for taskpaper documents.",
-    "version": "0.7.7",
+    "version": "0.7.8",
     "repository": {
         "type": "git",
         "url": "https://github.com/grahampcharles/todo-tools.git"
     },
     "engines": {
-        "vscode": "^1.67.1"
+        "vscode": "^1.71.1"
     },
     "categories": [
         "Other"

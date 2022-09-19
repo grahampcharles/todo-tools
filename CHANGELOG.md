@@ -2,7 +2,7 @@
 
 All notable changes to the "todo-tools" extension will be documented in this file.
 
-## [0.7.8] - unreleased
+## [0.7.8] - 2022-09-19
 ### add
 - statistics option
 
