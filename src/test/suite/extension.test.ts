@@ -313,6 +313,17 @@ suite("Extension Test Suite", () => {
         );
     });
 
+    it("due on day of week", () => {
+        const WEEKDAY_MONDAY = 1;
+        const nextMonday = nextWeekday(WEEKDAY_MONDAY, todayDay());
+        const testTask = new TaskPaperNode(`  - test item @due(Tuesday)`);
+
+        const dueDate = testTask.tagValue("due") || "";
+        const isSameDate = nextMonday.isSame(dueDate);
+        expect(isSameDate).to.equal(true, "item due date is set to next Monday");
+
+    });
+
     it("due today/yeterday comparisons", () => {
         const today = todayDay().format("YYYY-MM-DD");
         const testTask = new TaskPaperNode(`  - test item @due(${today})`);
@@ -449,9 +460,7 @@ suite("Extension Test Suite", () => {
 
     it("project sorting", () => {
         const project = new TaskPaperNode(testDocument);
-
         const sorted = project.children[0].children.sort(taskDueDateCompare);
-
         const expectations = ["not due", "due first", "due second"];
 
         sorted.forEach((node, index) => {

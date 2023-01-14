@@ -118,8 +118,12 @@ export function nextAnnual(
     fromDay: dayjs.Dayjs = dayjs()
 ): dayjs.Dayjs {
     let currentAnniverary = cleanDate(anniversary);
+    currentAnniverary.set("year", fromDay.year()) ;
 
-    while (fromDay.isSame(currentAnniverary) || fromDay.isAfter(currentAnniverary)) {
+    while (
+        fromDay.isSame(currentAnniverary) ||
+        fromDay.isAfter(currentAnniverary)
+    ) {
         currentAnniverary = currentAnniverary.add(1, "year");
     }
 
