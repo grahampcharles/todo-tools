@@ -225,6 +225,7 @@ export function updateStatistics(
     }
 
     const statistics = getStatistics(taskNode);
+    statistics.done = new Map([...statistics.done.entries()].sort());
 
     const doneProject = new TaskPaperNode("\tDone:");
     const dueProject = new TaskPaperNode("\tDue:");

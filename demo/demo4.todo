@@ -24,14 +24,14 @@ Today:
 	- family room cleanup @recur(3) @due(2022-02-11)
 	- kitchen @recur(1) @due(2022-02-11)
 	- tidying @recur(1) @due(2022-02-11)
-	- move sewing table @due(2022-02-12)
-	- set up scanner on an old laptop @due(2022-02-13)
 	- duolingo @recur(1) @due(2022-02-12)
+	- Hamline @recur(1) @due(2022-02-12)
+	- move sewing table @due(2022-02-12)
+	- photos @recur(10) @due(2022-02-12)
+	- reading @recur(1) @due(2022-02-12)
 	- savor @recur(1) @due(2022-02-12)
 	- writing @recur(1) @due(2022-02-12)
-	- reading @recur(1) @due(2022-02-12)
-	- Hamline @recur(1) @due(2022-02-12)
-	- photos @recur(10) @due(2022-02-12)
+	- set up scanner on an old laptop @due(2022-02-13)
 	- clean microwave @recur(6) @due(2022-02-16)
 	- trash cans in @recur(Fridays) @due(2022-02-18)
 	- taxes: finish @annual(02-20) @due(2022-02-20)
@@ -39,6 +39,7 @@ Today:
 	- kitchen drawer @recur(25) @due(2022-02-27)
 	- property tax 2 @annual(4-1) @due(2022-04-01)
 	- coin star @recur(70) @due(2022-04-08)
+	- property tax 1 @annual(11-15) @due(2022-11-15)
 
 Professional Ideas:
 	- dialogue-style podcast -- Allusionist, she has conversations with herself!
@@ -112,6 +113,45 @@ Electrician:
 New Year:
 	- Ifshin Music
 
+Statistics:
+	Today: 0
+	Overdue: 35
+	Done:
+		2021-12-27: 12
+		2021-12-31: 6
+		2022-01-01: 8
+		2022-01-02: 1
+		2022-01-03: 7
+		2022-01-04: 9
+		2022-01-06: 7
+		2022-01-07: 10
+		2022-01-08: 8
+		2022-01-09: 12
+		2022-01-10: 3
+		2022-01-11: 3
+		2022-01-14: 22
+		2022-01-15: 3
+		2022-01-16: 28
+		2022-01-21: 27
+		2022-01-23: 12
+		2022-01-24: 10
+		2022-01-25: 14
+		2022-01-26: 7
+		2022-01-27: 1
+		2022-01-28: 5
+		2022-01-30: 1
+		2022-02-01: 4
+		2022-02-02: 2
+		2022-02-03: 5
+		2022-02-04: 9
+		2022-02-05: 13
+		2022-02-06: 13
+		2022-02-07: 6
+		2022-02-08: 9
+		2022-02-09: 1
+		2022-02-10: 11
+		2022-02-11: 6
+
 Settings:
 	autoRun=true
 	runOnOpen=true
@@ -119,9 +159,9 @@ Settings:
 	sortByDueDate=true
 	recurringItemsAdjacent=false
 	autoRunInterval=45
+	statisticsSection=true
 
 Future:
-	- property tax 1 @annual(11-15) @due(2022-11-15)
 
 Archive:
 	- call ADT @started(22-01-10 10:28) 4, 2, 1, 4 @done(22-01-10 11:15) @lasted(47m54s) @project(Today)

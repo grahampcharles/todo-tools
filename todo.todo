@@ -1,13 +1,13 @@
 general:
 	- add recur(weekday) and/or recur(Monday, Tuesday, Wednesday)
 	- archive should sort by done, not by due
-	- auto-archive
-	- don't add an alphabetical sort at the end of the date sort; just return 0
+	- auto-archive function
+	- don't add an alphabetical sort at the end of the date sort; just return 0 (?)
 	- future done isn't working (on 9/22, due 9/23, done 9/22 -- regenerates for 9/23, should regenerate for 9/24)
 	- if you do a task on 10/6 but don't open it until 10/7 it'll think it needs to be redone on 10/8 not 10/7
 	- implement as formatter https://code.visualstudio.com/blogs/2016/11/15/formatters-best-practices
 	- rename options: useToday, useFuture, useArchive (rethink...)
-	- statistics not sorting @today
+	- statistics not sorting @today @done(23-01-14 14:37)
 	- due(Monday) is not working @due(2023-01-14) @today @done(23-01-14 14:25)
 
 fix:
