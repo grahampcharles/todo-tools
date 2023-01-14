@@ -7,8 +7,8 @@ general:
 	- if you do a task on 10/6 but don't open it until 10/7 it'll think it needs to be redone on 10/8 not 10/7
 	- implement as formatter https://code.visualstudio.com/blogs/2016/11/15/formatters-best-practices
 	- rename options: useToday, useFuture, useArchive (rethink...)
-	- statistics not sorting
-	- due(Monday) is not working @due(2023-01-14) @today
+	- statistics not sorting @today
+	- due(Monday) is not working @due(2023-01-14) @today @done(23-01-14 14:25)
 
 fix:
 	- annual events that are completed before the due date get regenerated on the same day

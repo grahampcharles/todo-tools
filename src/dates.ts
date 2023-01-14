@@ -54,6 +54,18 @@ export function cleanDate(dayString: string | undefined): dayjs.Dayjs {
         }
     }
 
+    // try a day name token
+    let dayNumber = dayNameToWeekday(dayString);
+    if (dayNumber === -1) {
+        dayNumber = dayNamePluralToWeekday(dayString);
+    }
+    if (dayNumber !== -1) {
+        ret = nextWeekday(dayNumber, todayDay());
+        if (ret.isValid()) {
+            return ret;
+        }
+    }
+
     // default to today
     return dayjs();
 }
@@ -118,7 +130,7 @@ export function nextAnnual(
     fromDay: dayjs.Dayjs = dayjs()
 ): dayjs.Dayjs {
     let currentAnniverary = cleanDate(anniversary);
-    currentAnniverary.set("year", fromDay.year()) ;
+    currentAnniverary = currentAnniverary.year(fromDay.year());
 
     while (
         fromDay.isSame(currentAnniverary) ||

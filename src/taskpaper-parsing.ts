@@ -186,7 +186,7 @@ export function replaceDueTokens(
         return;
     }
 
-    // replace date tokens
+    // replace date tokens (Monday, Tuesday, etc.)
     const due = cleanDate(input.tagValue("due"));
     if (due.isValid()) {
         const dueFormatted = due.format(DEFAULT_DATE_FORMAT);

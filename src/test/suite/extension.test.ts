@@ -38,6 +38,7 @@ import {
     processTaskNode,
     taskDueDateCompare,
     taskBlankToBottom,
+    replaceDueTokens,
 } from "../../taskpaper-parsing";
 import { TaskPaperNode } from "../../task-parser";
 import { getSpecialProjects } from "../../todo-tools";
@@ -313,14 +314,16 @@ suite("Extension Test Suite", () => {
         );
     });
 
-    it("due on day of week", () => {
+    it("replace due tokens", () => {
         const WEEKDAY_MONDAY = 1;
         const nextMonday = nextWeekday(WEEKDAY_MONDAY, todayDay());
-        const testTask = new TaskPaperNode(`  - test item @due(Tuesday)`);
+        const testTask = new TaskPaperNode(`  - test item @due(Monday)`);
+
+        replaceDueTokens(testTask);
 
         const dueDate = testTask.tagValue("due") || "";
-        const isSameDate = nextMonday.isSame(dueDate);
-        expect(isSameDate).to.equal(true, "item due date is set to next Monday");
+        const isSameDate = nextMonday.isSame(dueDate, "day");
+        expect(isSameDate).to.equal(true, "due Monday token replaced with Monday");
 
     });
 
