@@ -2,6 +2,11 @@
 
 All notable changes to the "todo-tools" extension will be documented in this file.
 
+## [0.8.3] - 2023-01-14
+### fix
+- statistics not sorting @today @done(23-01-14 14:37)
+- due(Monday) is not working @due(2023-01-14) @today @done(23-01-14 14:25)
+
 ## [0.8.2] - 2022-09-27
 ### fix
 - now using the @today tag will force items into the @today section
