@@ -2,12 +2,13 @@
 import { TaskPaperNode } from "./task-parser";
 import { cleanDate, todayDay } from "./dates";
 import { addProjectTag } from "./taskpaper-utils";
+import { triggerAsyncId } from "async_hooks";
 
 type NodeComparisonAlgorithm = (inputNode: TaskPaperNode) => boolean;
 
 export function moveNode(
     node?: TaskPaperNode,
-    test?: NodeComparisonAlgorithm,
+    tests?: NodeComparisonAlgorithm | NodeComparisonAlgorithm[],
     target?: TaskPaperNode,
     addProjectTagOnMove: boolean = false
 ) {
@@ -25,8 +26,13 @@ export function moveNode(
         return;
     }
 
-    // run the test on the node
-    const move = test ? test(node) : true;
+    // ensure test is array
+    if (tests !== undefined && !Array.isArray(tests)) {
+        tests = [tests];
+    }
+
+    // run the tests on the node; default to true if there's no tests
+    const move = tests ? tests.some((test) => test(node)) : true;
 
     if (move) {
         const newNode = node.clone();
@@ -60,11 +66,11 @@ export function isFuture(inputNode: TaskPaperNode): boolean {
     );
 }
 
-export function isDueTodayOrBefore(inputNode: TaskPaperNode): boolean {
+export function isDueBeforeToday(inputNode: TaskPaperNode): boolean {
     return (
         inputNode.hasTag("due") &&
         !inputNode.hasTag("done") &&
-        cleanDate(inputNode.tagValue("due")).isSameOrBefore(todayDay(), "day")
+        cleanDate(inputNode.tagValue("due")).isBefore(todayDay(), "day")
     );
 }
 
@@ -74,6 +80,10 @@ export function isDueToday(inputNode: TaskPaperNode): boolean {
         !inputNode.hasTag("done") &&
         cleanDate(inputNode.tagValue("due")).isSame(todayDay(), "day")
     );
+}
+// isDueTodayOrHasTodayTag
+export function hasTodayTag(inputNode: TaskPaperNode): boolean {
+    return inputNode.hasTag("today") && !inputNode.hasTag("done");
 }
 
 export function isOverdue(inputNode: TaskPaperNode): boolean {

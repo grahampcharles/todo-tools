@@ -1,28 +1,5 @@
 Today:
-	- crossword @recur(1) @due(2022-09-19) @high
-	- fecal @high @due(2022-09-19)
-	- record todo totals @recur(1) @high @due(2022-09-19)
-	- check Fern’s car codes @due(2022-09-19)
-	- clean something random @recur(1) @due(2022-09-19)
-	- Coastal Vine @due(2022-09-19) @recur(3)
-	- Duolingo @recur(1) @due(2022-09-19)
-	- exercise @recur(1) @due(2022-09-19) @exercise
-	- garden @recur(3) @due(2022-09-19)
-	- groceries @due(2022-09-19) @recur(Monday)
-	- Hamline @recur(1) @due(2022-09-19)
-	- horse @recur(1) @due(2022-09-19)
-	- kitchen @due(2022-09-19) @household @recur(1)
-	- laundry @recur(5) @due(2022-09-19)
-	- leg lifts 3x10 @recur(2) @due(2022-09-19) @exercise
-	- mom @recur(3) @due(2022-09-19)
-	- new light switch for Claudia @due(2022-09-19)
-	- reading @recur(1) @due(2022-09-19)
-	- reset bedroom @recur(1) @due(2022-09-19)
-	- scan some stuff @due(2022-09-19) @recur(3)
-	- tidy up cables on front porch @due(2022-09-19)
-	- toe touch 3x10 @recur(2) @due(2022-09-19) @exercise
-	- trash management @recur(3) @due(2022-09-19)
-	- writing @recur(1) @due(2022-09-19)
+	- trash cans out @recur(Thursday) @due(2022-09-22) @today
 
 Overdue:
 	- call ADT : credit balance, medical device issues. @due(2022-08-12) @dad @high
@@ -31,6 +8,10 @@ Overdue:
 	- call Ifshin Music @due(2022-08-29) @high
 	- ten minutes of emptiness @due(2022-09-17) @recur(1) @high
 	- work on theclassroombeyond.com @recur(1) @due(2022-09-17) @high
+	- fecal @high @due(2022-09-19)
+	- record todo totals @recur(1) @high @due(2022-09-19)
+	- crossword @recur(1) @due(2022-09-20) @high
+	- refill hydroponics @recur(7) @due(2022-09-20) @high
 	- check for credit fraud @due(2022-07-23)
 	- try black rolling thing as wood rack? @due(2022-08-12)
 	- add air to K tire @due(2022-08-13)
@@ -74,12 +55,27 @@ Overdue:
 	- start seeds @due(2022-09-17)
 	- trim front trees @due(2022-09-17) @recur(3)
 	- squat 3x6 @due(2022-09-18) @recur(3) @exercise
-
-Future:
-	- refill hydroponics @recur(7) @due(2022-09-20) @high
-	- put something into greenwaste @recur(Saturday) @due(2022-09-24) @high
-	- send Brittany Sabol Zoom invite @due(2022-09-25) @high
-	- Bart schedule annual exam 10/1 @due(2023-09-16) @high @recur(365)
+	- check Fern’s car codes @due(2022-09-19)
+	- clean something random @recur(1) @due(2022-09-19)
+	- Coastal Vine @due(2022-09-19) @recur(3)
+	- Duolingo @recur(1) @due(2022-09-19)
+	- exercise @recur(1) @due(2022-09-19) @exercise
+	- garden @recur(3) @due(2022-09-19)
+	- groceries @due(2022-09-19) @recur(Monday)
+	- Hamline @recur(1) @due(2022-09-19)
+	- horse @recur(1) @due(2022-09-19)
+	- kitchen @due(2022-09-19) @household @recur(1)
+	- laundry @recur(5) @due(2022-09-19)
+	- leg lifts 3x10 @recur(2) @due(2022-09-19) @exercise
+	- mom @recur(3) @due(2022-09-19)
+	- new light switch for Claudia @due(2022-09-19)
+	- reading @recur(1) @due(2022-09-19)
+	- reset bedroom @recur(1) @due(2022-09-19)
+	- scan some stuff @due(2022-09-19) @recur(3)
+	- tidy up cables on front porch @due(2022-09-19)
+	- toe touch 3x10 @recur(2) @due(2022-09-19) @exercise
+	- trash management @recur(3) @due(2022-09-19)
+	- writing @recur(1) @due(2022-09-19)
 	- coding @recur(2) @due(2022-09-20)
 	- dishwasher drain filter @due(2022-09-20) @recur(28)
 	- front yard @recur(6) @due(2022-09-20)
@@ -91,20 +87,24 @@ Future:
 	- spreadsheets with Claudia @due(2022-09-20)
 	- treat Shawnee's window @due(2022-09-20)
 	- trim trees under neighbor cables @due(2022-09-20) @recur(3)
-	- clean out car @due(2022-09-21) @recur(5)
-	- fix Fern's shelf @due(2022-09-21) @repairs
-	- mow lawn @due(2022-09-21) @recur(14)
-	- top off toilet paper TP @recur(5) @due(2022-09-21)
-	- trash cans out @recur(Thursday) @due(2022-09-22)
-	- 00ToFile directory @recur(7) @due(2022-09-23)
-	- desk @due(2022-09-23) @recur(6) @household
-	- guest bathroom @recur(5) @household @due(2022-09-23)
-	- master bathroom @recur(5) @household @due(2022-09-23)
-	- metal kitchen appliances @due(2022-09-23) @recur(11)
-	- stovetop @due(2022-09-23) @recur(5) @household
-	- take Fern’s car in @due(2022-09-23)
-	- trash cans in @recur(Friday) @household @due(2022-09-23)
-	- vacuum upstairs @due(2022-09-23) @recur(5) @household
+	- clean out car @due(2022-09-21) @recur(5) @yesterday
+	- fix Fern's shelf @due(2022-09-21) @repairs @yesterday
+	- mow lawn @due(2022-09-21) @recur(14) @yesterday
+	- top off toilet paper TP @recur(5) @due(2022-09-21) @yesterday
+
+Future:
+	- put something into greenwaste @recur(Saturday) @due(2022-09-24) @high
+	- send Brittany Sabol Zoom invite @due(2022-09-25) @high
+	- Bart schedule annual exam 10/1 @due(2023-09-16) @high @recur(365)
+	- 00ToFile directory @recur(7) @due(2022-09-23) @tomorrow
+	- desk @due(2022-09-23) @recur(6) @household @tomorrow
+	- guest bathroom @recur(5) @household @due(2022-09-23) @tomorrow
+	- master bathroom @recur(5) @household @due(2022-09-23) @tomorrow
+	- metal kitchen appliances @due(2022-09-23) @recur(11) @tomorrow
+	- stovetop @due(2022-09-23) @recur(5) @household @tomorrow
+	- take Fern’s car in @due(2022-09-23) @tomorrow
+	- trash cans in @recur(Friday) @household @due(2022-09-23) @tomorrow
+	- vacuum upstairs @due(2022-09-23) @recur(5) @household @tomorrow
 	- clean microwave @recur(6) @due(2022-09-24)
 	- grocery plan @recur(Sunday) @due(2022-09-25)
 	- Kaiser for COVID tests @recur(24) @due(2022-09-25)
@@ -194,6 +194,7 @@ Archive:
 	- crossword @due(2022-09-18) @high @done(22-09-18 10:38) @project(Today)
 	- record todo totals @high @due(2022-09-18) @done(22-09-18 10:38) @project(Today)
 	- unpack @high @due(2022-09-18) @done(22-09-18 11:56) @project(Today)
+	- crossword @due(2022-09-19) @high @done(22-09-19 14:10) @project(Today)
 	- scan some stuff @due(2022-08-12) @done(2022-09-16) @project(Overdue)
 	- trim trees under neighbor cables @due(2022-08-24) @done(22-09-15 09:41) @project(Overdue)
 	- vacuum upstairs @due(2022-08-29) @household @done(22-09-18 17:36) @project(Overdue)
@@ -253,12 +254,13 @@ Archive:
 	- top off toilet paper TP @due(2022-09-21) @done(22-09-16 21:02) @project(Future)
 
 Statistics:
-	Today: 24
-	Overdue: 48
+	Today: 1
+	Overdue: 88
 	Done:
 		2022-09-18: 24
 		2022-09-16: 28
 		2022-09-17: 13
+		2022-09-19: 1
 		2022-09-15: 4
 
 Settings:

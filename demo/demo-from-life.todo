@@ -5,6 +5,7 @@ Overdue:
 	- enroll Claudia @due(2022-05-19) @high
 	- get summer schedule to Fern's therapist @due(2022-05-19) @high
 	- clean out fire safe @due(2022-05-24) @high
+	- trash cans out @high @recur(Thursday) @due(2022-05-26)
 	- smoralsupport.com e-mail through Zoho @due(2022-03-13)
 	- theclassroombeyond.com e-mail through Zoho @due(2022-03-13)
 	- close Umpqua @due(2022-04-01)
@@ -42,9 +43,6 @@ Overdue:
 	- garden @recur(3) @due(2022-05-23)
 	- ask Claudia for something @recur(1) @due(2022-05-24)
 	- tidy back patio @recur(7) @due(2022-05-24) @household
-
-Future:
-	- trash cans out @high @recur(Thursday) @due(2022-05-26)
 	- Coastal Vine @due(2022-05-26) @recur(2)
 	- crossword @recur(1) @due(2022-05-26)
 	- family room cleanup @recur(3) @due(2022-05-26) @household
@@ -98,6 +96,8 @@ Future:
 	- archive taskpaper @due(2022-06-22) @recur(28)
 	- wash shower curtain @due(2022-07-01) @recur(45)
 	- transfer domains from winhost (aiid, drlindacharles) @due(2022-10-01)
+
+Future:
 	- schedule Kidsmiles @due(2022-11-10) @recur(170)
 
 Household:

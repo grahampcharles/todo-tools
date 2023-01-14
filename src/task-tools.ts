@@ -1,6 +1,12 @@
 import dayjs, { Dayjs } from "dayjs";
 import { TaskPaperNode } from "task-parser/TaskPaperNode";
-import { cleanDate, dayNameToWeekday, nextAnnual, nextWeekday } from "./dates";
+import {
+    cleanDate,
+    dayNameToWeekday,
+    nextAnnual,
+    nextWeekday,
+    todayDay,
+} from "./dates";
 
 export function getNextDueDate(node: TaskPaperNode): Dayjs {
     //// retrieves the next due date
@@ -17,20 +23,16 @@ export function getNextDueDate(node: TaskPaperNode): Dayjs {
 
     const doneDate = cleanDate(node.tagValue("done"));
     const dueDate = cleanDate(node.tagValue("due"));
-    const todayDate = cleanDate("");
     const recurString = node.tagValue("recur") ?? "";
 
     const sourceDate = isAnnual
-        ? latestDate([doneDate, dueDate, todayDate])
-        : latestDate([doneDate, todayDate]);
+        ? latestDate([doneDate, dueDate, todayDay()])
+        : latestDate([doneDate, todayDay()]);
 
     /// next recurrence date
     // next annual: find it
     if (isAnnual) {
         const ret = nextAnnual(node.tagValue("annual") || "1/1", sourceDate);
-
-        // log(`sourceDate: ${sourceDate.format("YYYY-MM-DD")}`);
-        // log(ret.format("YYYY-MM-DD"));
 
         if (ret.isValid()) {
             return ret;

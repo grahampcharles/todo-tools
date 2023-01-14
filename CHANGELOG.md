@@ -2,8 +2,19 @@
 
 All notable changes to the "todo-tools" extension will be documented in this file.
 
-## [0.7.8] - 2022-09-19
+## [0.8.2] - 2022-09-27
+### fix
+- now using the @today tag will force items into the @today section
 
+## [0.8.1] - 2022-09-27
+### fix
+- removing all whitespace lines
+
+## [0.8.0] - 2022-09-23
+### fix
+- bugfixes in complex documents
+
+## [0.7.9] - 2022-09-19
 ### fix
 - fixed recurrence when a task is done early (before due date)
 

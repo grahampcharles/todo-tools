@@ -29,6 +29,7 @@ import {
     testDocumentWithHigh,
     testDocumentWithSubprojectLines,
     testSettings,
+    testWithMultilineCommentsShort,
 } from "./testData";
 import { Settings } from "../../Settings";
 import dayjs, { Dayjs } from "dayjs";
@@ -41,8 +42,8 @@ import {
 import { TaskPaperNode } from "../../task-parser";
 import { getSpecialProjects } from "../../todo-tools";
 import {
+    isDueBeforeToday,
     isDueToday,
-    isDueTodayOrBefore,
     isFuture,
     isOverdue,
 } from "../../move-nodes";
@@ -53,12 +54,28 @@ const bBeforeA = 1;
 const aAndBSame = 0;
 
 suite("Extension Test Suite", () => {
+    it("edge notes cases", () => {
+        const document = new TaskPaperNode(testWithMultilineCommentsShort);
+        const project = document.children[0];
+        const subProject = project.children[0];
+        const subsubProject1 = subProject.children[0];
+        const subsubProject2 = subProject.children[1];
+
+        expect(document.children).to.have.lengthOf(1, "document");
+        expect(project.children).to.have.lengthOf(1, "project");
+        expect(subProject.children).to.have.lengthOf(
+            2,
+            `subProject: ${subProject.children.length}`
+        );
+        expect(subsubProject1.children).to.have.lengthOf(1, "subsubProject1");
+        expect(subsubProject2.children).to.have.lengthOf(3, "subsubProject2");
+    });
+
     it("test document with subproject lines", () => {
         const node = new TaskPaperNode(testDocumentWithSubprojectLines);
-
         const project = node.children[0];
-        expect(project).to.have.property("children").of.length(2);
 
+        expect(project).to.have.property("children").of.length(2);
         const subproject1 = project.children[0];
         expect(subproject1).to.have.property("value").eq("SubProject 1");
     });
@@ -88,14 +105,6 @@ suite("Extension Test Suite", () => {
 
         let nextDueDate = getNextDueDate(node);
         expect(nextDueDate.format("YYYY-MM-DD")).to.eq("2123-09-19");
-
-        // node.setTag("done", "2122-09-20");
-        // nextDueDate = getNextDueDate(node);
-        // expect(nextDueDate.format("YYYY-MM-DD")).to.eq("2123-09-19");
-
-        // node.setTag("done", "2123-09-20");
-        // nextDueDate = getNextDueDate(node);
-        // expect(nextDueDate.format("YYYY-MM-DD")).to.eq("2124-09-19");
     });
 
     it("next due date; day of the week", () => {
@@ -124,6 +133,24 @@ suite("Extension Test Suite", () => {
         node.setTag("done", "2122-09-17");
         nextDueDate = getNextDueDate(node);
         expect(nextDueDate.format("YYYY-MM-DD")).to.eq("2122-09-20");
+    });
+
+    it("next due date; number of days recurrence, in the past", () => {
+        const node = new TaskPaperNode("- test task");
+        node.setTag("recur", "3");
+        node.setTag("due", "2012-09-18");
+        node.setTag("done", "2012-09-18");
+
+        let nextDueDate = getNextDueDate(node);
+        expect(nextDueDate.format("YYYY-MM-DD")).to.eq(
+            todayDay().add(3, "day").format("YYYY-MM-DD")
+        );
+
+        node.setTag("done", "2012-09-17");
+        nextDueDate = getNextDueDate(node);
+        expect(nextDueDate.format("YYYY-MM-DD")).to.eq(
+            todayDay().add(3, "day").format("YYYY-MM-DD")
+        );
     });
 
     it("getDaysFromRecurrencePattern", () => {
@@ -273,26 +300,30 @@ suite("Extension Test Suite", () => {
         expect(test.overdueSection()).eq(false);
     });
 
-    it("date latest", () => {
+    it("latest date", () => {
         const date1 = dayjs("2022-01-01");
         const date2 = dayjs("2022-02-01");
 
-        const pickLatestDate = latestDate([date1, date2]);
-        expect(pickLatestDate.format("YYYY-MM-DD")).to.eql("2022-02-01");
+        const latestFromTwo = latestDate([date1, date2]);
+        expect(latestFromTwo.format("YYYY-MM-DD")).to.eql("2022-02-01");
 
+        const latestFromThree = latestDate([date1, date2, todayDay()]);
+        expect(latestFromThree.format("YYYY-MM-DD")).to.eql(
+            todayDay().format("YYYY-MM-DD")
+        );
+    });
+
+    it("due today/yeterday comparisons", () => {
         const today = todayDay().format("YYYY-MM-DD");
         const testTask = new TaskPaperNode(`  - test item @due(${today})`);
 
-        const answer1 = isDueTodayOrBefore(testTask);
-        expect(answer1).to.equal(true, "today is due today or before");
-
         testTask.setTag("due", todayDay().add(-1, "day").format("YYYY-MM-DD"));
-        const answer2 = isDueTodayOrBefore(testTask);
-        expect(answer2).to.equal(true, "yesterday is due today");
+        const answer2 = isDueBeforeToday(testTask);
+        expect(answer2).to.equal(true, "yesterday is due before today");
 
         testTask.setTag("due", todayDay().add(1, "day").format("YYYY-MM-DD"));
-        const answer3 = isDueTodayOrBefore(testTask);
-        expect(answer3).to.equal(false, "tomorrow is not due today");
+        const answer3 = isDueBeforeToday(testTask);
+        expect(answer3).to.equal(false, "tomorrow is not due nefore today");
     });
 
     type DueDateCompareTest = [TaskPaperNode, TaskPaperNode, number];
@@ -461,25 +492,6 @@ suite("Extension Test Suite", () => {
             const expectation = results[index];
             const actual = isBlankLine(new TaskPaperNode(test));
             expect(actual).to.equal(expectation, `fail on '${test}'`);
-        });
-    });
-
-    it("blank line sorting", () => {
-        const blankLineTests = new Array<[string, string]>();
-        blankLineTests.push(
-            ["", "test on top"],
-            ["", "  - test on top"],
-            ["test on top", ""],
-            ["- test on top", ""]
-        );
-        const results = [bBeforeA, bBeforeA, aBeforeB, aBeforeB];
-
-        blankLineTests.forEach((test, index) => {
-            const aNode = new TaskPaperNode(test[0]);
-            const bNode = new TaskPaperNode(test[1]);
-            const sortTest = taskBlankToBottom(aNode, bNode);
-
-            expect(sortTest).to.eq(results[index], `fail at index ${index}`);
         });
     });
 });

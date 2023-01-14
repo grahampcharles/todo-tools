@@ -3,7 +3,7 @@
     "displayName": "ToDo-Tools",
     "publisher": "grahampcharles",
     "description": "Auxiliary functions for taskpaper documents.",
-    "version": "0.7.8",
+    "version": "0.8.2",
     "repository": {
         "type": "git",
         "url": "https://github.com/grahampcharles/todo-tools.git"
@@ -102,7 +102,7 @@
                 "todotools.addTodayTomorrowYesterday": {
                     "type": "boolean",
                     "default": false,
-                    "description": "Automatically add tags for 'today, tomorrow, and overdue.'"
+                    "description": "Add positional tags for 'today, tomorrow, and overdue.'"
                 },
                 "todotools.statisticsSection": {
                     "type": "boolean",

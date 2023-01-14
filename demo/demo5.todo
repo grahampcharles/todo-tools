@@ -1,0 +1,23 @@
+Today:
+	- item #5
+	- random item, no biggie @due(2022-10-16) @today
+	- item #12 @due(2022-01-01) @today
+
+Overdue:
+
+Other Project:
+
+Archive:
+
+Future:
+
+Settings:
+	archiveDoneItems=true
+	autoRun=true
+	autoRunInterval=3
+	runOnOpen=true
+	sortByDueDate=true
+	overdueSection=true
+	recurringItemsAdjacent=false
+	statisticsSection=false
+	addTodayTomorrowYesterday=false

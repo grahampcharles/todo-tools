@@ -27,7 +27,6 @@ export const testDocumentWithSubprojectLines = `Today:
 \tSubproject 2:
 \t\t- task @done`;
 
-
 export const testSettings = `Today:
 \t- first @done
 \tSubProject:
@@ -54,4 +53,20 @@ export const testArchive1Target = `Future:
 
 Archive:
 \t- first @done(3025-05-16)
+`;
+
+export const testWithMultilineCommentsShort = `Project Name:
+\tSubproject 1:
+\t\tSubsubproject 1-1:
+\t\t\t- 1. Task 1-1-1
+
+\t\tSubsubproject 1-2:
+\t\t\t- 1. Task 1-2-1
+\t\t\t- 2. Task 1-2-2 With Notes
+\t\t\t\tHere's one line of notes
+\t\t\t\tHere's another line of notes
+\t\t\t\tHere's a third line of notes
+\t\t\t- 3. Task 1-2-2 With Notes
+\t\t\t\tNotes line 1
+\t\t\t\tNotes line 2
 `;

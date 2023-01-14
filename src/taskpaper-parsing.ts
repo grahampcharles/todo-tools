@@ -12,9 +12,10 @@ import {
 } from "./dates";
 import { Settings } from "./Settings";
 import {
+    hasTodayTag,
     isDone,
+    isDueBeforeToday,
     isDueToday,
-    isDueTodayOrBefore,
     isFuture,
     isOverdue,
     moveNode,
@@ -153,7 +154,10 @@ export function getDueTasks(node: TaskPaperNode): TaskPaperNode[] {
 }
 
 // replaces date tokens (like "today", "Monday") with clean due dates
-export function replaceDueTokens(input: TaskPaperNode): void {
+export function replaceDueTokens(
+    input: TaskPaperNode,
+    retainToday: boolean = false
+): void {
     // only further process tasks that have due dates
     if (input.type !== "task") {
         return;
@@ -161,11 +165,19 @@ export function replaceDueTokens(input: TaskPaperNode): void {
 
     // pre-process special tags (yesterday, today, tomorrow)
     RELATIVE_DAYS.forEach((relativeDay) => {
+        // don't mess with the today tag if we've been asked to retain it
+        const okayToMessWithTag = relativeDay !== "today" || !retainToday;
+
         if (input.hasTag(relativeDay)) {
-            if (!input.hasTag("due")) {
+            // set the relative day
+            if (!input.hasTag("due") && okayToMessWithTag) {
                 input.setTag("due", relativeDay);
             }
-            input.removeTag(relativeDay);
+
+            // clear the relative day tag
+            if (okayToMessWithTag) {
+                input.removeTag(relativeDay);
+            }
         }
     });
 
@@ -256,7 +268,7 @@ export function getStatistics(node: TaskPaperNode): StatisticsType {
     if (isDone(node)) {
         addTally(ret.done, node.tagValue("done"));
     }
-    if (isDueTodayOrBefore(node)) {
+    if (isDueBeforeToday(node) || isDueToday(node)) {
         addTally(ret.due, node.tagValue("due"));
     }
     if (isOverdue(node)) {
@@ -332,7 +344,7 @@ export function processTaskNode(
     }
 
     // handle special @due tokens
-    replaceDueTokens(taskNode);
+    replaceDueTokens(taskNode, !settings.addTodayTomorrowYesterday());
 
     // add relative date tag
     if (settings.addTodayTomorrowYesterday()) {
@@ -375,18 +387,23 @@ export function processTaskNode(
         }
     }
 
+    // use the "today" flag to move items unless
+    const moveToToday = settings.addTodayTomorrowYesterday()
+        ? [isDueToday]
+        : [isDueToday, hasTodayTag];
+
     /// move nodes as needed
     if (settings.overdueSection()) {
         /// TODAY / OVERDUE
-        moveNode(taskNode, isDueToday, today);
-        moveNode(newNode, isDueToday, today);
-
         moveNode(taskNode, isOverdue, overdue);
         moveNode(newNode, isOverdue, overdue);
+
+        moveNode(taskNode, moveToToday, today);
+        moveNode(newNode, moveToToday, today);
     } else {
         /// TODAY
-        moveNode(taskNode, isDueTodayOrBefore, today);
-        moveNode(newNode, isDueTodayOrBefore, today);
+        moveNode(taskNode, [...moveToToday, isDueBeforeToday], today);
+        moveNode(newNode, [...moveToToday, isDueBeforeToday], today);
     }
 
     /// ARCHIVE
