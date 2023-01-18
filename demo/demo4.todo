@@ -1,45 +1,8 @@
 Today:
-	- close Umpqua
-	- figure out problem with sudo certbot renew --dry-run for blog.smoralsupport.com
+	- move Doodaddy @due(2023-01-18) @high @today
 	- look up Frame It All
-	- move Doodaddy
-	- switch to Librofm from audible  ?
-	- trim front trees @started(21-10-25 11:33)
-	- trash cans out @high @recur(Thursdays) @due(2022-02-10)
-	- bellringer @recur(2) @due(2022-02-04)
-	- clean project table @due(2022-02-05) @recur(10)
-	- trash management @recur(3) @due(2022-02-05)
-	- smoral cleanup old blog @recur(3) @due(2022-02-06)
-	- taxes: start @annual(02-06) @due(2022-02-06)
-	- finances/bills @recur(6) @due(2022-02-08)
-	- garden @recur(3) @due(2022-02-08)
-	- learn a technology @recur(3) @due(2022-02-08)
-	- exercise @recur(2) @due(2022-02-09)
-	- borage @due(2022-02-10)
-	- laundry @recur(3) @due(2022-02-10)
-	- privacy policy @due(2022-02-10)
-	- Claudia @recur(1) @due(2022-02-11)
-	- coding @recur(2) @due(2022-02-11)
-	- crossword @recur(1) @due(2022-02-11)
-	- family room cleanup @recur(3) @due(2022-02-11)
-	- kitchen @recur(1) @due(2022-02-11)
-	- tidying @recur(1) @due(2022-02-11)
-	- duolingo @recur(1) @due(2022-02-12)
-	- Hamline @recur(1) @due(2022-02-12)
-	- move sewing table @due(2022-02-12)
-	- photos @recur(10) @due(2022-02-12)
-	- reading @recur(1) @due(2022-02-12)
-	- savor @recur(1) @due(2022-02-12)
-	- writing @recur(1) @due(2022-02-12)
-	- set up scanner on an old laptop @due(2022-02-13)
-	- clean microwave @recur(6) @due(2022-02-16)
-	- trash cans in @recur(Fridays) @due(2022-02-18)
-	- taxes: finish @annual(02-20) @due(2022-02-20)
-	- bathroom walls @recur(20) @due(2022-02-22)
-	- kitchen drawer @recur(25) @due(2022-02-27)
-	- property tax 2 @annual(4-1) @due(2022-04-01)
-	- coin star @recur(70) @due(2022-04-08)
-	- property tax 1 @annual(11-15) @due(2022-11-15)
+	- question @due(2023-01-15)
+	- question @due(2023-01-17)
 
 Professional Ideas:
 	- dialogue-style podcast -- Allusionist, she has conversations with herself!
@@ -114,8 +77,8 @@ New Year:
 	- Ifshin Music
 
 Statistics:
-	Today: 0
-	Overdue: 35
+	Today: 1
+	Overdue: 2
 	Done:
 		2021-12-27: 12
 		2021-12-31: 6
@@ -160,6 +123,7 @@ Settings:
 	recurringItemsAdjacent=false
 	autoRunInterval=45
 	statisticsSection=true
+	addTodayTomorrowYesterday=false
 
 Future:
 

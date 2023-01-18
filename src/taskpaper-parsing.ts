@@ -463,11 +463,18 @@ export function taskDueDateCompare(
         return 0;
     }
 
+    // is one (and only) one node today priority?
+    if (aNode.hasTag("today") && !bNode.hasTag("today")) {
+        return aBeforeB;
+    }
+    if (bNode.hasTag("today") && !aNode.hasTag("today")) {
+        return bBeforeA;
+    }
+
     // no due dates: alphabetical order
     if (!aNode.hasTag("due") && !bNode.hasTag("due")) {
         return caseInsensitiveCompare(aNode.value ?? "", bNode.value ?? "");
     }
-
     // one due date: sort item with no due date to the top
     if (!aNode.hasTag("due") || !bNode.hasTag("due")) {
         return aNode.hasTag("due") ? bBeforeA : aBeforeB;
@@ -479,13 +486,6 @@ export function taskDueDateCompare(
         return aBeforeB;
     }
     if (bNode.hasTag("high") && !aNode.hasTag("high")) {
-        return bBeforeA;
-    }
-    // is one (and only) one node today priority?
-    if (aNode.hasTag("today") && !bNode.hasTag("today")) {
-        return aBeforeB;
-    }
-    if (bNode.hasTag("today") && !aNode.hasTag("today")) {
         return bBeforeA;
     }
     // is one (and only) one node low priority?
