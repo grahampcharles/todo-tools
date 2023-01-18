@@ -481,6 +481,13 @@ export function taskDueDateCompare(
     if (bNode.hasTag("high") && !aNode.hasTag("high")) {
         return bBeforeA;
     }
+    // is one (and only) one node today priority?
+    if (aNode.hasTag("today") && !bNode.hasTag("today")) {
+        return aBeforeB;
+    }
+    if (bNode.hasTag("today") && !aNode.hasTag("today")) {
+        return bBeforeA;
+    }
     // is one (and only) one node low priority?
     if (aNode.hasTag("low") && !bNode.hasTag("low")) {
         return bBeforeA;
