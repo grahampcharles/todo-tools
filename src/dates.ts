@@ -48,7 +48,7 @@ export function cleanDate(dayString: string | undefined): dayjs.Dayjs {
         (item: string) => item === dayString
     );
     if (relativeDayIndex !== -1) {
-        ret = dayjs().add(relativeDayIndex - 1, "day"); // -1 because "yesterday" will have an index of 0
+        const ret = dayjs().add(relativeDayIndex - 1, "day"); // -1 because "yesterday" will have an index of 0
         if (ret.isValid()) {
             return ret;
         }
@@ -60,7 +60,7 @@ export function cleanDate(dayString: string | undefined): dayjs.Dayjs {
         dayNumber = dayNamePluralToWeekday(dayString);
     }
     if (dayNumber !== -1) {
-        ret = nextWeekday(dayNumber, todayDay());
+        const ret = nextWeekday(dayNumber, todayDay());
         if (ret.isValid()) {
             return ret;
         }
