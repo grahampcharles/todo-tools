@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import * as todoTools from "./todo-tools";
+import * as todoTools from "@src/todo-tools";
 
 export function activate(context: vscode.ExtensionContext) {
     const commands = [

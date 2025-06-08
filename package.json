@@ -193,7 +193,7 @@
         "webpack-cli": "^4.10.0"
     },
     "dependencies": {
-        "dayjs": "^1.11.5",
+        "dayjs": "^1.11.13",
         "task-parser": "file:../task-parser"
     }
 }

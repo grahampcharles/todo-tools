@@ -1,52 +1,16 @@
 import * as assert from "assert";
-import {
-    cleanDate,
-    dayNamePluralToWeekday,
-    dayNames,
-    dayNameToWeekday,
-    daysPassed,
-    daysUntilWeekday,
-    getDaysFromRecurrencePattern,
-    monthNameToNumber,
-    nextAnnual,
-    nextWeekday,
-    todayDay,
-    todayName,
-} from "../../dates";
 import { expect } from "chai";
 import { it } from "mocha";
-
-import {
-    getSectionLineNumber,
-    SectionBounds,
-    stringToLines,
-    stripTrailingWhitespace,
-} from "../../strings";
-import {
-    testArchive1Source,
-    testDocument,
-    testDocumentWithHigh,
-    testDocumentWithSubprojectLines,
-    testSettings,
-    testWithMultilineCommentsShort,
-} from "./testData";
-import { Settings } from "../../Settings";
 import dayjs, { Dayjs } from "dayjs";
-import {
-    isBlankLine,
-    processTaskNode,
-    taskDueDateCompare,
-    replaceDueTokens,
-} from "../../taskpaper-parsing";
 import { TaskPaperNode } from "task-parser";
-import { getSpecialProjects } from "../../todo-tools";
-import {
-    isDueBeforeToday,
-    isDueToday,
-    isFuture,
-    isOverdue,
-} from "../../move-nodes";
-import { getNextDueDate, latestDate } from "../../task-tools";
+import { cleanDate, todayDay, getDaysFromRecurrencePattern, daysPassed, nextWeekday, nextAnnual, dayNames, dayNameToWeekday, todayName, monthNameToNumber, dayNamePluralToWeekday, daysUntilWeekday } from "@src/dates";
+import { isDueBeforeToday, isDueToday, isOverdue, isFuture } from "@src/move-nodes";
+import { Settings } from "@src/Settings";
+import { SectionBounds, getSectionLineNumber, stringToLines, stripTrailingWhitespace } from "@src/strings";
+import { getNextDueDate, latestDate } from "@src/task-tools";
+import { replaceDueTokens, taskDueDateCompare, processTaskNode, isBlankLine } from "@src/taskpaper-parsing";
+import { getSpecialProjects } from "@src/todo-tools";
+import { testWithMultilineCommentsShort, testDocumentWithSubprojectLines, testArchive1Source, testSettings, testDocumentWithHigh, testDocument } from "./testData";
 
 const aBeforeB = -1;
 const bBeforeA = 1;

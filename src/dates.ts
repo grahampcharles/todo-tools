@@ -1,10 +1,10 @@
 // days of the week
 // TODO: much of this code could be removed by creating a dates module and exporting a custom dayjs
 import dayjs, { Dayjs } from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timeZone from "dayjs/plugin/timezone";
-import localeData from "dayjs/plugin/localeData";
-import customParseFormat from "dayjs/plugin/customParseFormat";
+import utc from "dayjs/plugin/utc.js";
+import timeZone from "dayjs/plugin/timezone.js";
+import localeData from "dayjs/plugin/localeData.js";
+import customParseFormat from "dayjs/plugin/customParseFormat.js";
 
 // extend the parse formatter
 dayjs.extend(customParseFormat);

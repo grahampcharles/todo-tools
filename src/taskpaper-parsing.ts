@@ -1,28 +1,14 @@
 import * as vscode from "vscode";
 import dayjs from "dayjs";
+import { Settings } from "@src/Settings";
+import { TaskPaperNode } from "task-parser";
+import { RELATIVE_DAYS, cleanDate, DEFAULT_DATE_FORMAT, todayDay } from "@src/dates";
+import { isDone, isDueBeforeToday, isDueToday, isOverdue, hasTodayTag, moveNode, isFuture } from "@src/move-nodes";
+import { caseInsensitiveCompare } from "@src/sort-lines";
+import { getNextDueDate } from "@src/task-tools";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
-
-import {
-    cleanDate,
-    todayDay,
-    DEFAULT_DATE_FORMAT,
-    RELATIVE_DAYS,
-} from "./dates";
-import { Settings } from "./Settings";
-import {
-    hasTodayTag,
-    isDone,
-    isDueBeforeToday,
-    isDueToday,
-    isFuture,
-    isOverdue,
-    moveNode,
-} from "./move-nodes";
-import { caseInsensitiveCompare } from "./sort-lines";
-import { TaskPaperNode } from "task-parser";
-import { getNextDueDate } from "./task-tools";
 
 // work in the local time zone
 dayjs.extend(utc);
@@ -45,7 +31,7 @@ export function parseTaskDocument(
     try {
         const ret = new TaskPaperNode(editor.document.getText());
         return ret;
-        } catch (error) {
+    } catch (error) {
         // report error to user
         vscode.window.showInformationMessage(String(error));
         return undefined;
