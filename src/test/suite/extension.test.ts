@@ -1,5 +1,4 @@
 import * as assert from "assert";
-import * as vscode from "vscode";
 import {
     cleanDate,
     dayNamePluralToWeekday,
@@ -37,10 +36,9 @@ import {
     isBlankLine,
     processTaskNode,
     taskDueDateCompare,
-    taskBlankToBottom,
     replaceDueTokens,
 } from "../../taskpaper-parsing";
-import { TaskPaperNode } from "../../task-parser";
+import { TaskPaperNode } from "task-parser";
 import { getSpecialProjects } from "../../todo-tools";
 import {
     isDueBeforeToday,
@@ -104,7 +102,7 @@ suite("Extension Test Suite", () => {
         node.setTag("due", "2122-09-19");
         node.setTag("done", "2122-09-18");
 
-        let nextDueDate = getNextDueDate(node);
+        const nextDueDate = getNextDueDate(node);
         expect(nextDueDate.format("YYYY-MM-DD")).to.eq("2123-09-19");
     });
 
@@ -274,18 +272,13 @@ suite("Extension Test Suite", () => {
     it("getSpecialProjects", () => {
         const items = new TaskPaperNode(testArchive1Source);
 
-        var archiveProject: TaskPaperNode | undefined,
-            todayProject: TaskPaperNode | undefined,
-            futureProject: TaskPaperNode | undefined,
-            overdueProject: TaskPaperNode | undefined;
-
-        [archiveProject, todayProject, futureProject, overdueProject] =
+        const [archiveProject, todayProject, futureProject, overdueProject] =
             getSpecialProjects(items);
 
         expect(todayProject).to.have.property("value", "Today");
         expect(archiveProject).to.have.property("value", "Archive");
-        expect(futureProject).to.be.undefined;
-        expect(overdueProject).to.be.undefined;
+        expect(futureProject).to.equal(undefined);
+        expect(overdueProject).to.equal(undefined);
     });
 
     it("settings", () => {
@@ -479,11 +472,7 @@ suite("Extension Test Suite", () => {
     it("task updating", () => {
         const items = new TaskPaperNode(testArchive1Source);
 
-        var archiveProject: TaskPaperNode | undefined,
-            todayProject: TaskPaperNode | undefined,
-            futureProject: TaskPaperNode | undefined,
-            overdueProject: TaskPaperNode | undefined;
-        [archiveProject, todayProject, futureProject, overdueProject] =
+        const [archiveProject, todayProject, futureProject, overdueProject] =
             getSpecialProjects(items);
 
         processTaskNode(

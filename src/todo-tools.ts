@@ -8,22 +8,21 @@ import {
     taskBlankToBottom,
     updateStatistics,
 } from "./taskpaper-parsing";
-import { TaskPaperNode } from "./task-parser";
+import { TaskPaperNode } from "task-parser";
 import { replaceCurrentLine, replaceLines } from "./sort-lines";
 import dayjs from "dayjs";
 import { DEFAULT_DATE_FORMAT } from "./dates";
-import { stat } from "fs";
 
 const settings = new Settings();
 
 // versioning
-var minutesIdle: number = 0;
+let minutesIdle: number = 0;
 const IS_DEBUG = true;
 const SECONDS_PER_MINUTE = IS_DEBUG ? 10 : 60; // one minute between runs (or two seconds in debug)
 // const outputChannel = vscode.window.createOutputChannel("ToDo Tools");
 // outputChannel.show();
-var timer: NodeJS.Timeout;
-var lastIdleTicks: number = 0;
+let timer: NodeJS.Timeout;
+let lastIdleTicks: number = 0;
 const IDLE_TICKS = 1 * 1000;
 
 export function log(message: string) {
@@ -119,7 +118,7 @@ function performCopyAndSave() {
     try {
         performCopy()
             .then(async () => textEditor.document.save())
-            .catch((reason: any) => {
+            .catch((reason: unknown) => {
                 if (reason instanceof Error) {
                     log(reason.message);
                 }
@@ -206,7 +205,7 @@ export async function performCopy(): Promise<boolean> {
     }
 
     // get items
-    let allItems = parseTaskDocument(textEditor);
+    const allItems = parseTaskDocument(textEditor);
     if (allItems === undefined) {
         return false;
     }
@@ -230,18 +229,15 @@ export async function performCopy(): Promise<boolean> {
     }
 
     // get special projects
-    var archiveProject: TaskPaperNode | undefined,
-        todayProject: TaskPaperNode | undefined,
-        futureProject: TaskPaperNode | undefined,
-        overdueProject: TaskPaperNode | undefined,
-        statisticsProject: TaskPaperNode | undefined;
-    [
+    const [
         archiveProject,
         todayProject,
         futureProject,
-        overdueProject,
+        _overdueProject,
         statisticsProject,
     ] = getSpecialProjects(allItems);
+
+    let overdueProject = _overdueProject;
 
     if (!settings.overdueSection()) {
         overdueProject = todayProject;
@@ -297,12 +293,12 @@ function writeOutItems(items: TaskPaperNode): Thenable<boolean> {
 export function getSpecialProjects(
     node: TaskPaperNode
 ): [
-    TaskPaperNode | undefined,
-    TaskPaperNode | undefined,
-    TaskPaperNode | undefined,
-    TaskPaperNode | undefined,
-    TaskPaperNode | undefined
-] {
+        TaskPaperNode | undefined,
+        TaskPaperNode | undefined,
+        TaskPaperNode | undefined,
+        TaskPaperNode | undefined,
+        TaskPaperNode | undefined
+    ] {
     return [
         getProjectByName(node, "Archive"),
         getProjectByName(node, "Today"),
@@ -322,4 +318,4 @@ function updateSettings(textEditor: vscode.TextEditor | undefined) {
     }
 }
 
-export function deactivate() {}
+export function deactivate() { }

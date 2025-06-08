@@ -15,7 +15,7 @@ export function clearSection(
     );
 
     if (lineRange.last !== -1) {
-        var range = new vscode.Range(lineRange.first, 0, lineRange.last, 0);
+        const range = new vscode.Range(lineRange.first, 0, lineRange.last, 0);
         const edit = new vscode.WorkspaceEdit();
         edit.delete(editor.document.uri, range);
         const applyThenable = vscode.workspace.applyEdit(edit);
@@ -55,7 +55,7 @@ export async function addLinesToSection(
         character: number = 0;
 
     // get the first line of the section
-    let lineStart = getSectionLineNumber(textToEdit, section).first;
+    const lineStart = getSectionLineNumber(textToEdit, section).first;
     line = lineStart + 1;
 
     // special case 1: the project name is

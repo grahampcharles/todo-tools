@@ -1,5 +1,5 @@
 import dayjs, { Dayjs } from "dayjs";
-import { TaskPaperNode } from "task-parser/TaskPaperNode";
+import { TaskPaperNode } from "task-parser";
 import {
     cleanDate,
     dayNameToWeekday,

@@ -17,7 +17,7 @@ export function getSectionLineNumber(
     lines: string[],
     sectionName: string
 ): SectionBounds {
-    let ret: SectionBounds = { first: -1, last: -1 };
+    const ret: SectionBounds = { first: -1, last: -1 };
 
     // sought-after section
     ret.first = lines.findIndex(

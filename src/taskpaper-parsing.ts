@@ -21,7 +21,7 @@ import {
     moveNode,
 } from "./move-nodes";
 import { caseInsensitiveCompare } from "./sort-lines";
-import { TaskPaperNode } from "./task-parser";
+import { TaskPaperNode } from "task-parser";
 import { getNextDueDate } from "./task-tools";
 
 // work in the local time zone
@@ -45,9 +45,9 @@ export function parseTaskDocument(
     try {
         const ret = new TaskPaperNode(editor.document.getText());
         return ret;
-    } catch (error: any) {
+        } catch (error) {
         // report error to user
-        vscode.window.showInformationMessage(error.toString());
+        vscode.window.showInformationMessage(String(error));
         return undefined;
     }
 }
@@ -245,7 +245,7 @@ export function pushStatisticMapToProject(
     map: Map<string, number>,
     project: TaskPaperNode
 ) {
-    for (let [date, value] of map) {
+    for (const [date, value] of map) {
         project.children.push(new TaskPaperNode(`\t\t${date}: ${value}`));
     }
 }
@@ -284,13 +284,13 @@ export function getStatistics(node: TaskPaperNode): StatisticsType {
         const childStats = getStatistics(childNode);
 
         if (childStats.done.size > 0) {
-            for (let [date, value] of childStats.done) {
+            for (const [date, value] of childStats.done) {
                 addTally(ret.done, date, value);
             }
         }
 
         if (childStats.due.size > 0) {
-            for (let [date, value] of childStats.due) {
+            for (const [date, value] of childStats.due) {
                 addTally(ret.due, date, value);
             }
         }
@@ -319,7 +319,7 @@ export function processTaskNode(
     future: TaskPaperNode | undefined,
     overdue: TaskPaperNode | undefined
 ): void {
-    var newNode: TaskPaperNode | undefined = undefined;
+    let newNode: TaskPaperNode | undefined = undefined;
 
     // does this node have children? if so, act on the children
     if (taskNode.children.length > 0) {

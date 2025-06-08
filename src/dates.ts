@@ -38,7 +38,7 @@ export function cleanDate(dayString: string | undefined): dayjs.Dayjs {
     }
 
     // try a format string
-    var ret = dayjs(dayString, FORMAT_STRINGS);
+    const ret = dayjs(dayString, FORMAT_STRINGS);
     if (ret.isValid()) {
         return ret;
     }
@@ -102,7 +102,7 @@ export function daysPassed(dtBegin: Date, dtEnd: Date): number {
 }
 
 export function treatAsUTC(date: Date): number {
-    var result = new Date(date);
+    const result = new Date(date);
     result.setMinutes(result.getMinutes() - result.getTimezoneOffset());
     return result.getTime();
 }
@@ -111,7 +111,7 @@ export function daysUntilWeekday(
     weekday: number,
     fromDay: dayjs.Dayjs = dayjs()
 ): number {
-    var days = weekday - fromDay.day();
+    let days = weekday - fromDay.day();
     if (days <= 0) {
         days = days + 7;
     }
@@ -150,13 +150,13 @@ export function getDaysFromRecurrencePattern(
     if (recur === undefined) {
         return 1;
     } // default
-    var days = parseInt(recur);
+    const days = parseInt(recur);
 
-    if (isNaN(days)) {
-        //// NON-NUMERIC recurrence patterns
+    if (Number.isNaN(days)) {
+        // NON-NUMERIC recurrence patterns
 
         // pattern 1: day of the week, pluralized
-        var test = dayNamePluralToWeekday(recur);
+        const test = dayNamePluralToWeekday(recur);
         if (test !== -1) {
             // set to be due on the next day of that name
             return daysUntilWeekday(test, fromDay);

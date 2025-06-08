@@ -1,8 +1,7 @@
 // from vscode-sort-lines
-import { TaskPaperNode } from "./task-parser";
+import { TaskPaperNode } from "task-parser";
 import { cleanDate, todayDay } from "./dates";
 import { addProjectTag } from "./taskpaper-utils";
-import { triggerAsyncId } from "async_hooks";
 
 type NodeComparisonAlgorithm = (inputNode: TaskPaperNode) => boolean;
 

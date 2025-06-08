@@ -1,5 +1,4 @@
-import { TaskPaperNode } from "./task-parser";
-import { Task } from "vscode";
+import { TaskPaperNode } from "task-parser";
 
 const yamlDelimiter = "---";
 /**
@@ -13,8 +12,8 @@ const yamlDelimiter = "---";
  * @return {*}  {string[]}
  */
 export function getSection(lines: string[], fromSection: string): string[] {
-    var output: string[] = [];
-    var isInSection: Boolean = false;
+    const output: string[] = [];
+    let isInSection: boolean = false;
 
     for (let i = 0; i < lines.length; i++) {
         if (isSectionHead(lines[i]) === fromSection) {
@@ -37,11 +36,8 @@ export function getSection(lines: string[], fromSection: string): string[] {
 /**
  *isSectionHead
  *Returns a string (the Project name) if the current line is the project head; otherwise returns false.
- * @export
- * @param {string} line
- * @return {string | Boolean}
  */
-export function isSectionHead(line: string): string | Boolean {
+export function isSectionHead(line: string): string | boolean {
     const trimmed: string = line.trim();
 
     if (trimmed.charAt(trimmed.length - 1) === ":") {

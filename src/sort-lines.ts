@@ -1,9 +1,7 @@
 // from vscode-sort-lines
-
-import { TaskPaperNode } from "./task-parser";
+import { TaskPaperNode } from "task-parser";
 import * as vscode from "vscode";
-import { cleanDate } from "./dates";
-import { getDueTasks, taskDueDateCompare } from "./taskpaper-parsing";
+import { taskDueDateCompare } from "./taskpaper-parsing";
 
 type ArrayTransformer = (lines: string[]) => string[];
 type SortingAlgorithm = (a: string, b: string) => number;
