@@ -3,3 +3,5 @@ How to refresh task-parser; not sure why it's not working as a dependency.
 rimraf ./lib/task-parser/
 mkdir ./lib/task-parser 
 copy ../task-parser/build/*.* ./lib/task-parser/
+
+As of 2025-06-08 it seems to work now; I had ChatGPT help with with npm link.
