@@ -1,7 +1,7 @@
 // from vscode-sort-lines
 import { TaskPaperNode } from "task-parser";
-import { cleanDate, todayDay } from "@src/dates";
-import { addProjectTag } from "@src/taskpaper-utils";
+import { cleanDate, todayDay } from "./dates";
+import { addProjectTag } from "./taskpaper-utils";
 
 type NodeComparisonAlgorithm = (inputNode: TaskPaperNode) => boolean;
 

@@ -1,10 +1,10 @@
 import dayjs from "dayjs";
 import { TaskPaperNode } from "task-parser";
 import * as vscode from "vscode";
-import { DEFAULT_DATE_FORMAT } from "@src/dates";
-import { Settings } from "@src/Settings";
-import { replaceCurrentLine, replaceLines } from "@src/sort-lines";
-import { parseTaskDocument, addProject, processTaskNode, updateStatistics, taskBlankToBottom, getProjectByName } from "@src/taskpaper-parsing";
+import { DEFAULT_DATE_FORMAT } from "./dates";
+import { Settings } from "./Settings";
+import { replaceCurrentLine, replaceLines } from "./sort-lines";
+import { parseTaskDocument, addProject, processTaskNode, updateStatistics, taskBlankToBottom, getProjectByName } from "./taskpaper-parsing";
 
 const settings = new Settings();
 

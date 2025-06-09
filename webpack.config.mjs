@@ -21,17 +21,14 @@ const extensionConfig = {
     vscode: 'commonjs vscode'
   },
   resolve: {
-    extensions: ['.ts', '.js'],
-    alias: {
-      '@src': path.resolve(__dirname, 'src')
-    }
+    extensions: ['.ts', '.js']
   },
   module: {
     rules: [
       {
         test: /\.ts$/,
         exclude: /node_modules/,
-        use: ['ts-loader']
+        use: 'ts-loader'
       }
     ]
   },

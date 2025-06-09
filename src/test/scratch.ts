@@ -1,6 +1,6 @@
 import { TaskPaperNode } from "task-parser";
-import { taskDueDateCompare } from "@src/taskpaper-parsing";
-import { testDocumentWithHigh } from "./suite/testData.js";
+import { taskDueDateCompare } from "../taskpaper-parsing";
+import { testDocumentWithHigh } from "./suite/testData";
 
 const project = new TaskPaperNode(testDocumentWithHigh);
 project.children[0].children.sort(taskDueDateCompare);

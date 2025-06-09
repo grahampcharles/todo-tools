@@ -1,11 +1,11 @@
 import * as vscode from "vscode";
 import dayjs from "dayjs";
-import { Settings } from "@src/Settings";
+import { Settings } from "./Settings";
 import { TaskPaperNode } from "task-parser";
-import { RELATIVE_DAYS, cleanDate, DEFAULT_DATE_FORMAT, todayDay } from "@src/dates";
-import { isDone, isDueBeforeToday, isDueToday, isOverdue, hasTodayTag, moveNode, isFuture } from "@src/move-nodes";
-import { caseInsensitiveCompare } from "@src/sort-lines";
-import { getNextDueDate } from "@src/task-tools";
+import { RELATIVE_DAYS, cleanDate, DEFAULT_DATE_FORMAT, todayDay } from "./dates";
+import { isDone, isDueBeforeToday, isDueToday, isOverdue, hasTodayTag, moveNode, isFuture } from "./move-nodes";
+import { caseInsensitiveCompare } from "./sort-lines";
+import { getNextDueDate } from "./task-tools";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";

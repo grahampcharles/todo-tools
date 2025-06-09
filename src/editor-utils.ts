@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { getSectionLineNumber, SectionBounds, stringToLines } from "@src/strings";
+import { getSectionLineNumber, SectionBounds, stringToLines } from "./strings";
 
 export function editorLines(editor: vscode.TextEditor): string[] {
     return stringToLines(editor.document.getText());

@@ -6,7 +6,7 @@ import {
     nextAnnual,
     nextWeekday,
     todayDay,
-} from "@src/dates";
+} from "./dates";
 
 export function getNextDueDate(node: TaskPaperNode): Dayjs {
     //// retrieves the next due date

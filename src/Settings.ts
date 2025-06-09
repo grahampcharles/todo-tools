@@ -1,7 +1,7 @@
 import { TaskPaperNode } from "task-parser";
 import * as vscode from "vscode";
-import { inferType } from "@src/inferType";
-import { getProjectByName } from "@src/taskpaper-parsing";
+import { inferType } from "./inferType";
+import { getProjectByName } from "./taskpaper-parsing";
 
 type SettingsMap = {
     autoRun: boolean;
