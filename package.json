@@ -3,7 +3,7 @@
     "displayName": "ToDo-Tools",
     "publisher": "grahampcharles",
     "description": "Auxiliary functions for taskpaper documents.",
-    "version": "0.8.4",
+    "version": "0.8.5",
     "repository": {
         "type": "git",
         "url": "https://github.com/grahampcharles/todo-tools.git"
@@ -162,7 +162,7 @@
         "pretest": "npm run compile-tests && npm run compile && npm run lint",
         "lint": "eslint src --ext ts",
         "test": "node ./out/test/runTest.js",
-    "test:src": "mocha --loader ts-node/esm --no-warnings \"src/test/**/*.test.ts\"",
+        "test:src": "mocha --loader ts-node/esm --no-warnings \"src/test/**/*.test.ts\"",
         "scratch": "ts-node ./src/test/scratch.ts",
         "_old_package": "webpack --mode production --devtool hidden-source-map",
         "package": "pnpm vsce package --no-dependencies",
