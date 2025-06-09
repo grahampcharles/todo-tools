@@ -165,8 +165,8 @@
         "test:src": "mocha --loader ts-node/esm --no-warnings \"src/test/**/*.test.ts\"",
         "scratch": "ts-node ./src/test/scratch.ts",
         "_old_package": "webpack --mode production --devtool hidden-source-map",
-        "package": "pnpm vsce package --no-dependencies",
-        "publish": "pnpm vsce publish --no-dependencies"
+        "package": "vsce package --no-dependencies",
+        "publish": "vsce publish --no-dependencies"
     },
     "devDependencies": {
         "@eslint/config-array": "^0.20.0",
@@ -178,12 +178,11 @@
         "@types/node": "^18.7.18",
         "@types/vscode": "^1.71.0",
         "@vscode/test-electron": "^2.1.5",
+        "@vscode/vsce": "^3.5.0",
         "chai": "^4.3.6",
         "eslint": "^9.28.0",
         "eslint-plugin-chai-friendly": "^1.0.1",
         "glob": "^10.4.5",
-        "mocha": "^11.5.0",
-        "nyc": "^17.1.0",
         "rimraf": "^6.0.1",
         "ts-loader": "^9.4.0",
         "ts-node": "^10.9.1",
@@ -194,6 +193,7 @@
     },
     "dependencies": {
         "dayjs": "^1.11.13",
+        "mocha": "^11.5.0",
         "task-parser": "file:../task-parser"
     }
 }
