@@ -18,13 +18,7 @@ dayjs.tz.guess();
 // date comparison extension
 dayjs.extend(isSameOrBefore);
 
-/**
- *parseTaskDocument
- *
- * @export
- * @param {*} document Document returned by the taskpaper parser.
- * @return {*} all the tasks in the document.
- */
+// Parses the TaskPaper document from the editor and returns the root node.
 export function parseTaskDocument(
     editor: vscode.TextEditor
 ): TaskPaperNode | undefined {
@@ -38,7 +32,7 @@ export function parseTaskDocument(
     }
 }
 
-// returns a top-level project with the given name
+// Returns a top-level project node with the given name.
 export function getProjectByName(
     node: TaskPaperNode,
     name: string
@@ -48,6 +42,7 @@ export function getProjectByName(
     );
 }
 
+// Adds a new project node at the specified location.
 export function addProject(
     node: TaskPaperNode,
     name: string,
@@ -80,7 +75,7 @@ export function addProject(
     node.children.push(newProject);
 }
 
-// returns a top-level project with the given name
+// Returns true if a top-level project with the given name exists.
 export function projectExistsByName(
     node: TaskPaperNode,
     name: string
@@ -93,8 +88,8 @@ export function projectExistsByName(
     );
 }
 
+// Returns all project nodes except Archive and Settings, flattened.
 export function filterProjects(node: TaskPaperNode): TaskPaperNode[] {
-    // returns only project nodes, flattened;
     const results = new Array<TaskPaperNode>();
 
     // skip Archive
@@ -122,15 +117,8 @@ export function filterProjects(node: TaskPaperNode): TaskPaperNode[] {
     return results;
 }
 
-/**
- *Returns all tasks that are @due and not @done; does *not* recurse
- *
- * @export
- * @param {TaskPaperNode} node
- * @return {*}  {TaskPaperNode[]}
- */
+// Returns all direct child tasks that are @due and not @done.
 export function getDueTasks(node: TaskPaperNode): TaskPaperNode[] {
-    // return any direct-child tasks that are due on or before today
     return node.children.filter(
         (childNode: TaskPaperNode) =>
             childNode.type === "task" &&
@@ -139,12 +127,11 @@ export function getDueTasks(node: TaskPaperNode): TaskPaperNode[] {
     );
 }
 
-// replaces date tokens (like "today", "Monday") with clean due dates
+// Replaces date tokens (like "today", "Monday") with clean due dates.
 export function replaceDueTokens(
     input: TaskPaperNode,
     retainToday: boolean = false
 ): void {
-    // only further process tasks that have due dates
     if (input.type !== "task") {
         return;
     }
@@ -182,6 +169,7 @@ export function replaceDueTokens(
     }
 }
 
+// Adds relative date flags (today, yesterday, tomorrow) to a task.
 export function addRelativeDateFlag(input: TaskPaperNode) {
     if (input.hasTag("done") || !input.hasTag("due")) {
         return;
@@ -202,6 +190,7 @@ export function addRelativeDateFlag(input: TaskPaperNode) {
     }
 }
 
+// Updates the statistics project node with current statistics.
 export function updateStatistics(
     taskNode: TaskPaperNode,
     statsProject: TaskPaperNode | undefined
@@ -227,6 +216,7 @@ export function updateStatistics(
     ];
 }
 
+// Pushes statistics from a map into a project node as children.
 export function pushStatisticMapToProject(
     map: Map<string, number>,
     project: TaskPaperNode
@@ -243,6 +233,7 @@ type StatisticsType = {
     overdue: number;
 };
 
+// Recursively gathers statistics for done, due, today, and overdue tasks.
 export function getStatistics(node: TaskPaperNode): StatisticsType {
     const ret = {
         done: new Map<string, number>(),
@@ -288,6 +279,7 @@ export function getStatistics(node: TaskPaperNode): StatisticsType {
     return ret;
 }
 
+// Adds a tally for a given date to the accumulator map.
 export function addTally(
     accumulator: Map<string, number>,
     date: string | undefined,
@@ -297,6 +289,7 @@ export function addTally(
     accumulator.set(dateString, (accumulator.get(dateString) ?? 0) + count);
 }
 
+// Processes a task node and its children, updating tags, moving nodes, and handling recurrence.
 export function processTaskNode(
     taskNode: TaskPaperNode,
     settings: Settings,
@@ -324,7 +317,6 @@ export function processTaskNode(
         }
     }
 
-    /// if this is a task, make some updates
     // only further process tasks
     if (taskNode.type !== "task") {
         return;
@@ -346,7 +338,7 @@ export function processTaskNode(
     if (taskHasRecurrenceAndIsDone) {
         const nextDate = getNextDueDate(taskNode);
 
-        /// case 1: already @done, so clone the node
+        // case 1: already @done, so clone the node
         if (taskNode.hasTag("done")) {
             // clone the node
             newNode = taskNode.clone();
@@ -368,7 +360,7 @@ export function processTaskNode(
 
             // clear the recurrence from the original
             taskNode.removeTag(["recur", "annual", "project"]);
-        } /// case 2: not yet @done, so just set the due date
+        } // case 2: not yet @done, so just set the due date
         else {
             taskNode.setTag("due", nextDate.format(DEFAULT_DATE_FORMAT));
         }
@@ -379,26 +371,26 @@ export function processTaskNode(
         ? [isDueToday]
         : [isDueToday, hasTodayTag];
 
-    /// move nodes as needed
+    // move nodes as needed
     if (settings.overdueSection()) {
-        /// TODAY / OVERDUE
+        // TODAY / OVERDUE
         moveNode(taskNode, isOverdue, overdue);
         moveNode(newNode, isOverdue, overdue);
 
         moveNode(taskNode, moveToToday, today);
         moveNode(newNode, moveToToday, today);
     } else {
-        /// TODAY
+        // TODAY
         moveNode(taskNode, [...moveToToday, isDueBeforeToday], today);
         moveNode(newNode, [...moveToToday, isDueBeforeToday], today);
     }
 
-    /// ARCHIVE
+    // ARCHIVE
     if (settings.archiveDoneItems()) {
         moveNode(taskNode, isDone, archive, true);
     }
 
-    /// FUTURE
+    // FUTURE
     if (!settings.recurringItemsAdjacent()) {
         moveNode(taskNode, isFuture, future);
         moveNode(newNode, isFuture, future);
@@ -407,6 +399,7 @@ export function processTaskNode(
     return;
 }
 
+// Sorts blank lines to the bottom when comparing two nodes.
 export function taskBlankToBottom(
     aNode: TaskPaperNode,
     bNode: TaskPaperNode
@@ -420,6 +413,7 @@ export function taskBlankToBottom(
     return 0;
 }
 
+// Returns true if the node is a blank line.
 export function isBlankLine(node: TaskPaperNode): boolean {
     if (node.type !== "unknown") {
         return false;
@@ -428,6 +422,7 @@ export function isBlankLine(node: TaskPaperNode): boolean {
     return (node.value ?? "").match(/\S.*/gm) === null;
 }
 
+// Compares two task nodes for sorting by due date, priority, and other criteria.
 export function taskDueDateCompare(
     aNode: TaskPaperNode,
     bNode: TaskPaperNode

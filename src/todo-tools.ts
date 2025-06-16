@@ -4,7 +4,7 @@ import * as vscode from "vscode";
 import { DEFAULT_DATE_FORMAT } from "./dates";
 import { Settings } from "./Settings";
 import { replaceCurrentLine, replaceLines } from "./sort-lines";
-import { parseTaskDocument, addProject, processTaskNode, updateStatistics, taskBlankToBottom, getProjectByName } from "./taskpaper-parsing";
+import { parseTaskDocument, addProject, processTaskNode, updateStatistics, taskBlankToBottom, getProjectByName, taskDueDateCompare } from "./taskpaper-parsing";
 
 const settings = new Settings();
 
@@ -310,18 +310,22 @@ export async function performCopy(): Promise<boolean> {
         updateStatistics(allItems, statisticsProject);
     }
 
+    // sort future by date
+    if (futureProject) {
+        futureProject.children = futureProject.children.sort(taskDueDateCompare);
+    }
+    
     // sort unknowns to bottom
-    [
+    for (const project of [
         archiveProject,
         todayProject,
-        futureProject,
         overdueProject,
         statisticsProject,
-    ].forEach((project) => {
+    ]) {
         if (project !== undefined) {
             project.children = project.children.sort(taskBlankToBottom);
         }
-    });
+    }
 
     // return a promise to write out the document
     return Promise.resolve(writeOutItems(allItems));
