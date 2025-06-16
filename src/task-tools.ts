@@ -9,7 +9,7 @@ import {
 } from "./dates";
 
 export function getNextDueDate(node: TaskPaperNode): Dayjs {
-    //// retrieves the next due date
+    /// retrieves the next due date
 
     // Get the "source date" -- the day
     // after which to generate the next task

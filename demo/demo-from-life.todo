@@ -96,9 +96,9 @@ Overdue:
 	- archive taskpaper @due(2022-06-22) @recur(28)
 	- wash shower curtain @due(2022-07-01) @recur(45)
 	- transfer domains from winhost (aiid, drlindacharles) @due(2022-10-01)
+	- schedule Kidsmiles @due(2022-11-10) @recur(170)
 
 Future:
-	- schedule Kidsmiles @due(2022-11-10) @recur(170)
 
 Household:
 	- address signs

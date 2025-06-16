@@ -7,6 +7,10 @@ export function activate(context: vscode.ExtensionContext) {
             "todotools.performCopy",
             todoTools.performCopy
         ),
+        vscode.commands.registerCommand(
+            "todotools.vaultArchive",
+            todoTools.vaultArchive
+        ),
         vscode.commands.registerCommand("todotools.setPriorityHigh", () =>
             todoTools.setPriority("high")
         ),

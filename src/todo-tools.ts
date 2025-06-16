@@ -189,6 +189,65 @@ const taskUnderCursor = (
 /**
  *Perform the copy of any due recurring tasks into the Today section
  */
+export async function vaultArchive(): Promise<boolean> {
+    log("vaultArchive");
+
+    const textEditor = vscode.window.activeTextEditor;
+    if (!textEditor) {
+        return false;
+    }
+
+    // get items
+    const allItems = parseTaskDocument(textEditor);
+    if (allItems === undefined) {
+        return false;
+    }
+
+    // update settings
+    await updateSettings(textEditor);
+
+
+    // get archive
+    const [
+        archiveProject
+    ] = getSpecialProjects(allItems);
+
+    if (!archiveProject) { return false; }
+    if (archiveProject.children.length === 0) {
+        vscode.window.showInformationMessage("There are no items to archive.");
+        return false;
+    }
+
+    const vault = archiveProject.toStringWithChildren();
+
+    const now = dayjs().format("YYYY-MM-DD-HH-mm-ss");
+    const filePath = vscode.Uri.file(
+        `${textEditor.document.uri.fsPath}.${now}.txt`
+    );
+
+    try {
+        await vscode.workspace.fs.writeFile(filePath, Buffer.from(vault.join("\n"), "utf8"));
+
+        // remove archive items
+        archiveProject.children = [];
+
+        vscode.window.showInformationMessage(`Vault saved to ${filePath.fsPath}`);
+    } catch (error) {
+        if (error instanceof Error) {
+            vscode.window.showErrorMessage(`Error saving vault: ${error.message}`);
+        } else {
+            vscode.window.showErrorMessage("Unknown error occurred while saving vault.");
+        }
+        return false;
+    }
+
+    // return a promise to write out the document
+    return Promise.resolve(writeOutItems(allItems));
+}
+
+/**
+ *Perform the copy of any due recurring tasks into the Today section
+ */
 export async function performCopy(): Promise<boolean> {
     log("performCopy");
 

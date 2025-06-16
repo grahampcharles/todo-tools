@@ -3,7 +3,7 @@
     "displayName": "ToDo-Tools",
     "publisher": "grahampcharles",
     "description": "Auxiliary functions for taskpaper documents.",
-    "version": "0.8.5",
+    "version": "0.8.6",
     "repository": {
         "type": "git",
         "url": "https://github.com/grahampcharles/todo-tools.git"
@@ -27,6 +27,7 @@
                 "mac": "cmd+alt+. c",
                 "when": "editorTextFocus"
             },
+            
             {
                 "command": "todotools.setPriorityHigh",
                 "key": "ctrl+alt+. h",
@@ -114,6 +115,10 @@
             {
                 "command": "todotools.performCopy",
                 "title": "ToDo Tools: Copy Recurring Tasks"
+            },
+            {
+                "command": "todotools.vaultArchive",
+                "title": "ToDo Tools: Move Archive to a Vault File"
             },
             {
                 "command": "todotools.setPriorityHigh",
