@@ -2,6 +2,8 @@
 
 All notable changes to the "todo-tools" extension will be documented in this file.
 
+## [0.8.9]
+
 ## [0.8.8] - 2025-06-18
 ### add
 - sort future by date (regardless of priority)
