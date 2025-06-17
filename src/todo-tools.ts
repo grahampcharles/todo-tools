@@ -311,7 +311,9 @@ export async function performCopy(): Promise<boolean> {
     }
 
     // sort future by date
+    log("here");
     if (futureProject) {
+        log("sorting future by date");
         futureProject.children = futureProject.children.sort(taskDueDateCompare);
     }
     
