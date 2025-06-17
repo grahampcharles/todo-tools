@@ -311,12 +311,14 @@ export async function performCopy(): Promise<boolean> {
     }
 
     // sort future by date
-    log("here");
     if (futureProject) {
         log("sorting future by date");
-        futureProject.children = futureProject.children.sort(taskDueDateCompare);
+        futureProject.children = futureProject.children.sort(
+            (a: TaskPaperNode, b: TaskPaperNode) =>
+                taskDueDateCompare(a, b, { ignorePriority: true })
+        );
     }
-    
+
     // sort unknowns to bottom
     for (const project of [
         archiveProject,

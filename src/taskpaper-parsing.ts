@@ -422,10 +422,15 @@ export function isBlankLine(node: TaskPaperNode): boolean {
     return (node.value ?? "").match(/\S.*/gm) === null;
 }
 
-// Compares two task nodes for sorting by due date, priority, and other criteria.
+type TaskCompareOptions = {
+    ignorePriority?: boolean; // if true, ignore priority tags when comparing
+}
+
+// Compares two task nodes for sorting by priority, due date, and other criteria.
 export function taskDueDateCompare(
     aNode: TaskPaperNode,
-    bNode: TaskPaperNode
+    bNode: TaskPaperNode,
+    options?: TaskCompareOptions
 ): number {
     const aBeforeB = -1;
     const bBeforeA = 1;
@@ -462,21 +467,22 @@ export function taskDueDateCompare(
     }
 
     // two due dates
-    // is one (and only) one node high priority?
-    if (aNode.hasTag("high") && !bNode.hasTag("high")) {
-        return aBeforeB;
+    if (!options?.ignorePriority) { // is one (and only) one node high priority?
+        if (aNode.hasTag("high") && !bNode.hasTag("high")) {
+            return aBeforeB;
+        }
+        if (bNode.hasTag("high") && !aNode.hasTag("high")) {
+            return bBeforeA;
+        }
+        // is one (and only) one node low priority?
+        if (aNode.hasTag("low") && !bNode.hasTag("low")) {
+            return bBeforeA;
+        }
+        if (bNode.hasTag("low") && !aNode.hasTag("low")) {
+            return aBeforeB;
+        }
     }
-    if (bNode.hasTag("high") && !aNode.hasTag("high")) {
-        return bBeforeA;
-    }
-    // is one (and only) one node low priority?
-    if (aNode.hasTag("low") && !bNode.hasTag("low")) {
-        return bBeforeA;
-    }
-    if (bNode.hasTag("low") && !aNode.hasTag("low")) {
-        return aBeforeB;
-    }
-
+    
     // is one (and only) one node already started?
     if (aNode.hasTag("started") && !bNode.hasTag("started")) {
         return aBeforeB;

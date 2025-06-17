@@ -2,13 +2,14 @@
 
 All notable changes to the "todo-tools" extension will be documented in this file.
 
-## [0.]
+## [0.8.8] - 2025-06-18
+### add
+- sort future by date (regardless of priority)
+- archive file
 
 ## [0.8.3] - 2023-01-18
 ### add
 - put @today at the top
-
-## [0.8.3] - 2023-01-14
 ### fix
 - statistics not sorting @today @done(23-01-14 14:37)
 - due(Monday) is not working @due(2023-01-14) @today @done(23-01-14 14:25)
