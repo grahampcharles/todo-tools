@@ -98,6 +98,25 @@ suite("Extension Test Suite", () => {
         expect(nextDueDate.format("YYYY-MM-DD")).to.eq("2122-09-20");
     });
 
+    it("next due date; weekday", () => {
+        const node = new TaskPaperNode("- test task");
+        node.setTag("recur", "weekday");
+        node.setTag("due", "2012-09-18");
+        node.setTag("done", "2012-09-18");
+
+        const nextDueDate = getNextDueDate(node);
+        expect(nextDueDate.format("YYYY-MM-DD")).to.eq(
+            nextWeekday(dayNameToWeekday("Monday")).format("YYYY-MM-DD")
+        );
+    });
+
+    it("dayNameToWeekday", () => {
+        const weekday = dayNameToWeekday("Monday");
+
+        expect(weekday).to.equal(1, "Monday should be 1");
+        
+    });
+
     it("next due date; number of days recurrence, in the past", () => {
         const node = new TaskPaperNode("- test task");
         node.setTag("recur", "3");

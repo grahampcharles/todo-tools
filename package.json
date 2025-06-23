@@ -16,7 +16,8 @@
     ],
     "activationEvents": [
         "onLanguage:todo",
-        "onLanguage:taskpaper"
+        "onLanguage:taskpaper",
+        "onStartupFinished", "*"
     ],
     "main": "./dist/extension.js",
     "contributes": {

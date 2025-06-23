@@ -31,13 +31,14 @@ export function getNextDueDate(node: TaskPaperNode): Dayjs {
 
     /// next recurrence date
     // next annual: find it
+
     if (isAnnual) {
         const ret = nextAnnual(node.tagValue("annual") || "1/1", sourceDate);
-
         if (ret.isValid()) {
             return ret;
         }
     }
+
 
     // simple number: just add it
     const dayOffset = parseInt(recurString);
@@ -55,6 +56,17 @@ export function getNextDueDate(node: TaskPaperNode): Dayjs {
         if (ret.isValid()) {
             return ret;
         }
+    }
+
+    // next working day
+    if (recurString === "weekday") {
+        const day = sourceDate.day();
+        // if today is a weekend or Friday, then next weekday is next Monday
+        if (day === 0 || day === 6 || day === 5) {
+            return nextWeekday(1, sourceDate);
+        }
+        // otherwise, next weekday is tomorrow
+        return nextWeekday(day + 1, sourceDate);
     }
 
     return cleanDate(node.tagValue("recur") || "1");

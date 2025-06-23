@@ -27,10 +27,10 @@ export function activate(context: vscode.ExtensionContext) {
             todoTools.setDue(7)
         ),
         vscode.workspace.onDidOpenTextDocument(todoTools.documentOnOpen),
-     vscode.workspace.onDidChangeTextDocument(todoTools.documentOnChange),
+        vscode.workspace.onDidChangeTextDocument(todoTools.documentOnChange),
     ];
 
     commands.forEach((command) => context.subscriptions.push(command));
 }
 
-export function deactivate() {}
+export function deactivate() { }
