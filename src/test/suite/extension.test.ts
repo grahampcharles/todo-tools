@@ -101,20 +101,18 @@ suite("Extension Test Suite", () => {
     it("next due date; weekday", () => {
         const node = new TaskPaperNode("- test task");
         node.setTag("recur", "weekday");
-        node.setTag("due", "2012-09-18");
-        node.setTag("done", "2012-09-18");
+        node.setTag("due", "2122-09-17");  // this is a Thursday
+        node.setTag("done", "2122-09-17");
 
         const nextDueDate = getNextDueDate(node);
-        expect(nextDueDate.format("YYYY-MM-DD")).to.eq(
-            nextWeekday(dayNameToWeekday("Monday")).format("YYYY-MM-DD")
-        );
+        expect(nextDueDate.format("YYYY-MM-DD")).to.eq("2122-09-18");
     });
 
     it("dayNameToWeekday", () => {
         const weekday = dayNameToWeekday("Monday");
 
         expect(weekday).to.equal(1, "Monday should be 1");
-        
+
     });
 
     it("next due date; number of days recurrence, in the past", () => {
@@ -198,6 +196,19 @@ suite("Extension Test Suite", () => {
         expect(daysUntilWeekday(2, day)).to.equal(7, "until Tuesday");
         expect(daysUntilWeekday(3, day)).to.equal(1, "until Wednesday");
         expect(daysUntilWeekday(0, day)).to.equal(5, "until Sunday");
+
+        // days until weekday with array
+        expect(daysUntilWeekday([0, 1], day)).to.equal(5, "until Sunday or Monday");  // next Sunday
+        expect(daysUntilWeekday([1, 2], day)).to.equal(6, "until Monday or Tuesday");  // next Monday
+        expect(daysUntilWeekday([3, 4], day)).to.equal(1, "until Wednesday or Thursday"); // Wednesday
+        expect(daysUntilWeekday([5, 6], day)).to.equal(3, "until Friday or Saturday"); // Friday
+        expect(daysUntilWeekday([1, 2, 3, 4, 5], day)).to.equal(1, "until Monday to Friday"); // Wednesday
+
+        // days until weekend with different start days
+        // start on a Friday, "2022-01-14"
+        expect(daysUntilWeekday([1, 2, 3, 4, 5], cleanDate("2022-01-14"))).to.equal(3, "from Friday, next is Monday");
+        expect(daysUntilWeekday([1, 2, 3, 4, 5], cleanDate("2022-01-15"))).to.equal(2, "from Saturday, next is Monday");
+        expect(daysUntilWeekday([1, 2, 3, 4, 5], cleanDate("2022-01-16"))).to.equal(1, "from Sunday, next is Monday");
     });
 
     it("clean date", () => {

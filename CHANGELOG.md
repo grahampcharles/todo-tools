@@ -3,12 +3,15 @@
 All notable changes to the "todo-tools" extension will be documented in this file.
 
 ## [0.8.9]
-### add
-- recur(weekday)
+### fix
+- recur(weekday) is recurring on the same day as done
 
+### todo:
+- recur(Mon,Tue,Wed)
 
 ## [0.8.8] - 2025-06-18
 ### add
+- recur(weekday)
 - sort future by date (regardless of priority)
 - archive file
 

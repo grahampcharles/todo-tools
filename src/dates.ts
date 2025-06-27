@@ -108,22 +108,30 @@ export function treatAsUTC(date: Date): number {
 }
 
 export function daysUntilWeekday(
-    weekday: number,
+    weekday: number | number[],
     fromDay: dayjs.Dayjs = dayjs()
 ): number {
-    let days = weekday - fromDay.day();
-    if (days <= 0) {
-        days = days + 7;
+    const weekdays = Array.isArray(weekday) ? weekday : [weekday];
+    let minDays = Infinity;
+
+    for (const day of weekdays) {
+        let days = day - fromDay.day();
+        if (days <= 0) {
+            days += 7;
+        }
+        minDays = Math.min(minDays, days);
     }
-    return days;
+
+    return minDays;
 }
 export function nextWeekday(
-    weekday: number,
+    weekday: number | number[],
     fromDay: dayjs.Dayjs = dayjs()
 ): dayjs.Dayjs {
     const days = daysUntilWeekday(weekday, fromDay);
     return fromDay.add(days, "day");
 }
+
 
 export function nextAnnual(
     anniversary: string,
