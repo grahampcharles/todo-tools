@@ -140,6 +140,7 @@ suite("Extension Test Suite", () => {
         expect(normalizeDayName('Mondays')).to.equal("Monday", "Mondays");
         expect(normalizeDayName('Tue')).to.equal("Tuesday", "Tue");
         expect(normalizeDayName('We')).to.equal("Wednesday", "We");
+        expect(normalizeDayName(' We ')).to.equal("Wednesday", " We ");
         expect(normalizeDayName('R')).to.equal("Thursday", "R");
         expect(normalizeDayName('Thu')).to.equal("Thursday", "Thu");
         expect(normalizeDayName('Thurs')).to.equal("Thursday", "Thurs");

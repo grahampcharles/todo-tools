@@ -87,15 +87,17 @@ export function normalizeDayName(dayName: string): string {
 
     // if the array has only members with exactly the same number of letters, trim the dayName to that number of letters (e.g. Thurs => Thu)
 
-    let index = findStringInArray(dayName, dayNames);
+    const trimmedDayName = dayName.trim();
+
+    let index = findStringInArray(trimmedDayName, dayNames);
     if (index === -1) {
-        index = findStringInArray(dayName, dayNamesShort);
+        index = findStringInArray(trimmedDayName, dayNamesShort);
     }
     if (index === -1) {
-        index = findStringInArray(dayName, dayNamesMin);
+        index = findStringInArray(trimmedDayName, dayNamesMin);
     }
     if (index === -1) {
-        index = findStringInArray(dayName, dayNamesSingleLetter
+        index = findStringInArray(trimmedDayName, dayNamesSingleLetter
         ); // special weekday names
     }
     if (index === -1) {
