@@ -59,14 +59,9 @@ export function getNextDueDate(node: TaskPaperNode): Dayjs {
     }
 
     // next working day
-    if (recurString === "weekday") {
-        const day = sourceDate.day();
-        // if today is a weekend or Friday, then next weekday is next Monday
-        if (day === 0 || day === 6 || day === 5) {
-            return nextWeekday(1, sourceDate);
-        }
+    if (recurString === "weekday") {  
         // otherwise, next weekday is tomorrow
-        return nextWeekday(day + 1, sourceDate);
+        return nextWeekday([1, 2, 3, 4, 5], sourceDate);
     }
 
     return cleanDate(node.tagValue("recur") || "1");
