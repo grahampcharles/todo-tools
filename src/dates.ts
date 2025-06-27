@@ -5,9 +5,13 @@ import utc from "dayjs/plugin/utc.js";
 import timeZone from "dayjs/plugin/timezone.js";
 import localeData from "dayjs/plugin/localeData.js";
 import customParseFormat from "dayjs/plugin/customParseFormat.js";
+import updateLocale from 'dayjs/plugin/updateLocale';
 
 // extend the parse formatter
 dayjs.extend(customParseFormat);
+
+// extend the locale updater
+dayjs.extend(updateLocale);
 
 // work in the local time zone and locale
 dayjs.extend(localeData);
@@ -30,6 +34,9 @@ const FORMAT_STRINGS = [
 export const RELATIVE_DAYS = ["yesterday", "today", "tomorrow"];
 export const DEFAULT_DATE_FORMAT = "YYYY-MM-DD";
 export const dayNames = dayjs.weekdays();
+export const dayNamesShort = dayjs.weekdaysShort();
+export const dayNamesMin = dayjs.weekdaysMin();
+export const dayNamesSingleLetter = ['U', 'M', 'T', 'W', 'R', 'F', 'S']; // i18n!!!
 
 export function cleanDate(dayString: string | undefined): dayjs.Dayjs {
     // attempts to turn the string into a Dayjs object
@@ -55,10 +62,7 @@ export function cleanDate(dayString: string | undefined): dayjs.Dayjs {
     }
 
     // try a day name token
-    let dayNumber = dayNameToWeekday(dayString);
-    if (dayNumber === -1) {
-        dayNumber = dayNamePluralToWeekday(dayString);
-    }
+    const dayNumber = dayNameToWeekday(dayString);
     if (dayNumber !== -1) {
         const ret = nextWeekday(dayNumber, todayDay());
         if (ret.isValid()) {
@@ -77,16 +81,43 @@ export function todayName(): string {
     return dayNames[todayDay().day()];
 }
 
+export function normalizeDayName(dayName: string): string {
+    // look in dayNames, dayNamesShort, and dayNamesMin for the day name
+    // if it exists, return the full name from dayNames at the same index
+
+    // if the array has only members with exactly the same number of letters, trim the dayName to that number of letters (e.g. Thurs => Thu)
+
+    let index = findStringInArray(dayName, dayNames);
+    if (index === -1) {
+        index = findStringInArray(dayName, dayNamesShort);
+    }
+    if (index === -1) {
+        index = findStringInArray(dayName, dayNamesMin);
+    }
+    if (index === -1) {
+        index = findStringInArray(dayName, dayNamesSingleLetter
+        ); // special weekday names
+    }
+    if (index === -1) {
+        return dayName; // not found, return the original
+    }
+    return dayNames[index];
+
+}
+
+export function findStringInArray(input: string, array: string[]): number {
+
+    const allStringsSameLength = array.every(
+        (item) => item.length === array[0].length);
+    const searchInput = allStringsSameLength ? input.slice(0, array[0].length) : input;
+    return array.findIndex((item) => item.toLowerCase() === searchInput.toLowerCase());
+
+}
+
 /// returns -1 on nonexistent
 export function dayNameToWeekday(dayName: string): number {
     // find the singular version of the day name
-    return dayNames.indexOf(dayName);
-}
-export function dayNamePluralToWeekday(dayName: string): number {
-    // find the singular version of the day name by slicing off the last letter
-    // TODO: i8n; maybe replace with @weekly(Tuesday) or something, since day names
-    // are differently pluralized in different languages; e.g. los martes
-    return dayNames.indexOf(dayName.slice(0, -1));
+    return dayNames.indexOf(normalizeDayName(dayName));
 }
 
 export function monthNameToNumber(monthName: string): number {
@@ -164,7 +195,7 @@ export function getDaysFromRecurrencePattern(
         // NON-NUMERIC recurrence patterns
 
         // pattern 1: day of the week, pluralized
-        const test = dayNamePluralToWeekday(recur);
+        const test = dayNameToWeekday(recur);
         if (test !== -1) {
             // set to be due on the next day of that name
             return daysUntilWeekday(test, fromDay);

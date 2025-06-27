@@ -3,7 +3,7 @@ import { expect } from "chai";
 import { it } from "mocha";
 import dayjs, { Dayjs } from "dayjs";
 import { TaskPaperNode } from "task-parser";
-import { cleanDate, todayDay, getDaysFromRecurrencePattern, daysPassed, nextWeekday, nextAnnual, dayNames, dayNameToWeekday, todayName, monthNameToNumber, dayNamePluralToWeekday, daysUntilWeekday } from "../../dates.js";
+import { cleanDate, todayDay, getDaysFromRecurrencePattern, daysPassed, nextWeekday, nextAnnual, dayNames, dayNameToWeekday, todayName, monthNameToNumber, daysUntilWeekday, normalizeDayName } from "../../dates.js";
 import { isDueBeforeToday, isDueToday, isOverdue, isFuture } from "../../move-nodes.js";
 import { Settings } from "../../Settings.js";
 import { SectionBounds, getSectionLineNumber, stringToLines, stripTrailingWhitespace } from "../../strings.js";
@@ -108,10 +108,57 @@ suite("Extension Test Suite", () => {
         expect(nextDueDate.format("YYYY-MM-DD")).to.eq("2122-09-18");
     });
 
-    it("dayNameToWeekday", () => {
-        const weekday = dayNameToWeekday("Monday");
+    it("next due date; multiple chosen days", () => {
+        const node = new TaskPaperNode("- test task");
+        node.setTag("recur", "Monday, Wednesday, Friday");
+        node.setTag("due", "2122-09-17");  // this is a Thursday
+        node.setTag("done", "2122-09-17");
 
+        // should be Friday
+        const nextDueDate1 = getNextDueDate(node);
+        expect(nextDueDate1.format("YYYY-MM-DD")).to.eq("2122-09-18", "MWF -> F");
+
+        // s/b Monday
+        node.setTag("recur", "Monday, Wednesday");  
+        const nextDueDate2 = getNextDueDate(node);
+        expect(nextDueDate2.format("YYYY-MM-DD")).to.eq("2122-09-21", "MW -> M");
+ 
+        // weird spellings and spacings
+        node.setTag("recur", "W,Th");
+
+        const doneDate = cleanDate(node.tagValue("done"));
+        expect(doneDate.format("YYYY-MM-DD")).to.eq("2122-09-17", "done date");
+
+        const nextDueDate3 = getNextDueDate(node);
+        expect(nextDueDate3.format("YYYY-MM-DD")).to.eq("2122-09-23", "W,Th -> W");
+
+
+    });
+
+    it("normalizeDayName", () => {        
+        expect(normalizeDayName('Monday')).to.equal("Monday", "Monday");
+        expect(normalizeDayName('Mondays')).to.equal("Monday", "Mondays");
+        expect(normalizeDayName('Tue')).to.equal("Tuesday", "Tue");
+        expect(normalizeDayName('We')).to.equal("Wednesday", "We");
+        expect(normalizeDayName('R')).to.equal("Thursday", "R");
+        expect(normalizeDayName('Thu')).to.equal("Thursday", "Thu");
+        expect(normalizeDayName('Thurs')).to.equal("Thursday", "Thurs");
+        expect(normalizeDayName('U')).to.equal("Sunday", "U");
+        expect(normalizeDayName('S')).to.equal("Saturday", "S");
+        expect(normalizeDayName('Sa')).to.equal("Saturday", "Sa");
+        expect(normalizeDayName('NotADayName')).to.equal("NotADayName", "NotADayName");
+    });
+
+    it("dayNameToWeekday", () => {
+        let weekday = dayNameToWeekday("Monday");
         expect(weekday).to.equal(1, "Monday should be 1");
+
+        weekday = dayNameToWeekday("Tues");
+        expect(weekday).to.equal(2, "Tues should be 2");
+
+        weekday = dayNameToWeekday("Th");
+        expect(weekday).to.equal(4, "Th should be 4");
+
 
     });
 
@@ -179,17 +226,9 @@ suite("Extension Test Suite", () => {
             "month name to number"
         );
         expect(dayNameToWeekday("Monday")).to.equal(1, "day name to weekday");
-        expect(dayNamePluralToWeekday("Monday")).to.equal(
-            -1,
-            "day name plural to weekday"
-        );
         expect(dayNameToWeekday("Mondays")).to.equal(
-            -1,
-            "day name to weekday -- not plural"
-        );
-        expect(dayNamePluralToWeekday("Mondays")).to.equal(
             1,
-            "day name plural to weekday"
+            "day name to weekday plural"
         );
 
         const day = cleanDate("2022-01-11"); // this is a Tuesday, day 2
