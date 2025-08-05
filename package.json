@@ -52,10 +52,22 @@
                 "mac": "cmd+alt+. w",
                 "when": "editorTextFocus"
             },
-            {
+                   {
                 "command": "todotools.setDueTomorrow",
+                "key": "ctrl+alt+. t",
+                "mac": "cmd+alt+. ",
+                "when": "editorTextFocus"
+            },
+            {
+                "command": "todotools.setDueNextDay",
                 "key": "ctrl+alt+. .",
                 "mac": "cmd+alt+. .",
+                "when": "editorTextFocus"
+            },
+            {
+                "command": "todotools.setDuePreviousDay",
+                "key": "ctrl+alt+. ,",
+                "mac": "cmd+alt+. ,",
                 "when": "editorTextFocus"
             }
         ],
@@ -140,6 +152,12 @@
                 "command": "todotools.setDueTomorrow",
                 "title": "ToDo Tools: Set Due Date to Tomorrow"
             }
+            ,
+            {
+                "command": "todotools.setDueNextDay",
+                "title": "ToDo Tools: Set Due Date to Next Day"
+            }
+            
         ],
         "languages": [
             {

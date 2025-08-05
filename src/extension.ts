@@ -23,6 +23,12 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.commands.registerCommand("todotools.setDueTomorrow", () =>
             todoTools.setDue(1)
         ),
+        vscode.commands.registerCommand("todotools.setDueNextDay", () =>
+            todoTools.setDueRelative(1)
+        ),
+        vscode.commands.registerCommand("todotools.setDuePreviousDay", () =>
+            todoTools.setDueRelative(-1)
+        ),
         vscode.commands.registerCommand("todotools.setDueInAWeek", () =>
             todoTools.setDue(7)
         ),

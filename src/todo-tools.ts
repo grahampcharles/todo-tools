@@ -127,6 +127,29 @@ function performCopyAndSave() {
     }
 }
 
+export async function setDueRelative(daysForward: number): Promise<boolean> {
+    // get current task, if the cursor is under a task
+    const task = taskUnderCursor(vscode.window.activeTextEditor);
+    const format = DEFAULT_DATE_FORMAT; // kludge; why is this not importing?
+
+    if (task === undefined || vscode.window.activeTextEditor === undefined) {
+        return new Promise<boolean>(() => false);
+    }
+
+    // get the current due date
+    const currentDue = task.tagValue("due");
+
+    // default to tomorrow if no due date is set
+    if (currentDue === undefined) { return setDue(daysForward); }
+
+    // set this duedate
+    const day = dayjs(currentDue).add(daysForward, "day");
+    task.setTag("due", day.format(format));
+
+    // update the line
+    return replaceCurrentLine(vscode.window.activeTextEditor, task.toString());
+}
+
 export async function setDue(daysAhead: number): Promise<boolean> {
     // get current task, if the cursor is under a task
     const task = taskUnderCursor(vscode.window.activeTextEditor);
