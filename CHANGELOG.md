@@ -2,6 +2,10 @@
 
 All notable changes to the "todo-tools" extension will be documented in this file.
 
+## Unreleased
+### change
+- allowed annual recurrence to be inferred from the recur tag not just the annual tag
+
 ## [0.8.9]
 ### add
 - recur(Mon,Tue,Wed)

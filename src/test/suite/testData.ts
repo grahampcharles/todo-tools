@@ -70,3 +70,8 @@ export const testWithMultilineCommentsShort = `Project Name:
 \t\t\t\tNotes line 1
 \t\t\t\tNotes line 2
 `;
+
+
+export const testAnnual715 = `Project Name:
+\t- pay annual bill @recur(07-15) @high
+`;

@@ -3,7 +3,7 @@ import { expect } from "chai";
 import { it } from "mocha";
 import dayjs, { Dayjs } from "dayjs";
 import { TaskPaperNode } from "task-parser";
-import { cleanDate, todayDay, getDaysFromRecurrencePattern, daysPassed, nextWeekday, nextAnnual, dayNames, dayNameToWeekday, todayName, monthNameToNumber, daysUntilWeekday, normalizeDayName } from "../../dates.js";
+import { cleanDate, todayDay, getDaysFromRecurrencePattern, daysPassed, nextWeekday, nextAnnual, dayNames, dayNameToWeekday, todayName, monthNameToNumber, daysUntilWeekday, normalizeDayName, isAnnualRecur } from "../../dates.js";
 import { isDueBeforeToday, isDueToday, isOverdue, isFuture } from "../../move-nodes.js";
 import { Settings } from "../../Settings.js";
 import { SectionBounds, getSectionLineNumber, stringToLines, stripTrailingWhitespace } from "../../strings.js";
@@ -17,6 +17,7 @@ const bBeforeA = 1;
 const aAndBSame = 0;
 
 suite("Extension Test Suite", () => {
+
     it("edge notes cases", () => {
         const document = new TaskPaperNode(testWithMultilineCommentsShort);
         const project = document.children[0];
@@ -69,6 +70,18 @@ suite("Extension Test Suite", () => {
         const nextDueDate = getNextDueDate(node);
         expect(nextDueDate.format("YYYY-MM-DD")).to.eq("2123-09-19");
     });
+
+    it("next due date; annual, but in 'recur' form", () => {
+        // completed annual items: should be moved to the year after they were done or due
+        const node = new TaskPaperNode("- test task");
+        node.setTag("recur", "9/19");
+        node.setTag("due", "2122-09-19");
+        node.setTag("done", "2122-09-18");
+
+        const nextDueDate = getNextDueDate(node);
+        expect(nextDueDate.format("YYYY-MM-DD")).to.eq("2123-09-19");
+    });
+
 
     it("next due date; day of the week", () => {
         const node = new TaskPaperNode("- test task");
@@ -180,6 +193,17 @@ suite("Extension Test Suite", () => {
             todayDay().add(3, "day").format("YYYY-MM-DD")
         );
     });
+
+    it("recur tag is actually an annual tag", () => {
+
+        expect(isAnnualRecur("7/15")).to.equal(true, "recur tag is actually an annual tag");
+        expect(isAnnualRecur("1")).to.equal(false, "recur tag is not actually an annual tag");
+
+        expect(isAnnualRecur(undefined)).to.equal(false, "undefined recur tag is not an annual tag");
+
+    });
+
+
 
     it("getDaysFromRecurrencePattern", () => {
         expect(getDaysFromRecurrencePattern("2")).to.eql(2, "in two days");

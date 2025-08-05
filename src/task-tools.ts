@@ -3,6 +3,7 @@ import { TaskPaperNode } from "task-parser";
 import {
     cleanDate,
     dayNameToWeekday,
+    isAnnualRecur,
     nextAnnual,
     nextWeekday,
     todayDay,
@@ -19,7 +20,7 @@ export function getNextDueDate(node: TaskPaperNode): Dayjs {
     // of the due date or the done date.
 
     // in any case, never return a due date before today
-    const isAnnual = node.hasTag("annual");
+    const isAnnual = node.hasTag("annual") || isAnnualRecur(node.tagValue("recur"));
 
     const doneDate = cleanDate(node.tagValue("done"));
     const dueDate = cleanDate(node.tagValue("due"));
@@ -33,7 +34,7 @@ export function getNextDueDate(node: TaskPaperNode): Dayjs {
     // next annual: find it
 
     if (isAnnual) {
-        const ret = nextAnnual(node.tagValue("annual") || "1/1", sourceDate);
+        const ret = nextAnnual(node.tagValue("annual") || node.tagValue("recur") || "1/1", sourceDate);
         if (ret.isValid()) {
             return ret;
         }

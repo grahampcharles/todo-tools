@@ -183,6 +183,18 @@ export function nextAnnual(
     return currentAnniverary;
 }
 
+export function isAnnualRecur(recur: string | undefined): boolean {
+    if (recur === undefined) { return false; }
+
+    // check if the recur string is a date in the format MM-DD or M-D or M/D or MM/DD
+    const datePattern = /^(0?[1-9]|1[0-2])[-/](0?[1-9]|[12][0-9]|3[01])$/;
+    if (datePattern.test(recur)) {
+        return true;
+    }
+    
+    return false;
+}
+
 export function getDaysFromRecurrencePattern(
     recur: string | undefined,
     fromDay: dayjs.Dayjs = dayjs()
