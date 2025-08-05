@@ -2,7 +2,12 @@
 
 All notable changes to the "todo-tools" extension will be documented in this file.
 
-## Unreleased
+## [0.8.10]
+### add
+- setDueRelative (which will now be the default) will change days relative to the current due date
+- assigned setDueRelative to ctrl+alt+period period
+- assigned setDueRelative(-1) to ctrl+alt+period comma
+
 ### change
 - allowed annual recurrence to be inferred from the recur tag not just the annual tag
 
@@ -59,10 +64,6 @@ All notable changes to the "todo-tools" extension will be documented in this fil
 - save project name to archive
 
 ## [0.7.5] - 2022-09-11
-### add
-- setDueRelative (which will now be the default) will change days relative to the current due date
-- assigned setDueRelative to ctrl+alt+period period
-- assigned setDueRelative(-1) to ctrl+alt+period comma
 
 ### fix
 - autoRun troubleshooting
