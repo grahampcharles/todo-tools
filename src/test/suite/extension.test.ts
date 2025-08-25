@@ -569,8 +569,8 @@ suite("Extension Test Suite", () => {
             const actual = isDone(node);
             expect(actual).to.equal(expectation, `fail done text on element # ${index}`);
 
-            const dateExpectation = dates[index]
-            const actualDate = node.tagValue('done')
+            const dateExpectation = dates[index];
+            const actualDate = node.tagValue('done');
             expect(actualDate).to.equal(dateExpectation, `fail date on element # ${index}`);
 
         });
