@@ -3,14 +3,14 @@ import { expect } from "chai";
 import { it } from "mocha";
 import dayjs, { Dayjs } from "dayjs";
 import { TaskPaperNode } from "task-parser";
-import { cleanDate, todayDay, getDaysFromRecurrencePattern, daysPassed, nextWeekday, nextAnnual, dayNames, dayNameToWeekday, todayName, monthNameToNumber, daysUntilWeekday, normalizeDayName, isAnnualRecur } from "../../dates.js";
-import { isDueBeforeToday, isDueToday, isOverdue, isFuture } from "../../move-nodes.js";
+import { cleanDate, todayDay, getDaysFromRecurrencePattern, daysPassed, nextWeekday, nextAnnual, dayNames, dayNameToWeekday, todayName, monthNameToNumber, daysUntilWeekday, normalizeDayName, isAnnualRecur, DEFAULT_DATE_FORMAT } from "../../dates.js";
+import { isDueBeforeToday, isDueToday, isOverdue, isFuture, isDone } from "../../move-nodes.js";
 import { Settings } from "../../Settings.js";
 import { SectionBounds, getSectionLineNumber, stringToLines, stripTrailingWhitespace } from "../../strings.js";
 import { getNextDueDate, latestDate } from "../../task-tools.js";
 import { replaceDueTokens, taskDueDateCompare, processTaskNode, isBlankLine } from "../../taskpaper-parsing.js";
 import { getSpecialProjects } from "../../todo-tools.js";
-import { testWithMultilineCommentsShort, testDocumentWithSubprojectLines, testArchive1Source, testSettings, testDocumentWithHigh, testDocument } from "./testData.js";
+import { testWithMultilineCommentsShort, testDocumentWithSubprojectLines, testArchive1Source, testSettings, testDocumentWithHigh, testDocument, testDone1Source } from "./testData.js";
 
 const aBeforeB = -1;
 const bBeforeA = 1;
@@ -132,10 +132,10 @@ suite("Extension Test Suite", () => {
         expect(nextDueDate1.format("YYYY-MM-DD")).to.eq("2122-09-18", "MWF -> F");
 
         // s/b Monday
-        node.setTag("recur", "Monday, Wednesday");  
+        node.setTag("recur", "Monday, Wednesday");
         const nextDueDate2 = getNextDueDate(node);
         expect(nextDueDate2.format("YYYY-MM-DD")).to.eq("2122-09-21", "MW -> M");
- 
+
         // weird spellings and spacings
         node.setTag("recur", "W,Th");
 
@@ -148,7 +148,7 @@ suite("Extension Test Suite", () => {
 
     });
 
-    it("normalizeDayName", () => {        
+    it("normalizeDayName", () => {
         expect(normalizeDayName('Monday')).to.equal("Monday", "Monday");
         expect(normalizeDayName('Mondays')).to.equal("Monday", "Mondays");
         expect(normalizeDayName('Tue')).to.equal("Tuesday", "Tue");
@@ -541,6 +541,39 @@ suite("Extension Test Suite", () => {
             futureProject,
             overdueProject
         );
+    });
+
+    it("handles done tag correctly", () => {
+        const items =
+            new TaskPaperNode(testDone1Source);
+
+        const [archiveProject, todayProject, futureProject, overdueProject] =
+            getSpecialProjects(items);
+
+        processTaskNode(
+            items,
+            new Settings(),
+            archiveProject,
+            todayProject,
+            futureProject,
+            overdueProject
+        );
+
+        const results = [true, true, false];
+        const dates = ['2023-03-01', dayjs().format(DEFAULT_DATE_FORMAT), undefined];
+
+        const resultNodes: TaskPaperNode[] = items.children[0].children;
+
+        resultNodes.forEach((node, index) => {
+            const expectation = results[index];
+            const actual = isDone(node);
+            expect(actual).to.equal(expectation, `fail done text on element # ${index}`);
+
+            const dateExpectation = dates[index]
+            const actualDate = node.tagValue('done')
+            expect(actualDate).to.equal(dateExpectation, `fail date on element # ${index}`);
+
+        });
     });
 
     it("is blank line", () => {

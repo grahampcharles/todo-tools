@@ -48,6 +48,12 @@ export const testArchive1Source = `Today:
 Archive:
 `;
 
+export const testDone1Source = `Today: 
+\t- first @done(2023-03-01)
+\t- second @done
+\t- third won't be done
+`;
+
 export const testArchive1Target = `Future:
 \t- first @recur(1) @due(3025-05-17)
 

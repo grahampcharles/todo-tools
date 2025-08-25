@@ -2,6 +2,10 @@
 
 All notable changes to the "todo-tools" extension will be documented in this file.
 
+## [0.8.11]
+### add
+- automatically add today's date to @done with undefined date
+
 ## [0.8.10]
 ### add
 - setDueRelative (which will now be the default) will change days relative to the current due date

@@ -325,6 +325,11 @@ export function processTaskNode(
     // handle special @due tokens
     replaceDueTokens(taskNode, !settings.addTodayTomorrowYesterday());
 
+    // update done date if if's missing
+    if (taskNode.hasTag("done") &&  taskNode.tagValue("done") === undefined) {
+        taskNode.setTag("done",  todayDay().format(DEFAULT_DATE_FORMAT));
+    }
+
     // add relative date tag
     if (settings.addTodayTomorrowYesterday()) {
         addRelativeDateFlag(taskNode);
