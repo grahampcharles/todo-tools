@@ -2,7 +2,10 @@
 
 All notable changes to the "todo-tools" extension will be documented in this file.
 
-## [0.8.11]
+
+## [0.8.12] UNRELEASED
+
+## [0.8.11] - 8/24/2025
 ### add
 - automatically add today's date to @done with undefined date
 
